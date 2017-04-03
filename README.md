@@ -1,5 +1,8 @@
 # Group Project - *Nexxus*
-**Nexxus** is an android app that enables networking by finding relevant people during a professional event 
+
+**Nexxus** is an android app that enables networking by finding relevant people during a professional event.
+Networking in a professional context is hard, we are looking for specific people, like people from the same school, a particular company or with a certain title.
+Nexxus helps find people who are relevant. With Nexxus, professional networking will not boring anymore :)
 
 ## User Stories
 
