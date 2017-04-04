@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Nexxus</string>
+    <string name="tag_line">Professional Networking made easy</string>
+    <string name="login_with_linkedin">Login with LinkedIn</string>
 </resources>
