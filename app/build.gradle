@@ -1,9 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda' // make sure to apply last!
 
-def apikeyPropertiesFile = rootProject.file("apikey.properties");
-def apikeyProperties = new Properties()
-apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
     compileSdkVersion 25
@@ -25,9 +22,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        // api keys
-        buildConfigField("String", "consumerKey", apikeyProperties['consumerKey'])
-        buildConfigField("String", "consumerSecret", apikeyProperties['consumerSecret'])
     }
     buildTypes {
         release {
@@ -61,12 +55,6 @@ dependencies {
 
     // GSON for easy JSON parsing
     compile 'com.google.code.gson:gson:2.7'
-
-    // ouath
-    compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
-
-    // android async network lib
-    compile 'com.loopj.android:android-async-http:1.4.9'
 
     // retrofit & GSON Converter
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
