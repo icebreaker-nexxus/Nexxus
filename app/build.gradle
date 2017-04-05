@@ -28,6 +28,7 @@ android {
         // api keys
         buildConfigField("String", "CLIENT_ID", apikeyProperties['CLIENT_ID'])
         buildConfigField("String", "CLIENT_SECRET", apikeyProperties['CLIENT_SECRET'])
+        buildConfigField("String", "meetupApiKey", apikeyProperties['meetupApiKey'])
     }
     buildTypes {
         release {

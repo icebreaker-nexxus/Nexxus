@@ -63,3 +63,7 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+# linkedin-sdk
+linkedin-sdk/build/**
+linkedin-sdk/build
