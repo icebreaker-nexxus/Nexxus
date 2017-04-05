@@ -12,23 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.icebreakers.nexxus.activities.LoginActivity">
+        <activity android:name="com.icebreakers.nexxus.activities.SplashActivity">
             <intent-filter>
-
-                <!-- Add action, category, data to intent-filter  -->
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="app" android:host="twitter-dev" />
-
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="android.app.Activity" />
         </activity>
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

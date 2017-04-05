@@ -1,0 +1,52 @@
+package com.icebreakers.nexxus.activities;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import com.icebreakers.nexxus.MainActivity;
+import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
+import com.linkedin.platform.AccessToken;
+import com.linkedin.platform.LISession;
+import com.linkedin.platform.LISessionManager;
+
+/**
+ * Created by amodi on 4/4/17.
+ */
+
+public class SplashActivity extends AppCompatActivity {
+    private static final String TAG = SplashActivity.class.getSimpleName();
+    // splash screen timer
+    private static int SPLASH_TIME_OUT = 1000;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+
+        AccessToken accessToken = NexxusSharePreferences.getLIAccessToken(this);
+        LISessionManager.getInstance(getApplicationContext()).init(accessToken);
+        LISession session = LISessionManager.getInstance(getApplicationContext()).getSession();
+        if (session != null && session.isValid()) {
+            startActivity(MainActivity.class);
+        } else {
+            startActivity(LoginActivity.class);
+        }
+    }
+
+    private void startActivity(final Class activityClass) {
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                Intent i = new Intent(SplashActivity.this, activityClass);
+                startActivity(i);
+
+                // close this activity
+                finish();
+            }
+        }, SPLASH_TIME_OUT);
+    }
+}
