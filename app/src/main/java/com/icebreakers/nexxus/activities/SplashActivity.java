@@ -5,12 +5,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import com.icebreakers.nexxus.MainActivity;
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.models.Profile;
+import com.icebreakers.nexxus.network.LinkedInClient;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
 import com.linkedin.platform.LISession;
 import com.linkedin.platform.LISessionManager;
+import com.linkedin.platform.errors.LIApiError;
+import com.linkedin.platform.listeners.ApiListener;
+import com.linkedin.platform.listeners.ApiResponse;
+import org.parceler.Parcels;
+
+import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
 
 /**
  * Created by amodi on 4/4/17.
@@ -30,23 +39,45 @@ public class SplashActivity extends AppCompatActivity {
         LISessionManager.getInstance(getApplicationContext()).init(accessToken);
         LISession session = LISessionManager.getInstance(getApplicationContext()).getSession();
         if (session != null && session.isValid()) {
-            startActivity(MainActivity.class);
+            fetchProfileAndStartActivity();
         } else {
-            startActivity(LoginActivity.class);
+            startLoginActivity();
         }
     }
 
-    private void startActivity(final Class activityClass) {
+    private void startLoginActivity() {
         new Handler().postDelayed(new Runnable() {
 
             @Override
             public void run() {
-                Intent i = new Intent(SplashActivity.this, activityClass);
+                Intent i = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(i);
 
                 // close this activity
                 finish();
             }
         }, SPLASH_TIME_OUT);
+    }
+
+    private void fetchProfileAndStartActivity() {
+        LinkedInClient linkedInClient = new LinkedInClient(getApplicationContext());
+        linkedInClient.fetchBasicProfileInformation(new ApiListener() {
+            @Override
+            public void onApiSuccess(ApiResponse apiResponse) {
+                Profile profile = Profile.fromJSON(apiResponse.getResponseDataAsJson());
+                startMainActivity(profile);
+            }
+
+            @Override
+            public void onApiError(LIApiError error) {
+                Log.e(TAG, "Error fetching profile information " + error);
+            }
+        });
+    }
+
+    private void startMainActivity(Profile profile) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
+        startActivity(intent);
     }
 }
