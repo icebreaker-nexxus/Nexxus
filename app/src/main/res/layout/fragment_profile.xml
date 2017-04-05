@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivProfileImage"
+            android:layout_centerHorizontal="true"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_below="@id/ivProfileImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+            tools:text="Aditya Modi"/>
+
+        <TextView
+            android:id="@+id/tvHeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvName"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+            tools:text="Software Engineer"/>
+
+    </RelativeLayout>
+
+
+</ScrollView>

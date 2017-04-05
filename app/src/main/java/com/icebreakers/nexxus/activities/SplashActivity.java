@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import com.icebreakers.nexxus.MainActivity;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.network.LinkedInClient;
@@ -76,7 +75,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void startMainActivity(Profile profile) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
         startActivity(intent);
     }

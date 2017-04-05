@@ -23,6 +23,8 @@ public class Profile {
 
     public String pictureUrl;
 
+    public String emailAddress;
+
     public static Profile fromJSON(JSONObject jsonObject) {
         Profile profile = new Profile();
         try {
@@ -32,6 +34,7 @@ public class Profile {
             profile.headline = jsonObject.getString("headline");
             profile.publicProfileUrl = jsonObject.getString("publicProfileUrl");
             profile.pictureUrl = jsonObject.getString("pictureUrl");
+            profile.emailAddress = jsonObject.getString("emailAddress");
         } catch (JSONException e) {
             e.printStackTrace();
         }
