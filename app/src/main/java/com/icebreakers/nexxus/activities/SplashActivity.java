@@ -6,9 +6,11 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.Profile;
-import com.icebreakers.nexxus.network.LinkedInClient;
+import com.icebreakers.nexxus.clients.LinkedInClient;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
 import com.linkedin.platform.LISession;
@@ -25,7 +27,7 @@ import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
  */
 
 public class SplashActivity extends AppCompatActivity {
-    private static final String TAG = SplashActivity.class.getSimpleName();
+    private static final String TAG = NexxusApplication.BASE_TAG + SplashActivity.class.getSimpleName();
     // splash screen timer
     private static int SPLASH_TIME_OUT = 1000;
 

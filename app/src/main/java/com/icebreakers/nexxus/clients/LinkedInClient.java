@@ -1,4 +1,4 @@
-package com.icebreakers.nexxus.network;
+package com.icebreakers.nexxus.clients;
 
 import android.content.Context;
 import com.linkedin.platform.APIHelper;

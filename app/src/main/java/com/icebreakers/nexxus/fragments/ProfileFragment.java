@@ -8,12 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.bumptech.glide.Glide;
+import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.Profile;
+
 import org.parceler.Parcels;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
 
@@ -22,6 +26,8 @@ import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
  */
 
 public class ProfileFragment extends Fragment {
+
+    private static final String TAG = NexxusApplication.BASE_TAG + ProfileFragment.class.getName();
 
     @BindView(R.id.tvName) TextView tvProfileName;
     @BindView(R.id.tvHeadline) TextView tvHeadline;

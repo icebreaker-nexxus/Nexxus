@@ -13,8 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
+import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
@@ -27,12 +27,15 @@ import com.linkedin.platform.utils.Scope;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by amodi on 4/3/17.
  */
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final String TAG = NexxusApplication.BASE_TAG + LoginActivity.class.getSimpleName();
 
     @BindView(R.id.btnLogin) Button loginButton;
 

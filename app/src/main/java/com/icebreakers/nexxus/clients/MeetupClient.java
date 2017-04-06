@@ -6,6 +6,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.BuildConfig;
+import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.api.MeetupAPI;
 import com.icebreakers.nexxus.models.MeetupEvent;
 
@@ -21,14 +22,14 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import static android.content.ContentValues.TAG;
-
 
 /**
  * Created by radhikak on 4/4/17.
  */
 
 public class MeetupClient {
+
+    private static final String TAG = NexxusApplication.BASE_TAG + MeetupClient.class.getName();
 
     public static final String BASE_URL = "https://api.meetup.com";
 
