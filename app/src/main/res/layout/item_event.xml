@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="3dp"
+    android:background="#F9F8F8"
+    android:layout_marginBottom="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvEventName"
+            tools:text="hello_world hello_world hello_world hello_world hello_world hello_world"
+            style="@style/eventTitle"/>
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_below="@id/tvEventName"
+            tools:text="hello_world hello_world hello_world hello_world hello_world hello_world"
+            style="@style/articleSnippet"/>
+
+        <TextView
+            android:id="@+id/tvVenue"
+            android:layout_below="@id/tvTime"
+            tools:text="hello_world hello_world hello_world hello_world hello_world hello_world"
+            style="@style/articleSnippet"/>
+    </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+

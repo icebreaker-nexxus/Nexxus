@@ -19,7 +19,7 @@ import org.parceler.Parcels;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
+import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
 
 /**
  * Created by amodi on 4/5/17.

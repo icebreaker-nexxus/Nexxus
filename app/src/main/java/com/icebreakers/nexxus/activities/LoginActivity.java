@@ -59,6 +59,10 @@ public class LoginActivity extends AppCompatActivity {
                         // save the accessToken for future use
                         saveAccessToken();
                         //NexxusSharePreferences.putLIAccessToken(thisActivity, );
+
+                        Log.d(TAG, "Starting EventListActivity");
+                        startActivity(new Intent(LoginActivity.this, EventListActivity.class));
+                        finish();
                     }
 
                     @Override

@@ -9,8 +9,8 @@ import android.util.Log;
 
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.clients.LinkedInClient;
+import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
 import com.linkedin.platform.LISession;
@@ -18,9 +18,6 @@ import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
-import org.parceler.Parcels;
-
-import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
 
 /**
  * Created by amodi on 4/4/17.
@@ -77,8 +74,10 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void startMainActivity(Profile profile) {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
-        startActivity(intent);
+//        Intent intent = new Intent(this, ProfileActivity.class);
+//        intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
+//        startActivity(intent);
+        Log.d(TAG, "Starting EventListActivity");
+        startActivity(new Intent(this, EventListActivity.class));
     }
 }
