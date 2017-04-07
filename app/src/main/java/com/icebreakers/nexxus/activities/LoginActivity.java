@@ -13,22 +13,30 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.clients.LinkedInClient;
+import com.icebreakers.nexxus.models.internal.Profile;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
 import com.linkedin.platform.LISession;
 import com.linkedin.platform.LISessionManager;
+import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.errors.LIAuthError;
+import com.linkedin.platform.listeners.ApiListener;
+import com.linkedin.platform.listeners.ApiResponse;
 import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.utils.Scope;
+import org.parceler.Parcels;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
 
 /**
  * Created by amodi on 4/3/17.
@@ -58,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.i(TAG, "Login successful");
                         // save the accessToken for future use
                         saveAccessToken();
-                        //NexxusSharePreferences.putLIAccessToken(thisActivity, );
+                        fetchProfileAndStartActivity();
                     }
 
                     @Override
@@ -71,6 +79,27 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchProfileAndStartActivity() {
+        LinkedInClient linkedInClient = new LinkedInClient(getApplicationContext());
+        linkedInClient.fetchFullProfileInformation(new ApiListener() {
+            @Override
+            public void onApiSuccess(ApiResponse apiResponse) {
+                Gson gson = new GsonBuilder().create();
+                Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), Profile.class);
+                com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
+                Intent intent = new Intent(thisActivity, ProfileActivity.class);
+                intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onApiError(LIApiError error) {
+                Log.e(TAG, "Error fetching profile information " + error);
+            }
+        });
+    }
+
+
     private void saveAccessToken() {
         LISessionManager sessionManager = LISessionManager.getInstance(getApplicationContext());
         LISession session = sessionManager.getSession();
@@ -79,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private static Scope buildScope() {
-        return Scope.build(Scope.R_BASICPROFILE);
+        return Scope.build(Scope.R_FULLPROFILE);
     }
 
     private void debugInformation() {

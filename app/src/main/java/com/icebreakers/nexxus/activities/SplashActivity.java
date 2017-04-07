@@ -6,11 +6,12 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.clients.LinkedInClient;
+import com.icebreakers.nexxus.models.internal.Profile;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
 import com.linkedin.platform.LISession;
@@ -62,10 +63,12 @@ public class SplashActivity extends AppCompatActivity {
 
     private void fetchProfileAndStartActivity() {
         LinkedInClient linkedInClient = new LinkedInClient(getApplicationContext());
-        linkedInClient.fetchBasicProfileInformation(new ApiListener() {
+        linkedInClient.fetchFullProfileInformation(new ApiListener() {
             @Override
             public void onApiSuccess(ApiResponse apiResponse) {
-                Profile profile = Profile.fromJSON(apiResponse.getResponseDataAsJson());
+                Gson gson = new GsonBuilder().create();
+                Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), Profile.class);
+                com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
                 startMainActivity(profile);
             }
 
@@ -76,7 +79,7 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    private void startMainActivity(Profile profile) {
+    private void startMainActivity(com.icebreakers.nexxus.models.Profile profile) {
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
         startActivity(intent);
