@@ -1,5 +1,6 @@
 package com.icebreakers.nexxus.models;
 
+import com.google.firebase.database.IgnoreExtraProperties;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
  */
 
 @Parcel
+@IgnoreExtraProperties
 public class Profile {
 
     public String id;
@@ -32,7 +34,7 @@ public class Profile {
 
     @Parcel
     public static class LIDate {
-        int year;
+        public int year;
     }
 
     @Parcel

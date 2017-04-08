@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "301509767098",
+    "firebase_url": "https://nexxus-42eaf.firebaseio.com",
+    "project_id": "nexxus-42eaf",
+    "storage_bucket": "nexxus-42eaf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301509767098:android:8ed791c73954e783",
+        "android_client_info": {
+          "package_name": "com.icebreakers.nexxus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "301509767098-6ptvm45ild3ecepu5tbnsamteospq0vq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh6q7GZda0-7Zg1hey6dFMW1K5AzK3mhM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

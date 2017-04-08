@@ -14,6 +14,7 @@ public class NexxusSharePreferences {
 
     private static final String NAME = "Nexxus";
     private static final String ACCESS_TOKEN_LI = "access_token_li";
+    private static final String PROFILE_ID = "profile_id";
 
     public static void putLIAccessToken(Context context, AccessToken accessToken) {
         Gson gson = new Gson();
@@ -35,5 +36,14 @@ public class NexxusSharePreferences {
     public static SharedPreferences getSharedPrefernces(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
         return sharedPreferences;
+    }
+
+    @Nullable
+    public static String getProfileId(Context context) {
+        return getSharedPrefernces(context).getString(PROFILE_ID, null);
+    }
+
+    public static void putProfileId(Context context, String profileId) {
+        getSharedPrefernces(context).edit().putString(PROFILE_ID, profileId).apply();
     }
 }
