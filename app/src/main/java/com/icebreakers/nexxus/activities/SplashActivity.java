@@ -48,6 +48,7 @@ public class SplashActivity extends AppCompatActivity {
         String profileId = NexxusSharePreferences.getProfileId(this);
         if (session != null && session.isValid() && profileId != null) {
 
+            String profileId = NexxusSharePreferences.getProfileId(this);
             Database.instance().databaseReference.child(PROFILE_TABLE).child(profileId)
                                                  .addValueEventListener(new ValueEventListener() {
                 @Override
