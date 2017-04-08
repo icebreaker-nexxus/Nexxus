@@ -27,5 +27,6 @@ public interface MeetupAPI {
                                                @Query("lat") Double lat,
                                                @Query("lon") Double lon,
                                                @Query("radius") Integer radius,
+                                               @Query("fields") String fields,
                                                @Query("sign") Boolean sign);
 }

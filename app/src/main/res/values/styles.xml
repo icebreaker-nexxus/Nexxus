@@ -39,7 +39,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="articleSnippet" parent="@android:style/TextAppearance">
+    <style name="eventDescription" parent="@android:style/TextAppearance">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">12sp</item>
@@ -52,5 +52,9 @@
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
     </style>
+
+    <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

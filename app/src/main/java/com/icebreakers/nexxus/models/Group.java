@@ -4,6 +4,9 @@ package com.icebreakers.nexxus.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Group {
 
     @SerializedName("created")
@@ -30,6 +33,15 @@ public class Group {
     @SerializedName("who")
     @Expose
     private String who;
+    @SerializedName("key_photo")
+    @Expose
+    private KeyPhoto keyPhoto;
+    @SerializedName("photo")
+    @Expose
+    private Photo photo;
+    @SerializedName("category")
+    @Expose
+    private Category category;
 
     public Long getCreated() {
         return created;
@@ -93,6 +105,30 @@ public class Group {
 
     public void setWho(String who) {
         this.who = who;
+    }
+
+    public KeyPhoto getKeyPhoto() {
+        return keyPhoto;
+    }
+
+    public void setKeyPhoto(KeyPhoto keyPhoto) {
+        this.keyPhoto = keyPhoto;
+    }
+
+    public Photo getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override

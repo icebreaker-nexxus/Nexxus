@@ -1,5 +1,6 @@
 package com.icebreakers.nexxus.activities;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,6 +19,8 @@ import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.utils.EndlessRecyclerViewScrollListener;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.LocationProvider;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +63,11 @@ public class EventListActivity extends AppCompatActivity
         public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 
            // launch Event details activity
+            MeetupEvent event = events.get(position);
+
+            Intent detailsActivityIntent = new Intent(EventListActivity.this, EventDetailsActivity.class);
+            detailsActivityIntent.putExtra("event", Parcels.wrap(event));
+            startActivity(detailsActivityIntent);
         }
     };
 
@@ -135,7 +143,13 @@ public class EventListActivity extends AppCompatActivity
         Call<List<MeetupEvent>> eventsCall = MeetupClient.getInstance().findEvents(location.getLatitude(), location.getLongitude());
         Log.d(TAG, "Meetup find events request: " + eventsCall.request().url().toString());
 
-        // TODO add tech categories
+        // TODO Filter events based on categories with ids - with map
+        // = 2 (Career and Business)
+        // 6 Education and Learning
+        // 34 Tech
+
+
+        // TODO Sort this list with shortest distance - with map
 
         CompositeSubscription compositeSubscription = new CompositeSubscription();
         compositeSubscription.add(MeetupClient.getInstance()
@@ -162,9 +176,12 @@ public class EventListActivity extends AppCompatActivity
                         Log.d(TAG, "onNext events #" + meetupEvents.size());
                         for (MeetupEvent event: meetupEvents) {
                             Log.d(TAG, event.toString());
+                            if (event.getGroup().getCategory().getId() == 6
+                                    || event.getGroup().getCategory().getId() == 34
+                                    || event.getGroup().getCategory().getId() == 2)
+                                events.add(event);
                         }
 
-                        events.addAll(meetupEvents);
                         eventListAdapter.notifyDataSetChanged();
 
                     }

@@ -4,8 +4,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.MeetupEvent;
@@ -39,6 +41,9 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         @BindView(R.id.tvVenue)
         TextView tvVenue;
 
+        @BindView(R.id.ivImage)
+        ImageView ivImage;
+
         public EventViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -47,10 +52,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
     public EventListAdapter(List<MeetupEvent> articles) {
         this.events = articles;
-    }
-
-    public MeetupEvent getItem(int position) {
-        return events.get(position);
     }
 
     @Override
@@ -67,13 +68,37 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         holder.tvName.setText(event.getName());
 
         // TODO better date format
+        // something like Today at 2:00pm
         holder.tvTime.setText(dateFormat.format(new Date(event.getTime())));
 
         // TODO expand address
         if (event.getVenue() != null)
         holder.tvVenue.setText(event.getVenue().getAddress1());
 
-        // TODO load group image
+        String imageURL = null;
+
+
+        if (event.getGroup().getKeyPhoto() != null) {
+            imageURL = event.getGroup().getKeyPhoto().getHighresLink();
+        } else  if (event.getGroup().getPhoto() != null) {
+            imageURL = event.getGroup().getPhoto().getHighresLink();
+        }
+
+        if (imageURL != null) {
+
+            if (imageURL != null) {
+                holder.ivImage.setVisibility(View.VISIBLE);
+                Glide.with(holder.itemView.getContext())
+                        .load(imageURL)
+                        .placeholder(R.drawable.loading)
+                        .error(R.drawable.loading)
+                        .into(holder.ivImage);
+            } else {
+                holder.ivImage.setVisibility(View.GONE);
+            }
+        } else {
+            holder.ivImage.setVisibility(View.GONE);
+        }
     }
 
     @Override
