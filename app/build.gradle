@@ -91,6 +91,11 @@ dependencies {
 
     // Scribe
     compile 'com.github.scribejava:scribejava-apis:3.2.0'
+    
+    // Rounded corner images
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 
     // For RxJava 2
     //compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.0.6'
