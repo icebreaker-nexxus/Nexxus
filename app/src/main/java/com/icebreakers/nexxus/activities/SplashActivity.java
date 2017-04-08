@@ -14,7 +14,6 @@ import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.clients.LinkedInClient;
-import com.icebreakers.nexxus.models.FakeEvent;
 import com.icebreakers.nexxus.models.internal.Profile;
 import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
@@ -46,8 +45,9 @@ public class SplashActivity extends AppCompatActivity {
         AccessToken accessToken = NexxusSharePreferences.getLIAccessToken(this);
         LISessionManager.getInstance(getApplicationContext()).init(accessToken);
         LISession session = LISessionManager.getInstance(getApplicationContext()).getSession();
-        if (session != null && session.isValid()) {
-            String profileId = NexxusSharePreferences.getProfileId(this);
+        String profileId = NexxusSharePreferences.getProfileId(this);
+        if (session != null && session.isValid() && profileId != null) {
+
             Database.instance().databaseReference.child(PROFILE_TABLE).child(profileId)
                                                  .addValueEventListener(new ValueEventListener() {
                 @Override
@@ -57,11 +57,6 @@ public class SplashActivity extends AppCompatActivity {
                         Log.e(TAG, "Cannot find profile for profileId " + dataSnapshot.getKey());
                         fetchProfileAndStartActivity();
                     } else {
-                        FakeEvent fakeEvent = new FakeEvent();
-                        fakeEvent.id = "1234";
-                        fakeEvent.name = "fakeEvent";
-                        fakeEvent.attendees.add(profile);
-                        Database.instance().databaseReference.child("Event").child(fakeEvent.id).setValue(fakeEvent);
                         startMainActivity(profile);
                     }
                 }
