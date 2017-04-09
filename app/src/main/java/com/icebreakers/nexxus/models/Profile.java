@@ -16,8 +16,6 @@ public class Profile {
 
     public String id;
 
-    public String name;
-
     public String firstName;
 
     public String lastName;
@@ -84,7 +82,7 @@ public class Profile {
 
         @Override
         public int hashCode() {
-            return companyId.hashCode();
+            return companyId != null ? companyId.hashCode() : 0;
         }
     }
 
@@ -93,7 +91,6 @@ public class Profile {
         profile.id = internalProfile.id;
         profile.firstName = internalProfile.firstName;
         profile.lastName = internalProfile.lastName;
-        profile.name = profile.firstName + " " + profile.lastName;
         profile.headline = internalProfile.headline;
         profile.emailAddress = internalProfile.emailAddress;
         profile.pictureUrl = internalProfile.pictureUrl;

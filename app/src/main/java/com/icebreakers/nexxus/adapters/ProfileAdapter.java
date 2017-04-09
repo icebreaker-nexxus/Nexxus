@@ -45,14 +45,21 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
     @Override
     public void onBindViewHolder(ProfileViewHolder holder, int position) {
         Profile profile = profileList.get(position);
-        holder.profileNameText.setText(profile.name);
+        if (profile.firstName != null && profile.lastName != null) {
+            holder.profileNameText.setText(profile.firstName + " " + profile.lastName);
+        } else {
+            holder.profileNameText.setText(profile.firstName != null ? profile.firstName : profile.lastName);
+        }
+
         holder.profileHeadlineText.setText(profile.headline);
         Glide.with(context).load(profile.pictureUrl).into(holder.profileImage);
         Similarities similarities = similaritiesMap.get(profile.id);
-        if (similarities.numOfSimilarities >= 1) {
+        if (similarities != null && similarities.numOfSimilarities >= 1) {
             if (similarities.numOfSimilarities > 1) {
                 holder.profileSimilarityImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_common));
-                holder.profileSimilarityText.setText(similarities.numOfSimilarities + " things in common");
+                holder.profileSimilarityText.setText(String.format(context.getResources()
+                                                                          .getString(R.string.similarities_in_common),
+                                                                   similarities.numOfSimilarities));
             } else {
                 if (similarities.similarEducations.size() != 0) {
                     holder.profileSimilarityImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_education));
@@ -63,7 +70,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
                 }
             }
         } else {
-            holder.profileSimilarityText.setVisibility(View.GONE);
+            holder.similaritySection.setVisibility(View.GONE);
         }
 
     }
@@ -71,6 +78,10 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
     @Override
     public int getItemCount() {
         return profileList.size();
+    }
+
+    public void updateSimilaritiesMap(Map<String, Similarities> similaritiesMap) {
+        this.similaritiesMap.putAll(similaritiesMap);
     }
 
     class ProfileViewHolder extends RecyclerView.ViewHolder {

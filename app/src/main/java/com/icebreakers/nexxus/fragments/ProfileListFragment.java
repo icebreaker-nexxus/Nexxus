@@ -10,11 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.ProfileAdapter;
 import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
+import com.icebreakers.nexxus.persistence.Database;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -32,6 +36,7 @@ public class ProfileListFragment extends Fragment {
     ProfileAdapter profileAdapter;
     RecyclerView.LayoutManager layoutManager;
     Profile profile;
+    List<Profile> profileList;
 
     public static ProfileListFragment newInstance(Profile profile) {
 
@@ -55,23 +60,48 @@ public class ProfileListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_list, container, false);
         ButterKnife.bind(this, view);
 
-        // test data, to be replaced by real calls from db
-        List<Profile> b = new ArrayList<>();
-        b.add(profile);
+//        // test data, to be replaced by real calls from db
+//        List<Profile> b = new ArrayList<>();
+//        b.add(profile);
+//
+//        Profile asd = new Profile();
+//        asd.educationList = new ArrayList<>();
+//        Profile.Education education = new Profile.Education();
+//        education.schoolName = profile.educationList.get(0).schoolName;
+//        asd.educationList.add(education);
+//        b.add(asd);
 
-        Profile asd = new Profile();
-        asd.educationList = new ArrayList<>();
-        Profile.Education education = new Profile.Education();
-        education.schoolName = profile.educationList.get(0).schoolName;
-        asd.educationList.add(education);
-        b.add(asd);
+        profileList = new ArrayList<>();
 
-        Map<String, Similarities> similaritiesMap = SimilaritiesFinder.findSimilarities(profile, b);
+        Map<String, Similarities> similaritiesMap = SimilaritiesFinder.findSimilarities(profile, profileList);
         layoutManager = new LinearLayoutManager(getContext());
-        profileAdapter = new ProfileAdapter(getContext(), b, similaritiesMap);
-        recyclerView.setLayoutManager(layoutManager);
+        profileAdapter = new ProfileAdapter(getContext(), profileList, similaritiesMap);
         recyclerView.setAdapter(profileAdapter);
 
+        recyclerView.setLayoutManager(layoutManager);
+
+        fetchAttendeesForTheEvent();
+
         return view;
+    }
+
+    private void fetchAttendeesForTheEvent() {
+        // for now, fetch all profile objects
+        Database.instance().databaseReference.child(Database.PROFILE_TABLE).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
+                    Profile newListOfProfiles = dataSnapshotChild.getValue(Profile.class);
+                    profileList.add(newListOfProfiles);
+                }
+                profileAdapter.updateSimilaritiesMap(SimilaritiesFinder.findSimilarities(profile, profileList));
+                profileAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
