@@ -21,7 +21,6 @@ public class NexxusApplication extends Application {
                                           .setFontAttrId(R.attr.fontPath)
                                           .build()
         );
-
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         Database.instance().databaseReference.keepSynced(true);
     }
