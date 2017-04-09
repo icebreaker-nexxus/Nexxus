@@ -1,9 +1,9 @@
 package com.icebreakers.nexxus;
 
 import android.app.Application;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import com.google.firebase.database.FirebaseDatabase;
 import com.icebreakers.nexxus.persistence.Database;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by radhikak on 4/6/17.
