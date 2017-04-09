@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +19,7 @@ import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.clients.LinkedInClient;
+import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.internal.Profile;
 import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
@@ -32,18 +32,15 @@ import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
 import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.utils.Scope;
-import org.parceler.Parcels;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
 
 /**
  * Created by amodi on 4/3/17.
  */
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
     private static final String TAG = NexxusApplication.BASE_TAG + LoginActivity.class.getSimpleName();
 
     @BindView(R.id.btnLogin) Button loginButton;
@@ -67,12 +64,8 @@ public class LoginActivity extends AppCompatActivity {
                         Log.i(TAG, "Login successful");
                         // save the accessToken for future use
                         saveAccessToken();
-            //            fetchProfileAndStartActivity();
-                        //NexxusSharePreferences.putLIAccessToken(thisActivity, );
-
-                        Log.d(TAG, "Starting EventListActivity");
-                        startActivity(new Intent(LoginActivity.this, EventListActivity.class));
-                        finish();
+                        fetchProfileAndSaveProfileId();
+                        Router.startEventListActivity(LoginActivity.this);
                     }
 
                     @Override
@@ -85,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchProfileAndStartActivity() {
+    private void fetchProfileAndSaveProfileId() {
         LinkedInClient linkedInClient = new LinkedInClient(getApplicationContext());
         linkedInClient.fetchFullProfileInformation(new ApiListener() {
             @Override
@@ -95,9 +88,9 @@ public class LoginActivity extends AppCompatActivity {
                 com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
                 NexxusSharePreferences.putProfileId(thisActivity, profile.id);
                 Database.instance().insertProfileValue(profile);
-                Intent intent = new Intent(thisActivity, ProfileActivity.class);
-                intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
-                startActivity(intent);
+//                Intent intent = new Intent(thisActivity, ProfileActivity.class);
+//                intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
+//                startActivity(intent);
             }
 
             @Override
