@@ -53,10 +53,9 @@ public class SplashActivity extends BaseActivity {
                     com.icebreakers.nexxus.models.Profile profile = dataSnapshot.getValue(com.icebreakers.nexxus.models.Profile.class);
                     if (profile == null) {
                         Log.e(TAG, "Cannot find profile for profileId " + dataSnapshot.getKey());
-                        fetchProfileAndSave();
-                        Router.startEventListActivity(SplashActivity.this);
+                        fetchAndSaveProfileStartEventListActivity();
                     } else {
-                        Router.startEventListActivity(SplashActivity.this);
+                        Router.startEventListActivity(SplashActivity.this, profile);
                     }
                 }
 
@@ -84,7 +83,7 @@ public class SplashActivity extends BaseActivity {
         }, SPLASH_TIME_OUT);
     }
 
-    private void fetchProfileAndSave() {
+    private void fetchAndSaveProfileStartEventListActivity() {
         LinkedInClient linkedInClient = new LinkedInClient(getApplicationContext());
         linkedInClient.fetchFullProfileInformation(new ApiListener() {
             @Override
@@ -93,6 +92,7 @@ public class SplashActivity extends BaseActivity {
                 Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), Profile.class);
                 com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
                 Database.instance().insertProfileValue(profile);
+                Router.startEventListActivity(SplashActivity.this, profile);
             }
 
             @Override
