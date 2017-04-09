@@ -105,7 +105,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void startMainActivity(com.icebreakers.nexxus.models.Profile profile) {
-        Intent intent = new Intent(this, ProfileActivity.class);
+        Intent intent = new Intent(this, ProfileListActivity.class);
         intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
         startActivity(intent);
     }

@@ -8,4 +8,32 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TextAppearance.ArtDeco" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/black_85</item>
+        <item name="fontPath">fonts/SourceSansPro-Regular.ttf</item>
+    </style>
+
+    <style name="TextAppearance.ArtDeco.Italics" parent="TextAppearance.ArtDeco">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextAppearance.ArtDeco.Headline1" parent="TextAppearance.ArtDeco">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/black_85</item>
+        <item name="fontPath">fonts/SourceSansPro-Regular.ttf</item>
+    </style>
+    <style name="TextAppearance.ArtDeco.Headline1.Bold" parent="TextAppearance.ArtDeco.Headline1">
+        <item name="android:textSize">21sp</item>
+        <item name="fontPath">fonts/SourceSansPro-Bold.ttf</item>
+    </style>
+
+    <style name="TextAppearance.ArtDeco.Headline1.Big.Bold" parent="TextAppearance.ArtDeco.Headline1.Bold">
+        <item name="android:textSize">34sp</item>
+    </style>
+    <style name="TextAppearance.ArtDeco.Subhead" parent="TextAppearance.ArtDeco">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/black_55</item>
+        <item name="fontPath">fonts/SourceSansPro-Regular.ttf</item>
+    </style>
+
 </resources>

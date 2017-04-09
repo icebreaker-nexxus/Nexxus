@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.fragments.ProfileFragment;
+import com.icebreakers.nexxus.fragments.ProfileListFragment;
 import com.icebreakers.nexxus.models.Profile;
 import org.parceler.Parcels;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -18,25 +18,27 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
 
 /**
- * Created by amodi on 4/5/17.
+ * Created by amodi on 4/8/17.
  */
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileListActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile_list);
         ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.attendees));
 
         Intent intent = getIntent();
         Profile profile = Parcels.unwrap(intent.getParcelableExtra(PROFILE_EXTRA));
-        getSupportActionBar().setTitle(profile.firstName + " " + profile.lastName);
+
         FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.fragmentContainer, ProfileFragment.newInstance(profile)).commit();
+        fm.beginTransaction().replace(R.id.profileListContainer, ProfileListFragment.newInstance(profile)).commit();
     }
 
     @Override

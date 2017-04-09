@@ -1,6 +1,7 @@
 package com.icebreakers.nexxus;
 
 import android.app.Application;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import com.google.firebase.database.FirebaseDatabase;
 import com.icebreakers.nexxus.persistence.Database;
 
@@ -15,7 +16,11 @@ public class NexxusApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                                          .setDefaultFontPath("fonts/SourceSansPro-Regular.ttf")
+                                          .setFontAttrId(R.attr.fontPath)
+                                          .build()
+        );
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         Database.instance().databaseReference.keepSynced(true);
     }

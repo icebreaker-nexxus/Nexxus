@@ -3,4 +3,6 @@
     <string name="tag_line">Professional Networking made easy</string>
     <string name="login_with_linkedin">Login with LinkedIn</string>
     <string name="login_failure">Failed to login with LinkedIn</string>
+    <string name="attendees">Attendees</string>
+    <string name="similarities_in_common">%d things in common</string>
 </resources>

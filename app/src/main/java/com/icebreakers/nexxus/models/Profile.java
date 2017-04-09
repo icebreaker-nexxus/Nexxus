@@ -32,6 +32,8 @@ public class Profile {
 
     public List<Position> positionList;
 
+
+
     @Parcel
     public static class LIDate {
         public int year;
@@ -42,6 +44,21 @@ public class Profile {
         public String schoolName;
         public LIDate startDate;
         public LIDate endDate;
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Education))
+                return false;
+            if (obj == this)
+                return true;
+            Education rhs = (Education) obj;
+            return this.schoolName.equals(rhs.schoolName);
+        }
+
+        @Override
+        public int hashCode() {
+            return schoolName.hashCode();
+        }
     }
 
     @Parcel
@@ -52,6 +69,21 @@ public class Profile {
         public String title;
         public LIDate startDate;
         public LIDate endDate;
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Position))
+                return false;
+            if (obj == this)
+                return true;
+            Position rhs = (Position) obj;
+            return this.companyId.equals(rhs.companyId);
+        }
+
+        @Override
+        public int hashCode() {
+            return companyId != null ? companyId.hashCode() : 0;
+        }
     }
 
     public static Profile convertFromInternalProfile(com.icebreakers.nexxus.models.internal.Profile internalProfile) {
