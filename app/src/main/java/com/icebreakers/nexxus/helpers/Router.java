@@ -20,9 +20,11 @@ public class Router {
 
     private static final String TAG = NexxusApplication.BASE_TAG + Router.class.getSimpleName();
 
-    public static void startEventListActivity(BaseActivity activity) {
+    public static void startEventListActivity(BaseActivity activity, Profile profile) {
         Log.d(TAG, "Starting EventListActivity");
-        activity.startActivity(new Intent(activity, EventListActivity.class));
+        Intent intent = new Intent(activity, EventListActivity.class);
+        intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
+        activity.startActivity(intent);
     }
 
     public static void startProfileActivity(BaseActivity activity, Profile profile) {

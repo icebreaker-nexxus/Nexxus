@@ -3,37 +3,45 @@ package com.icebreakers.nexxus.activities;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-
+import android.widget.ImageView;
+import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.EventListAdapter;
 import com.icebreakers.nexxus.clients.MeetupClient;
+import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
+import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.utils.EndlessRecyclerViewScrollListener;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.LocationProvider;
-
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class EventListActivity extends AppCompatActivity
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
+
+public class EventListActivity extends BaseActivity
         implements LocationProvider.LocationCallback {
 
     private static final String TAG = NexxusApplication.BASE_TAG + EventListActivity.class.getName();
@@ -48,6 +56,17 @@ public class EventListActivity extends AppCompatActivity
 
     @BindView(R.id.rvEvents)
     RecyclerView rvEvents;
+
+    @BindView(R.id.drawer)
+    DrawerLayout drawerLayout;
+
+    @BindView(R.id.navigationView)
+    NavigationView navigationView;
+
+    ImageView navHeaderProfileImage;
+    TextView navHeaderProfileName;
+    ActionBarDrawerToggle drawerToggle;
+    Profile profile;
 
     List<MeetupEvent> events = new ArrayList<>();
     EventListAdapter eventListAdapter;
@@ -77,6 +96,9 @@ public class EventListActivity extends AppCompatActivity
         setContentView(R.layout.activity_event_list);
 
         ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+        profile = Parcels.unwrap(intent.getParcelableExtra(PROFILE_EXTRA));
 
         setSupportActionBar(toolbar);
 
@@ -117,6 +139,14 @@ public class EventListActivity extends AppCompatActivity
                  fetchMeetupEvents(lastKnownLocation);
             }
         });
+
+        // navigation bar
+        drawerToggle = setupDrawerToggle();
+        setupDrawerContent(navigationView);
+        View v = navigationView.getHeaderView(0);
+        navHeaderProfileImage = (ImageView) v.findViewById(R.id.ivNavprofileImage);
+        navHeaderProfileName = (TextView) v.findViewById(R.id.tvNavProfileName);
+        setupNavigationHeader();
     }
 
     @Override
@@ -187,5 +217,64 @@ public class EventListActivity extends AppCompatActivity
                     }
                 })
         );
+    }
+
+    // Navigation header
+
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
+        // and will not render the hamburger icon without it.
+        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+            new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    selectDrawerItem(menuItem);
+                    return true;
+                }
+            });
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+        // Create a new fragment and specify the fragment to show based on nav item clicked
+        switch(menuItem.getItemId()) {
+            case R.id.event_list_nav:
+                //Router.startEventListActivity(this, profile);
+                break;
+            case R.id.profile_nav:
+                Router.startProfileActivity(this, profile);
+                break;
+            case R.id.attendees_nav:
+                Router.startProfileListActivity(this, profile);
+                break;
+            default:
+                break;
+        }
+
+        // Close the navigation drawer
+        drawerLayout.closeDrawers();
+    }
+
+    private void setupNavigationHeader() {
+        Glide.with(this).load(profile.pictureUrl).into(navHeaderProfileImage);
+        navHeaderProfileName.setText(profile.firstName + " " + profile.lastName);
     }
 }

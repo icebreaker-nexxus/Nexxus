@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="180dp">
+
+    <ImageView
+        android:id="@+id/navHeaderImage"
+        android:layout_width="wrap_content"
+        android:layout_height="180dp"
+        android:src="@drawable/header"
+        android:scaleType="centerCrop"/>
+
+    <LinearLayout
+        android:layout_gravity="bottom|left"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivNavprofileImage"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_margin="8dp"
+            tools:src="@drawable/ic_launcher"
+            app:civ_border_color="#FFFFFF"/>
+
+        <TextView
+            android:id="@+id/tvNavProfileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textAppearance="@style/TextAppearance.ArtDeco.Headline1.Bold"
+            android:textColor="@android:color/white"
+            tools:text="Aditya Modii"/>
+
+    </LinearLayout>
+
+</FrameLayout>

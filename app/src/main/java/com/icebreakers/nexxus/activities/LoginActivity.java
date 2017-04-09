@@ -64,8 +64,7 @@ public class LoginActivity extends BaseActivity {
                         Log.i(TAG, "Login successful");
                         // save the accessToken for future use
                         saveAccessToken();
-                        fetchProfileAndSaveProfileId();
-                        Router.startEventListActivity(LoginActivity.this);
+                        fetchAndSaveProfileStartEventListActivity();
                     }
 
                     @Override
@@ -78,7 +77,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void fetchProfileAndSaveProfileId() {
+    private void fetchAndSaveProfileStartEventListActivity() {
         LinkedInClient linkedInClient = new LinkedInClient(getApplicationContext());
         linkedInClient.fetchFullProfileInformation(new ApiListener() {
             @Override
@@ -88,9 +87,7 @@ public class LoginActivity extends BaseActivity {
                 com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
                 NexxusSharePreferences.putProfileId(thisActivity, profile.id);
                 Database.instance().insertProfileValue(profile);
-//                Intent intent = new Intent(thisActivity, ProfileActivity.class);
-//                intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
-//                startActivity(intent);
+                Router.startEventListActivity(LoginActivity.this, profile);
             }
 
             @Override
