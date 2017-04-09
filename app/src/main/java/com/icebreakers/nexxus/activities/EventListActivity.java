@@ -3,14 +3,20 @@ package com.icebreakers.nexxus.activities;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.EventListAdapter;
@@ -19,19 +25,15 @@ import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.utils.EndlessRecyclerViewScrollListener;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.LocationProvider;
-
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventListActivity extends AppCompatActivity
         implements LocationProvider.LocationCallback {
@@ -48,6 +50,14 @@ public class EventListActivity extends AppCompatActivity
 
     @BindView(R.id.rvEvents)
     RecyclerView rvEvents;
+
+    @BindView(R.id.drawer)
+    DrawerLayout drawerLayout;
+
+    @BindView(R.id.navigationView)
+    NavigationView navigationView;
+
+    ActionBarDrawerToggle drawerToggle;
 
     List<MeetupEvent> events = new ArrayList<>();
     EventListAdapter eventListAdapter;
@@ -117,6 +127,9 @@ public class EventListActivity extends AppCompatActivity
                  fetchMeetupEvents(lastKnownLocation);
             }
         });
+
+        // navigation bar
+        drawerToggle = setupDrawerToggle();
     }
 
     @Override
@@ -187,5 +200,28 @@ public class EventListActivity extends AppCompatActivity
                     }
                 })
         );
+    }
+
+    // Navigation header
+
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
+        // and will not render the hamburger icon without it.
+        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
     }
 }

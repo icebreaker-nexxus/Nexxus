@@ -6,4 +6,9 @@
     <string name="attendees">Attendees</string>
     <string name="similarities_in_common">%d things in common</string>
     <string name="title_activity_event_details">EventDetailsActivity</string>
+    <string name="event_list">Event List</string>
+    <string name="profile">Profile</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
 </resources>
