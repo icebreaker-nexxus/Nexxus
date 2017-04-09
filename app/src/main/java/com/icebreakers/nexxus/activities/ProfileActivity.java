@@ -7,21 +7,25 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.fragments.ProfileFragment;
 import com.icebreakers.nexxus.models.Profile;
+
 import org.parceler.Parcels;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 /**
  * Created by amodi on 4/5/17.
  */
 
 public class ProfileActivity extends AppCompatActivity {
+
+    public static final String PROFILE_EXTRA = "profile_extra";
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 

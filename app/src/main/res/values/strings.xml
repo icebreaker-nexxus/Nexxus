@@ -5,4 +5,5 @@
     <string name="login_failure">Failed to login with LinkedIn</string>
     <string name="attendees">Attendees</string>
     <string name="similarities_in_common">%d things in common</string>
+    <string name="title_activity_event_details">EventDetailsActivity</string>
 </resources>

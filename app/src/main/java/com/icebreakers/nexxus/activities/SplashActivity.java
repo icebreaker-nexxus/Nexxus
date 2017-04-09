@@ -14,8 +14,8 @@ import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.clients.LinkedInClient;
-import com.icebreakers.nexxus.models.internal.Profile;
 import com.icebreakers.nexxus.persistence.Database;
+import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
 import com.linkedin.platform.LISession;
@@ -23,9 +23,8 @@ import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
-import org.parceler.Parcels;
 
-import static com.icebreakers.nexxus.MainActivity.PROFILE_EXTRA;
+
 import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
 /**
@@ -55,7 +54,7 @@ public class SplashActivity extends AppCompatActivity {
                     com.icebreakers.nexxus.models.Profile profile = dataSnapshot.getValue(com.icebreakers.nexxus.models.Profile.class);
                     if (profile == null) {
                         Log.e(TAG, "Cannot find profile for profileId " + dataSnapshot.getKey());
-                        fetchProfileAndStartActivity();
+//                        fetchProfileAndStartActivity();
                     } else {
                         startMainActivity(profile);
                     }
@@ -85,28 +84,31 @@ public class SplashActivity extends AppCompatActivity {
         }, SPLASH_TIME_OUT);
     }
 
-    private void fetchProfileAndStartActivity() {
-        LinkedInClient linkedInClient = new LinkedInClient(getApplicationContext());
-        linkedInClient.fetchFullProfileInformation(new ApiListener() {
-            @Override
-            public void onApiSuccess(ApiResponse apiResponse) {
-                Gson gson = new GsonBuilder().create();
-                Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), Profile.class);
-                com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
-                Database.instance().insertProfileValue(profile);
-                startMainActivity(profile);
-            }
+//    private void fetchProfileAndStartActivity() {
+//        LinkedInClient linkedInClient = new LinkedInClient(getApplicationContext());
+//        linkedInClient.fetchFullProfileInformation(new ApiListener() {
+//            @Override
+//            public void onApiSuccess(ApiResponse apiResponse) {
+//                Gson gson = new GsonBuilder().create();
+//                Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), Profile.class);
+//                com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
+//                Database.instance().insertProfileValue(profile);
+//                startMainActivity(profile);
+//            }
+//
+//            @Override
+//            public void onApiError(LIApiError error) {
+//                Log.e(TAG, "Error fetching profile information " + error);
+//            }
+//        });
+//    }
 
-            @Override
-            public void onApiError(LIApiError error) {
-                Log.e(TAG, "Error fetching profile information " + error);
-            }
-        });
-    }
 
-    private void startMainActivity(com.icebreakers.nexxus.models.Profile profile) {
-        Intent intent = new Intent(this, ProfileListActivity.class);
-        intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
-        startActivity(intent);
+    private void startMainActivity(Profile profile) {
+//        Intent intent = new Intent(this, ProfileActivity.class);
+//        intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
+//        startActivity(intent);
+        Log.d(TAG, "Starting EventListActivity");
+        startActivity(new Intent(this, EventListActivity.class));
     }
 }
