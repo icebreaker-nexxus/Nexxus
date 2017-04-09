@@ -21,6 +21,7 @@ import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.clients.LinkedInClient;
 import com.icebreakers.nexxus.models.internal.Profile;
+import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
 import com.linkedin.platform.LISession;
@@ -87,6 +88,8 @@ public class LoginActivity extends AppCompatActivity {
                 Gson gson = new GsonBuilder().create();
                 Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), Profile.class);
                 com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
+                NexxusSharePreferences.putProfileId(thisActivity, profile.id);
+                Database.instance().insertProfileValue(profile);
                 Intent intent = new Intent(thisActivity, ProfileActivity.class);
                 intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
                 startActivity(intent);
@@ -108,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private static Scope buildScope() {
-        return Scope.build(Scope.R_FULLPROFILE);
+        return Scope.build(Scope.R_FULLPROFILE, Scope.R_EMAILADDRESS);
     }
 
     private void debugInformation() {

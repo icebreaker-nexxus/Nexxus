@@ -1,5 +1,6 @@
 package com.icebreakers.nexxus.models;
 
+import com.google.firebase.database.IgnoreExtraProperties;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
  */
 
 @Parcel
+@IgnoreExtraProperties
 public class Profile {
 
     public String id;
@@ -32,7 +34,7 @@ public class Profile {
 
     @Parcel
     public static class LIDate {
-        int year;
+        public int year;
     }
 
     @Parcel
@@ -62,36 +64,43 @@ public class Profile {
         profile.pictureUrl = internalProfile.pictureUrl;
         profile.publicProfileUrl = internalProfile.publicProfileUrl;
         List<Education> educationList = new ArrayList<>();
-        for (com.icebreakers.nexxus.models.internal.Profile.Education internalEducation : internalProfile.educationInfo.educationList) {
-            Education education = new Education();
-            education.schoolName = internalEducation.schoolName;
-            education.startDate = internalEducation.startDate;
-            education.endDate = internalEducation.endDate;
-            educationList.add(education);
+        if (internalProfile.educationInfo != null && internalProfile.educationInfo.educationList != null) {
+            for (com.icebreakers.nexxus.models.internal.Profile.Education internalEducation : internalProfile.educationInfo.educationList) {
+                Education education = new Education();
+                education.schoolName = internalEducation.schoolName;
+                education.startDate = internalEducation.startDate;
+                education.endDate = internalEducation.endDate;
+                educationList.add(education);
+            }
         }
 
         List<Position> positionList = new ArrayList<>();
-        for (com.icebreakers.nexxus.models.internal.Profile.Position internalPosition : internalProfile.currentCompanyInfo.positionInfos) {
-            Position position = new Position();
-            position.companyId = internalPosition.company.id;
-            position.companyName = internalPosition.company.name;
-            position.isCurrent = internalPosition.isCurrent;
-            position.startDate = internalPosition.startDate;
-            position.endDate = internalPosition.endDate;
-            position.title = internalPosition.title;
-            positionList.add(position);
+        if (internalProfile.currentCompanyInfo != null && internalProfile.currentCompanyInfo.positionInfos != null) {
+            for (com.icebreakers.nexxus.models.internal.Profile.Position internalPosition : internalProfile.currentCompanyInfo.positionInfos) {
+                Position position = new Position();
+                position.companyId = internalPosition.company.id;
+                position.companyName = internalPosition.company.name;
+                position.isCurrent = internalPosition.isCurrent;
+                position.startDate = internalPosition.startDate;
+                position.endDate = internalPosition.endDate;
+                position.title = internalPosition.title;
+                positionList.add(position);
+            }
         }
 
-        for (com.icebreakers.nexxus.models.internal.Profile.Position internalPosition : internalProfile.pastCompanyInfo.positionInfos) {
-            Position position = new Position();
-            position.companyId = internalPosition.company.id;
-            position.companyName = internalPosition.company.name;
-            position.isCurrent = internalPosition.isCurrent;
-            position.startDate = internalPosition.startDate;
-            position.endDate = internalPosition.endDate;
-            position.title = internalPosition.title;
-            positionList.add(position);
+        if (internalProfile.pastCompanyInfo != null && internalProfile.pastCompanyInfo.positionInfos != null) {
+            for (com.icebreakers.nexxus.models.internal.Profile.Position internalPosition : internalProfile.pastCompanyInfo.positionInfos) {
+                Position position = new Position();
+                position.companyId = internalPosition.company.id;
+                position.companyName = internalPosition.company.name;
+                position.isCurrent = internalPosition.isCurrent;
+                position.startDate = internalPosition.startDate;
+                position.endDate = internalPosition.endDate;
+                position.title = internalPosition.title;
+                positionList.add(position);
+            }
         }
+
 
         profile.educationList = educationList;
         profile.positionList = positionList;
