@@ -28,19 +28,5 @@ public class NexxusApplication extends Application {
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         Database.instance().databaseReference.keepSynced(true);
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                                          .setDefaultFontPath("fonts/SourceSansPro-Regular.ttf")
-                                          .setFontAttrId(R.attr.fontPath)
-                                          .build()
-        );
-
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        Database.instance().databaseReference.keepSynced(true);
-
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                                          .setDefaultFontPath("fonts/SourceSansPro-Regular.ttf")
-                                          .setFontAttrId(R.attr.fontPath)
-                                          .build()
-        );
     }
 }
