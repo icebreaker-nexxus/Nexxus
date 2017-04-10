@@ -7,11 +7,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.MeetupEvent;
 
@@ -30,8 +29,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.backdrop)
-    ImageView ivBackdrop;
+//    @BindView(R.id.backdrop)
+//    ImageView ivBackdrop;
 
     @BindView(R.id.tvEventName)
     TextView tvEventName;
@@ -60,28 +59,30 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(event.getName());
 
-        String imageURL = null;
-        if (event.getGroup().getKeyPhoto() != null) {
-            imageURL = event.getGroup().getKeyPhoto().getHighresLink();
-        } else  if (event.getGroup().getPhoto() != null) {
-            imageURL = event.getGroup().getPhoto().getHighresLink();
-        }
+        // TODO Is image really needed?
 
-        if (imageURL != null) {
-
-            if (imageURL != null) {
-                ivBackdrop.setVisibility(View.VISIBLE);
-                Glide.with(this)
-                        .load(imageURL)
-                        .placeholder(R.drawable.loading)
-                        .error(R.drawable.loading)
-                        .into(ivBackdrop);
-            } else {
-                ivBackdrop.setVisibility(View.GONE);
-            }
-        } else {
-            ivBackdrop.setVisibility(View.GONE);
-        }
+//        String imageURL = null;
+//        if (event.getGroup().getKeyPhoto() != null) {
+//            imageURL = event.getGroup().getKeyPhoto().getHighresLink();
+//        } else  if (event.getGroup().getPhoto() != null) {
+//            imageURL = event.getGroup().getPhoto().getHighresLink();
+//        }
+//
+//        if (imageURL != null) {
+//
+//            if (imageURL != null) {
+//                ivBackdrop.setVisibility(View.VISIBLE);
+//                Glide.with(this)
+//                        .load(imageURL)
+//                        .placeholder(R.drawable.loading)
+//                        .error(R.drawable.loading)
+//                        .into(ivBackdrop);
+//            } else {
+//                ivBackdrop.setVisibility(View.GONE);
+//            }
+//        } else {
+//            ivBackdrop.setVisibility(View.GONE);
+//        }
 
         tvEventName.setText(event.getName());
         if (event.getDescription() != null && !event.getDescription().isEmpty()) {
@@ -100,6 +101,16 @@ public class EventDetailsActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

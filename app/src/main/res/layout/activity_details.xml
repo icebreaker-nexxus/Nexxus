@@ -29,37 +29,29 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    app:layout_collapseMode="pin"
                     android:layout_marginTop="?attr/actionBarSize">
-
-                    <ImageView
-                        android:id="@+id/backdrop"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginTop="5dp"
-                        tools:src="@drawable/loading"
-                        app:layout_collapseMode="parallax" />
 
                     <TextView
                         android:id="@+id/tvEventName"
-                        android:layout_below="@id/backdrop"
-                        app:layout_collapseMode="pin"
+                        android:layout_margin="5dp"
+                        android:layout_alignParentTop="true"
                         tools:text="hello_world hello_world hello_world hello_world hello_world hello_world"
                         style="@style/eventTitle"/>
 
                     <TextView
-                        android:id="@+id/tvDescription"
-                        android:layout_below="@id/tvEventName"
-                        app:layout_collapseMode="pin"
-                        tools:text="hello_world hello_world hello_world hello_world hello_world hello_world"
-                        style="@style/eventDescription"/>
-
-                    <TextView
                         android:id="@+id/tvTime"
-                        android:layout_below="@id/tvDescription"
+                        android:layout_below="@id/tvEventName"
                         tools:text="hello_world"
-                        app:layout_collapseMode="pin"
-                        style="@style/eventDescription"/>
+                        style="@style/eventTime"/>
+
+                    <com.borjabravo.readmoretextview.ReadMoreTextView
+                        android:id="@+id/tvDescription"
+                        android:layout_below="@id/tvTime"
+                        app:trimMode="trimModeLine"
+                        app:trimLines="3"
+                        app:colorClickableText="@color/colorPrimary"
+                        style="@style/eventDescription" />
 
                 </RelativeLayout>
 
