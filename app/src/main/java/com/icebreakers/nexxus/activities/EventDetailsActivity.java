@@ -3,15 +3,28 @@ package com.icebreakers.nexxus.activities;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.ui.IconGenerator;
+import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.databinding.ActivityEventDetailsBinding;
 import com.icebreakers.nexxus.models.MeetupEvent;
+import com.icebreakers.nexxus.models.Venue;
+import com.icebreakers.nexxus.utils.MapUtils;
 
 import org.parceler.Parcels;
 
@@ -20,12 +33,33 @@ import java.util.Date;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
+    private static final String TAG = NexxusApplication.BASE_TAG + EventDetailsActivity.class.getName();
     private MeetupEvent event;
 
     ActivityEventDetailsBinding binding;
 
     final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd");
     final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+
+
+    OnMapReadyCallback mapReadyCallback =  new OnMapReadyCallback() {
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+
+            Venue venue =  event.getVenue();
+            LatLng point = new LatLng(venue.getLat(), venue.getLon());
+            BitmapDescriptor icon = MapUtils.createBubble(EventDetailsActivity.this, IconGenerator.STYLE_GREEN, venue.getName());
+            // Creates and adds marker to the map
+            Marker marker = MapUtils.addMarker(googleMap, point, venue.getName(), icon, true);
+            marker.setPosition(point);
+
+            // Zoom in to Event location
+            CameraUpdate center = CameraUpdateFactory.newLatLng(point);
+            CameraUpdate zoom= CameraUpdateFactory.zoomTo(11);
+            googleMap.moveCamera(center);
+            googleMap.animateCamera(zoom);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +118,13 @@ public class EventDetailsActivity extends AppCompatActivity {
             String address = String.format("%s, %s", event.getVenue().getAddress1(), event.getVenue().getCity());
             binding.header.tvLocationAddress.setText(address);
             binding.header.ivLocation.setColorFilter(getResources().getColor(android.R.color.darker_gray));
+            // setup map view
+            binding.mapview.onCreate(savedInstanceState);
+            binding.mapview.getMapAsync(mapReadyCallback);
         } else {
+            Log.d(TAG, "NOT setting up onMapReadyCallback, since Venue is null");
             binding.header.ivLocation.setVisibility(View.GONE);
+            binding.mapview.setVisibility(View.GONE);
         }
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -108,4 +147,45 @@ public class EventDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        binding.mapview.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        binding.mapview.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        binding.mapview.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        binding.mapview.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        binding.mapview.onStop();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        binding.mapview.onLowMemory();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding.mapview.onDestroy();
+    }
 }

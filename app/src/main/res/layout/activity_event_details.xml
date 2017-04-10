@@ -40,6 +40,12 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapview"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
