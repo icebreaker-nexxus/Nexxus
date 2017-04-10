@@ -18,8 +18,6 @@ import org.parceler.Parcels;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.icebreakers.nexxus.R.id.tvEventName;
-
 public class EventDetailsActivity extends AppCompatActivity {
 
     private MeetupEvent event;
@@ -45,7 +43,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
         // TODO Is image really needed?
-
 //        String imageURL = null;
 //        if (event.getGroup().getKeyPhoto() != null) {
 //            imageURL = event.getGroup().getKeyPhoto().getHighresLink();
