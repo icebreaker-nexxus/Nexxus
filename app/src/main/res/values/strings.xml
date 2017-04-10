@@ -18,5 +18,7 @@
     <string name="from_to" formatted="false">%s - %s</string>
     <string name="from_to_present">%s - Present</string>
     <string name="full_name" formatted="false">%s %s</string>
+    <string name="location_permission_rationale">Location permissions are needed to fetch nearby events</string>
+    <string name="ok">Ok</string>
 
 </resources>
