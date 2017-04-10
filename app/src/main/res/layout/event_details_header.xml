@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:ext="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" >
 <RelativeLayout
     android:layout_width="match_parent"
@@ -40,7 +39,6 @@
         tools:text="Tomorrow at 3pm"
         style="@style/eventDate"
         android:text="Monday April 10"
-        android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:layout_below="@id/tvEventName"
         android:layout_toRightOf="@+id/ivTime"/>
@@ -65,15 +63,15 @@
 
     <TextView
         android:id="@+id/tvLocationTitle"
-        tools:text="Tomorrow at 3pm"
-        style="@style/eventDate"
         android:layout_marginTop="10dp"
+        tools:text="Netflix"
+        style="@style/eventDate"
         android:layout_below="@id/tvTime"
         android:layout_toRightOf="@+id/ivLocation"/>
 
     <TextView
         android:id="@+id/tvLocationAddress"
-        tools:text="Tomorrow at 3pm"
+        tools:text="121 Albright Way"
         style="@style/eventTime"
         android:layout_below="@id/tvLocationTitle"
         android:layout_toRightOf="@+id/ivTime"/>
