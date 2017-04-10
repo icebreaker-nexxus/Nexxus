@@ -1,17 +1,16 @@
 package com.icebreakers.nexxus.activities;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.databinding.ActivityDetailsBinding;
 import com.icebreakers.nexxus.models.MeetupEvent;
 
 import org.parceler.Parcels;
@@ -19,37 +18,23 @@ import org.parceler.Parcels;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import static com.icebreakers.nexxus.R.id.tvEventName;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
     private MeetupEvent event;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    ActivityDetailsBinding binding;
 
-//    @BindView(R.id.backdrop)
-//    ImageView ivBackdrop;
-
-    @BindView(R.id.tvEventName)
-    TextView tvEventName;
-
-    @BindView(R.id.tvDescription)
-    TextView tvDescription;
-
-    @BindView(R.id.tvTime)
-    TextView tvTime;
-
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm");
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd");
+    final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
-        ButterKnife.bind(this);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_details);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -57,7 +42,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         Intent detailsIntent = getIntent();
         event = Parcels.unwrap(detailsIntent.getParcelableExtra("event"));
 
-        getSupportActionBar().setTitle(event.getName());
+        getSupportActionBar().setTitle("");
 
         // TODO Is image really needed?
 
@@ -82,18 +67,31 @@ public class EventDetailsActivity extends AppCompatActivity {
 //            }
 //        } else {
 //            ivBackdrop.setVisibility(View.GONE);
-//        }
+//       }
 
-        tvEventName.setText(event.getName());
+        binding.header.tvEventName.setText(event.getName());
         if (event.getDescription() != null && !event.getDescription().isEmpty()) {
-            tvDescription.setText(Html.fromHtml(event.getDescription()));
+            binding.header.tvDescription.setText(Html.fromHtml(event.getDescription()));
         } else {
-            tvDescription.setVisibility(View.GONE);
+            binding.header.tvDescription.setVisibility(View.GONE);
         }
-        tvTime.setText(dateFormat.format(new Date(event.getTime())));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        binding.header.ivTime.setColorFilter(getResources().getColor(android.R.color.darker_gray));
+        binding.header.tvDate.setText(dateFormat.format(new Date(event.getTime())));
+
+        // TODO Set relative time or start time - end time if available.
+        binding.header.tvTime.setText(timeFormat.format(new Date(event.getTime())));
+
+        if (event.getVenue() != null) {
+            binding.header.tvLocationTitle.setText(event.getVenue().getName());
+            String address = String.format("%s, %s", event.getVenue().getAddress1(), event.getVenue().getCity());
+            binding.header.tvLocationAddress.setText(address);
+            binding.header.ivLocation.setColorFilter(getResources().getColor(android.R.color.darker_gray));
+        } else {
+            binding.header.ivLocation.setVisibility(View.GONE);
+        }
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO implement check in action

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ext="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvEventName"
+        android:layout_margin="5dp"
+        android:layout_alignParentTop="true"
+        android:textAlignment="viewStart"
+        tools:text="hello_world hello_world hello_world hello_world hello_world hello_world"
+        style="@style/eventTitle"/>
+
+    <View
+        android:id="@+id/vSeparator1"
+        android:layout_width="match_parent"
+        android:layout_marginRight="5dp"
+        android:layout_height="1dp"
+        android:alpha="0.5"
+        android:layout_below="@id/tvEventName"
+        android:background="@color/separator"/>
+
+    <ImageView
+        android:id="@+id/ivTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vSeparator1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_access_time"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:id="@+id/tvDate"
+        tools:text="Tomorrow at 3pm"
+        style="@style/eventDate"
+        android:text="Monday April 10"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/tvEventName"
+        android:layout_toRightOf="@+id/ivTime"/>
+
+    <TextView
+        android:id="@+id/tvTime"
+        tools:text="3pm"
+        style="@style/eventTime"
+        android:layout_below="@id/tvDate"
+        android:layout_toRightOf="@+id/ivTime"/>
+
+    <ImageView
+        android:id="@+id/ivLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTime"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/location"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:id="@+id/tvLocationTitle"
+        tools:text="Tomorrow at 3pm"
+        style="@style/eventDate"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/tvTime"
+        android:layout_toRightOf="@+id/ivLocation"/>
+
+    <TextView
+        android:id="@+id/tvLocationAddress"
+        tools:text="Tomorrow at 3pm"
+        style="@style/eventTime"
+        android:layout_below="@id/tvLocationTitle"
+        android:layout_toRightOf="@+id/ivTime"/>
+
+    <View
+        android:id="@+id/vSeparator2"
+        android:layout_width="match_parent"
+        android:layout_marginRight="5dp"
+        android:layout_height="1dp"
+        android:layout_below="@id/tvLocationAddress"
+        android:alpha="0.5"
+        android:background="@color/separator"/>
+
+    <com.borjabravo.readmoretextview.ReadMoreTextView
+        android:id="@+id/tvDescription"
+        android:layout_below="@id/vSeparator2"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        app:trimMode="trimModeLine"
+        app:trimLines="8"
+        app:colorClickableText="@color/colorPrimary"
+        android:autoLink="all"
+        android:linksClickable="true"
+        android:typeface="sans"
+        style="@style/eventDescription" />
+</RelativeLayout>
+</layout>

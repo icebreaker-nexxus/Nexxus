@@ -53,7 +53,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="android:layout_margin">5dp</item>
         <item name="android:padding">5dp</item>
         <item name="android:maxLines">3</item>
@@ -61,16 +61,22 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="eventTime" parent="@android:style/TextAppearance">
+    <style name="eventDate" parent="@android:style/TextAppearance">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginLeft">1dp</item>
         <item name="android:layout_marginRight">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <style name="eventTime" parent="@style/eventDate">
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="eventDescription" parent="@android:style/TextAppearance">

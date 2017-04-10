@@ -7,4 +7,5 @@
     <color name="black_55">#8C000000</color>
     <color name="black_85">#D8000000</color>
     <color name="highlight">#FFC107</color>
+    <color name="separator">#c0c0c0</color>
 </resources>
