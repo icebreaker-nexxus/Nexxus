@@ -10,5 +10,7 @@
     <string name="profile">Profile</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="location_permission_rationale">Location permissions are needed to fetch nearby events</string>
+    <string name="ok">Ok</string>
 
 </resources>
