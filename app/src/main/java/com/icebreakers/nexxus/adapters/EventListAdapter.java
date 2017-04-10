@@ -8,12 +8,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.MeetupEvent;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,7 +28,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     private static final String TAG = NexxusApplication.BASE_TAG + EventListAdapter.class.getName();
     List<MeetupEvent> events;
 
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm");
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd");
+    final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
 
@@ -36,7 +37,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         TextView tvName;
 
         @BindView(R.id.tvTime)
-        TextView tvTime;
+        RelativeTimeTextView tvTime;
 
         @BindView(R.id.tvVenue)
         TextView tvVenue;
@@ -66,14 +67,13 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         MeetupEvent event = events.get(position);
 
         holder.tvName.setText(event.getName());
-
-        // TODO better date format
-        // something like Today at 2:00pm
-        holder.tvTime.setText(dateFormat.format(new Date(event.getTime())));
+        holder.tvTime.setReferenceTime(event.getTime());
 
         // TODO expand address
-        if (event.getVenue() != null)
-        holder.tvVenue.setText(event.getVenue().getAddress1());
+        if (event.getVenue() != null) {
+            String address = String.format("%s, %s", event.getVenue().getAddress1(), event.getVenue().getCity());
+            holder.tvVenue.setText(address);
+        }
 
         String imageURL = null;
 
