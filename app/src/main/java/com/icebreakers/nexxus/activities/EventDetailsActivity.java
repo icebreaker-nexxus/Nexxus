@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.databinding.ActivityDetailsBinding;
+import com.icebreakers.nexxus.databinding.ActivityEventDetailsBinding;
+import com.icebreakers.nexxus.fragments.ProfileListFragment;
 import com.icebreakers.nexxus.models.MeetupEvent;
 
 import org.parceler.Parcels;
@@ -22,7 +25,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private MeetupEvent event;
 
-    ActivityDetailsBinding binding;
+    ActivityEventDetailsBinding binding;
 
     final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd");
     final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
@@ -30,7 +33,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_details);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_event_details);
 
         setSupportActionBar(binding.toolbar);
 
@@ -96,6 +99,14 @@ public class EventDetailsActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        ProfileListFragment fragment = ProfileListFragment.newInstance(NexxusApplication.getProfile());
+
+        FragmentTransaction ft =
+                getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.flContainer, fragment).commit();
+
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
