@@ -54,3 +54,12 @@ The following **bonus** features are implemented:
 * [ ] Chat room based on interests?
 * [ ] Hashtag based search
 * [ ] Notifications?
+
+
+## Video Walkthrough
+
+Here's a walkthrough of implemented user stories:
+
+<img src='./codepath-nexxus-sprint1.gif' title='Sprint 1 Video Walkthrough' width='' alt='Video Walkthrough' />
+
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
