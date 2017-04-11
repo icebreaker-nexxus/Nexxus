@@ -1,6 +1,5 @@
 package com.icebreakers.nexxus.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +8,6 @@ import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.fragments.ProfileFragment;
 import com.icebreakers.nexxus.models.Profile;
 import org.parceler.Parcels;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 /**
@@ -29,10 +27,5 @@ public class ProfileActivity extends BaseActivity {
         Profile profile = Parcels.unwrap(intent.getParcelableExtra(PROFILE_EXTRA));
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.fragmentContainer, ProfileFragment.newInstance(profile)).commit();
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(base));
     }
 }

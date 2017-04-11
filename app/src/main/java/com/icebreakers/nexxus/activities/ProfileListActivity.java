@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.icebreakers.nexxus.R;
@@ -30,6 +31,8 @@ public class ProfileListActivity extends BaseActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.attendees));
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         Profile profile = Parcels.unwrap(intent.getParcelableExtra(PROFILE_EXTRA));
@@ -38,4 +41,18 @@ public class ProfileListActivity extends BaseActivity {
         fm.beginTransaction().replace(R.id.profileListContainer, ProfileListFragment.newInstance(profile)).commit();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
