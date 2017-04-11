@@ -23,6 +23,11 @@
         <item name="android:textColor">@color/black_85</item>
         <item name="fontPath">fonts/SourceSansPro-Regular.ttf</item>
     </style>
+
+    <style name="TextAppearance.ArtDeco.Headline1.Small.Bold" parent="TextAppearance.ArtDeco.Headline1">
+        <item name="fontPath">fonts/SourceSansPro-Bold.ttf</item>
+    </style>
+
     <style name="TextAppearance.ArtDeco.Headline1.Bold" parent="TextAppearance.ArtDeco.Headline1">
         <item name="android:textSize">21sp</item>
         <item name="fontPath">fonts/SourceSansPro-Bold.ttf</item>

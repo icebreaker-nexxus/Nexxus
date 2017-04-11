@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/item_spacing_8"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/item_spacing_1"
+        android:paddingTop="@dimen/item_spacing_1">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/section_header_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:maxLines="1"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.ArtDeco.Headline1.Small.Bold"
+                tools:text="Donald Trump"/>
+
+            <TextView
+                android:id="@+id/section_headline_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:maxLines="2"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.ArtDeco.Headline1"
+                tools:text="CEO America - lets make america great again"/>
+
+            <TextView
+                android:id="@+id/section_subheadline_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:maxLines="2"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.ArtDeco.Subhead"
+                android:text="2014 - Present"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/item_spacing_1"
+        android:background="@color/gray_light"/>
+
+</LinearLayout>

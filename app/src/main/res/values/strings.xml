@@ -10,5 +10,13 @@
     <string name="profile">Profile</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="in_common">In Common</string>
+    <string name="icebreaker">Icebreaker</string>
+    <string name="highly_skilled_at">Highly skilled in Android</string>
+    <string name="experience">Experience</string>
+    <string name="education">Education</string>
+    <string name="from_to" formatted="false">%s - %s</string>
+    <string name="from_to_present">%s - Present</string>
+    <string name="full_name" formatted="false">%s %s</string>
 
 </resources>
