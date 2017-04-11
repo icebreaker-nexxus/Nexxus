@@ -7,7 +7,6 @@ import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -38,14 +37,13 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     ActivityEventDetailsBinding binding;
 
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd");
-    final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd");
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
 
     OnMapReadyCallback mapReadyCallback =  new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
-
             Venue venue =  event.getVenue();
             LatLng point = new LatLng(venue.getLat(), venue.getLon());
             BitmapDescriptor icon = MapUtils.createBubble(EventDetailsActivity.this, IconGenerator.STYLE_GREEN, venue.getName());
@@ -76,7 +74,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("");
 
-        // TODO Is image really needed?
 //        String imageURL = null;
 //        if (event.getGroup().getKeyPhoto() != null) {
 //            imageURL = event.getGroup().getKeyPhoto().getHighresLink();
@@ -108,24 +105,19 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
 
         binding.header.ivTime.setColorFilter(getResources().getColor(android.R.color.darker_gray));
-        binding.header.tvDate.setText(dateFormat.format(new Date(event.getTime())));
+        binding.header.tvDate.setText(DATE_FORMAT.format(new Date(event.getTime())));
 
         // TODO Set relative time or start time - end time if available.
-        binding.header.tvTime.setText(timeFormat.format(new Date(event.getTime())));
+        binding.header.tvTime.setText(TIME_FORMAT.format(new Date(event.getTime())));
 
-        if (event.getVenue() != null) {
-            binding.header.tvLocationTitle.setText(event.getVenue().getName());
-            String address = String.format("%s, %s", event.getVenue().getAddress1(), event.getVenue().getCity());
-            binding.header.tvLocationAddress.setText(address);
-            binding.header.ivLocation.setColorFilter(getResources().getColor(android.R.color.darker_gray));
-            // setup map view
-            binding.mapview.onCreate(savedInstanceState);
-            binding.mapview.getMapAsync(mapReadyCallback);
-        } else {
-            Log.d(TAG, "NOT setting up onMapReadyCallback, since Venue is null");
-            binding.header.ivLocation.setVisibility(View.GONE);
-            binding.mapview.setVisibility(View.GONE);
-        }
+        // We make sure that venue is never null
+        binding.header.tvLocationTitle.setText(event.getVenue().getName());
+        String address = String.format("%s, %s", event.getVenue().getAddress1(), event.getVenue().getCity());
+        binding.header.tvLocationAddress.setText(address);
+        binding.header.ivLocation.setColorFilter(getResources().getColor(android.R.color.darker_gray));
+        // setup map view
+        binding.mapview.onCreate(savedInstanceState);
+        binding.mapview.getMapAsync(mapReadyCallback);
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override

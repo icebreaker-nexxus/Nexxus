@@ -70,13 +70,11 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         holder.tvTime.setReferenceTime(event.getTime());
 
         // TODO expand address
-        if (event.getVenue() != null) {
-            String address = String.format("%s, %s", event.getVenue().getAddress1(), event.getVenue().getCity());
-            holder.tvVenue.setText(address);
-        }
+        // We make sure venue is never null, hence no need to check
+        String address = String.format("%s, %s", event.getVenue().getAddress1(), event.getVenue().getCity());
+        holder.tvVenue.setText(address);
 
         String imageURL = null;
-
 
         if (event.getGroup().getKeyPhoto() != null) {
             imageURL = event.getGroup().getKeyPhoto().getHighresLink();

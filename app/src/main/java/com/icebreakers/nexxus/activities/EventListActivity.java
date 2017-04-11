@@ -266,6 +266,7 @@ public class EventListActivity extends BaseActivity
         CompositeSubscription compositeSubscription = new CompositeSubscription();
         compositeSubscription.add(MeetupClient.getInstance()
                 .rxfindEvents(location.getLatitude(), location.getLongitude())
+                .map(meetupEvents -> { return filterEvents(meetupEvents);})
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<MeetupEvent>>() {
@@ -286,14 +287,7 @@ public class EventListActivity extends BaseActivity
                         swipeRefreshLayout.setRefreshing(false);
 
                         Log.d(TAG, "onNext events #" + meetupEvents.size());
-                        for (MeetupEvent event: meetupEvents) {
-                            Log.d(TAG, event.toString());
-                            if (event.getGroup().getCategory().getId() == 6
-                                    || event.getGroup().getCategory().getId() == 34
-                                    || event.getGroup().getCategory().getId() == 2)
-                                events.add(event);
-                        }
-
+                        events.addAll(meetupEvents);
                         eventListAdapter.notifyDataSetChanged();
 
                     }
@@ -301,9 +295,30 @@ public class EventListActivity extends BaseActivity
         );
     }
 
+    private List<MeetupEvent> filterEvents(List<MeetupEvent> allEvents)
+    {
+        List<MeetupEvent> interestingEvents = new ArrayList<>();
+
+        for (MeetupEvent event: allEvents) {
+            if (event.getVenue() != null
+                && (event.getGroup().getCategory().getId() == 6
+                        || event.getGroup().getCategory().getId() == 34
+                        || event.getGroup().getCategory().getId() == 2)) {
+                    interestingEvents.add(event);
+                Log.d(TAG, "Event added: " + event.toString());
+                }
+        }
+
+        return interestingEvents;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeSubscription.unsubscribe();
+    }
+
     // Navigation header
-
-
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
