@@ -183,5 +183,4 @@ public class ProfileFragment extends Fragment {
             ButterKnife.bind(this, v);
         }
     }
-
 }
