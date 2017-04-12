@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -19,8 +20,10 @@ import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
+import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import org.parceler.Parcels;
 
 import java.util.List;
@@ -63,6 +66,7 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         profile = Parcels.unwrap(getArguments().getParcelable(PROFILE_EXTRA));
+        similaritiesWithLoggedInMember = SimilaritiesFinder.findSimilarities(NexxusSharePreferences.getLoggedInMemberProfile(getActivity()), profile);
     }
 
     @Nullable
@@ -96,10 +100,29 @@ public class ProfileFragment extends Fragment {
 
     private void insertCommonSection() {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.common_item, commonSection, false);
-        CommonItemViewHolder commonItemViewHolder = new CommonItemViewHolder(v);
-        commonItemViewHolder.commonAttributeText.setText("Woksdkdsfmasdfasdfaslfm");
-        commonSection.addView(v);
 
+        if (similaritiesWithLoggedInMember == null || similaritiesWithLoggedInMember.numOfSimilarities == 0) {
+            commonSection.setVisibility(View.GONE);
+            return;
+        }
+
+        if (similaritiesWithLoggedInMember.similarPositions != null) {
+            for (Profile.Position position : similaritiesWithLoggedInMember.similarPositions) {
+                CommonItemViewHolder commonItemViewHolder = new CommonItemViewHolder(v);
+                commonItemViewHolder.commonImage.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_work));
+                commonItemViewHolder.commonAttributeText.setText(String.format(getString(R.string.worked_at), position.companyName));
+                commonSection.addView(v);
+            }
+        }
+
+        if (similaritiesWithLoggedInMember.similarEducations != null) {
+            for (Profile.Education education : similaritiesWithLoggedInMember.similarEducations) {
+                CommonItemViewHolder commonItemViewHolder = new CommonItemViewHolder(v);
+                commonItemViewHolder.commonImage.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_education));
+                commonItemViewHolder.commonAttributeText.setText(String.format(getString(R.string.studied_at), education.schoolName));
+                commonSection.addView(v);
+            }
+        }
     }
 
     private void insertExperienceSection() {
