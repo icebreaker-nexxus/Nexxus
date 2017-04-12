@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.Profile;
+import com.icebreakers.nexxus.models.Similarities;
 import org.parceler.Parcels;
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbarLayout;
 
     private Profile profile;
+    private Similarities similaritiesWithLoggedInMember;
 
     public static ProfileFragment newInstance(Profile profile) {
 

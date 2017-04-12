@@ -4,6 +4,7 @@ import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,25 +23,34 @@ public class SimilaritiesFinder {
      */
     public static Map<String, Similarities> findSimilarities(Profile mainProfile, List<Profile> profileList) {
         Map<String, Similarities> similaritiesMap = new HashMap<>();
-        Set<Profile.Position> mainProfilePositionSet = new HashSet<>(mainProfile.positionList);
-        Set<Profile.Education> mainProfileEducationSet = new HashSet<>(mainProfile.educationList);
+        Set<Profile.Position> mainProfilePositionSet = mainProfile.educationList != null ? new HashSet<>(mainProfile.positionList) : Collections.emptySet();
+        Set<Profile.Education> mainProfileEducationSet = mainProfile.positionList != null ? new HashSet<>(mainProfile.educationList) : Collections.emptySet();
 
         for (Profile profileToCompare : profileList) {
+            if (profileToCompare.id.equals(mainProfile.id)) {
+                // do not compare for self view
+                continue;
+            }
             List<Profile.Education> educationList = new ArrayList<>();
             List<Profile.Position> positionList = new ArrayList<>();
 
-            if (profileToCompare.educationList != null) {
-                for (Profile.Education education : profileToCompare.educationList) {
-                    if (mainProfileEducationSet.contains(education)) {
-                        educationList.add(education);
+            if (mainProfileEducationSet.size() >= 1) {
+                // compare only if there is something to compare against
+                if (profileToCompare.educationList != null) {
+                    for (Profile.Education education : profileToCompare.educationList) {
+                        if (mainProfileEducationSet.contains(education)) {
+                            educationList.add(education);
+                        }
                     }
                 }
             }
 
-            if (profileToCompare.positionList != null) {
-                for (Profile.Position position : profileToCompare.positionList) {
-                    if (mainProfilePositionSet.contains(position)) {
-                        positionList.add(position);
+            if (mainProfilePositionSet.size() >= 1) {
+                if (profileToCompare.positionList != null) {
+                    for (Profile.Position position : profileToCompare.positionList) {
+                        if (mainProfilePositionSet.contains(position)) {
+                            positionList.add(position);
+                        }
                     }
                 }
             }
@@ -51,5 +61,11 @@ public class SimilaritiesFinder {
 
         return similaritiesMap;
 
+    }
+
+    public static final Similarities findSimilarities(Profile mainProfile, Profile profileToCompare) {
+        List<Profile> profileList = new ArrayList<>();
+        profileList.add(profileToCompare);
+        return findSimilarities(mainProfile, profileList).get(profileToCompare.id);
     }
 }
