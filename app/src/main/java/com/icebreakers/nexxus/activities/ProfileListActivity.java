@@ -10,6 +10,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.fragments.ProfileListFragment;
+import com.icebreakers.nexxus.helpers.Router;
+import com.icebreakers.nexxus.listeners.ProfileClickListener;
 import com.icebreakers.nexxus.models.Profile;
 import org.parceler.Parcels;
 
@@ -19,9 +21,14 @@ import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
  * Created by amodi on 4/8/17.
  */
 
-public class ProfileListActivity extends BaseActivity {
+public class ProfileListActivity extends BaseActivity implements ProfileClickListener {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
+
+    @Override
+    public void onClick(Profile profile) {
+        Router.startProfileActivity(this, profile);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.ProfileAdapter;
 import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
+import com.icebreakers.nexxus.listeners.ProfileClickListener;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
 import com.icebreakers.nexxus.persistence.Database;
@@ -75,7 +76,7 @@ public class ProfileListFragment extends Fragment {
 
         Map<String, Similarities> similaritiesMap = SimilaritiesFinder.findSimilarities(profile, profileList);
         layoutManager = new LinearLayoutManager(getContext());
-        profileAdapter = new ProfileAdapter(getContext(), profileList, similaritiesMap);
+        profileAdapter = new ProfileAdapter((ProfileClickListener) getActivity(), getContext(), profileList, similaritiesMap);
         recyclerView.setAdapter(profileAdapter);
 
         recyclerView.setLayoutManager(layoutManager);

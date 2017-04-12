@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.listeners.ProfileClickListener;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
 
@@ -28,11 +29,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
     private Context context;
     private List<Profile> profileList;
     private Map<String, Similarities> similaritiesMap;
+    private ProfileClickListener profileClickListener;
 
-    public ProfileAdapter(Context context, List<Profile> profileList, Map<String, Similarities> similaritiesMap) {
+    public ProfileAdapter(ProfileClickListener profileClickListener, Context context, List<Profile> profileList, Map<String, Similarities> similaritiesMap) {
         this.context = context;
         this.profileList = profileList;
         this.similaritiesMap = similaritiesMap;
+        this.profileClickListener = profileClickListener;
     }
 
 
@@ -96,6 +99,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         public ProfileViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Profile profile = profileList.get(getAdapterPosition());
+                    profileClickListener.onClick(profile);
+                }
+            });
         }
     }
 }

@@ -43,6 +43,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.commonSection) LinearLayout commonSection;
+    @BindView(R.id.icebreakerSection) LinearLayout icebreakerSection;
     @BindView(R.id.cardViewExperience) CardView experienceCardView;
     @BindView(R.id.linearLayoutExperienceSection) LinearLayout linearLayoutExperienceSection;
     @BindView(R.id.cardViewEducation) CardView educationCardView;
@@ -51,6 +52,7 @@ public class ProfileFragment extends Fragment {
 
     private Profile profile;
     private Similarities similaritiesWithLoggedInMember;
+    private boolean isSelfView;
 
     public static ProfileFragment newInstance(Profile profile) {
 
@@ -66,7 +68,9 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         profile = Parcels.unwrap(getArguments().getParcelable(PROFILE_EXTRA));
-        similaritiesWithLoggedInMember = SimilaritiesFinder.findSimilarities(NexxusSharePreferences.getLoggedInMemberProfile(getActivity()), profile);
+        Profile loggedInMemberProfile = NexxusSharePreferences.getLoggedInMemberProfile(getActivity());
+        similaritiesWithLoggedInMember = SimilaritiesFinder.findSimilarities(loggedInMemberProfile, profile);
+        isSelfView = profile.id.equals(loggedInMemberProfile.id);
     }
 
     @Nullable
@@ -101,11 +105,19 @@ public class ProfileFragment extends Fragment {
     private void insertCommonSection() {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.common_item, commonSection, false);
 
-        if (similaritiesWithLoggedInMember == null || similaritiesWithLoggedInMember.numOfSimilarities == 0) {
+        if (isSelfView) {
             commonSection.setVisibility(View.GONE);
+            icebreakerSection.setVisibility(View.GONE);
             return;
         }
 
+        if (similaritiesWithLoggedInMember == null || similaritiesWithLoggedInMember.numOfSimilarities == 0) {
+            commonSection.setVisibility(View.GONE);
+            icebreakerSection.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        icebreakerSection.setVisibility(View.GONE);
         if (similaritiesWithLoggedInMember.similarPositions != null) {
             for (Profile.Position position : similaritiesWithLoggedInMember.similarPositions) {
                 CommonItemViewHolder commonItemViewHolder = new CommonItemViewHolder(v);
@@ -162,7 +174,7 @@ public class ProfileFragment extends Fragment {
     private void insertEducationSection() {
         List<Profile.Education> educationList = profile.educationList;
         if (educationList == null || educationList.size() == 0) {
-            experienceCardView.setVisibility(View.GONE);
+            educationCardView.setVisibility(View.GONE);
             return;
         }
 
