@@ -87,6 +87,7 @@ public class LoginActivity extends BaseActivity {
                 com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
                 NexxusSharePreferences.putProfileId(thisActivity, profile.id);
                 Database.instance().insertProfileValue(profile);
+                NexxusSharePreferences.putLoggedInMemberProfile(LoginActivity.this, profile);
                 Router.startEventListActivity(LoginActivity.this, profile);
             }
 

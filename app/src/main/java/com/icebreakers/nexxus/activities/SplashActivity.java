@@ -92,6 +92,7 @@ public class SplashActivity extends BaseActivity {
                 Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), Profile.class);
                 com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
                 Database.instance().insertProfileValue(profile);
+                NexxusSharePreferences.putLoggedInMemberProfile(SplashActivity.this, profile);
                 Router.startEventListActivity(SplashActivity.this, profile);
             }
 
