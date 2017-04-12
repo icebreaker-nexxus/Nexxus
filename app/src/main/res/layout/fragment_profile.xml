@@ -99,7 +99,6 @@
                 android:paddingRight="24dp"
                 android:paddingEnd="24dp"
                 android:paddingBottom="12dp"
-
                 android:layout_marginLeft="36dp"
                 android:layout_marginRight="36dp">
 
@@ -107,7 +106,7 @@
                     android:id="@+id/tvCommonHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.ArtDeco.Headline1"
+                    android:textAppearance="@style/TextAppearance.ArtDeco.Headline1.Small.Bold"
                     android:text="@string/in_common"/>
 
             </LinearLayout>
@@ -133,7 +132,7 @@
                     android:id="@+id/tvIceBreakerHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.ArtDeco.Headline1"
+                    android:textAppearance="@style/TextAppearance.ArtDeco.Headline1.Small.Bold"
                     android:text="@string/icebreaker"/>
 
                 <TextView
@@ -141,6 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:textAppearance="@style/TextAppearance.ArtDeco.Headline1"
                     android:text="@string/highly_skilled_at"/>
 
             </LinearLayout>
