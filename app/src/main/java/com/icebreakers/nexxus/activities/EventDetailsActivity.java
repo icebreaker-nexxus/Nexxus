@@ -42,8 +42,8 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     ActivityEventDetailsBinding binding;
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd");
-    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEEE, MMM dd");
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("h:mm a");
 
     ProfileHolder profileHolder;
 
