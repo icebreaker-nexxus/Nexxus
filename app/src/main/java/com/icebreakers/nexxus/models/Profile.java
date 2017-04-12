@@ -37,6 +37,11 @@ public class Profile {
     @Parcel
     public static class LIDate {
         public int year;
+
+        @Override
+        public String toString() {
+            return String.valueOf(year);
+        }
     }
 
     @Parcel
