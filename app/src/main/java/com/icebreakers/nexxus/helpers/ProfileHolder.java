@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.models.Profile;
+import com.icebreakers.nexxus.models.internal.MeetupEventRef;
 import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
@@ -48,7 +49,7 @@ public class ProfileHolder {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             Profile currentProfile = dataSnapshot.getValue(com.icebreakers.nexxus.models.Profile.class);
-            if (profile == null) {
+            if (currentProfile == null) {
                 Log.e(TAG, "Cannot find profile for profileId " + dataSnapshot.getKey());
                 // fetch from server
                 fetchProfileFromServer();
@@ -57,6 +58,7 @@ public class ProfileHolder {
                 profile = currentProfile;
                 if (callback != null) {
                     callback.onSuccess(profile);
+                    callback = null;
                 }
             }
         }
@@ -69,6 +71,7 @@ public class ProfileHolder {
 
     public static ProfileHolder getInstance(Context context) {
         if (instance == null) {
+            Log.d(TAG, "Creating new ProfileHolder instance");
             instance = new ProfileHolder(context);
         }
 
@@ -80,9 +83,6 @@ public class ProfileHolder {
         LISessionManager.getInstance(context).init(accessToken);
         session = LISessionManager.getInstance(context).getSession();
         profileId = NexxusSharePreferences.getProfileId(context);
-
-        if (hasUserLoggedIn())
-            fetchProfle(null);
     }
 
     public boolean hasUserLoggedIn() {
@@ -100,6 +100,24 @@ public class ProfileHolder {
         fetchProfileFromDb(valueEventListener);
     }
 
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void checkIn(MeetupEventRef eventRef) {
+        profile.addMeetupEventRef(eventRef);
+        Database.instance().saveProfile(profile);
+    }
+
+    public boolean isUserCheckedIn(MeetupEventRef eventRef) {
+        for (MeetupEventRef meetupEventRef : profile.meetupEventRefs) {
+            if (eventRef.getEventId().equals(meetupEventRef.getEventId())) return true;
+        }
+
+        return false;
+    }
+
+
     private void fetchProfileFromDb(final ValueEventListener listener) {
         Database.instance().databaseReference.child(PROFILE_TABLE).child(profileId)
                 .addValueEventListener(listener);
@@ -113,7 +131,11 @@ public class ProfileHolder {
                 Gson gson = new GsonBuilder().create();
                 com.icebreakers.nexxus.models.internal.Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), com.icebreakers.nexxus.models.internal.Profile.class);
                 profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
-                Database.instance().insertProfileValue(profile);
+
+                profileId = profile.id;
+                NexxusSharePreferences.putProfileId(NexxusApplication.getInstance().getApplicationContext(), profile.id);
+
+                Database.instance().saveProfile(profile);
 
                 Log.d(TAG, "Profile fetched successfully");
 

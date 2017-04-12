@@ -7,6 +7,7 @@ import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -21,8 +22,10 @@ import com.google.maps.android.ui.IconGenerator;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.databinding.ActivityEventDetailsBinding;
+import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Venue;
+import com.icebreakers.nexxus.models.internal.MeetupEventRef;
 import com.icebreakers.nexxus.utils.MapUtils;
 
 import org.parceler.Parcels;
@@ -33,13 +36,16 @@ import java.util.Date;
 public class EventDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = NexxusApplication.BASE_TAG + EventDetailsActivity.class.getName();
+
     private MeetupEvent event;
+    private MeetupEventRef eventRef;
 
     ActivityEventDetailsBinding binding;
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd");
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
+    ProfileHolder profileHolder;
 
     OnMapReadyCallback mapReadyCallback =  new OnMapReadyCallback() {
         @Override
@@ -68,11 +74,13 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("");
 
         Intent detailsIntent = getIntent();
         event = Parcels.unwrap(detailsIntent.getParcelableExtra("event"));
+        eventRef = event.getEventRef();
 
-        getSupportActionBar().setTitle("");
+        profileHolder = ProfileHolder.getInstance(this);
 
 //        String imageURL = null;
 //        if (event.getGroup().getKeyPhoto() != null) {
@@ -119,14 +127,26 @@ public class EventDetailsActivity extends AppCompatActivity {
         binding.mapview.onCreate(savedInstanceState);
         binding.mapview.getMapAsync(mapReadyCallback);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO implement check in action
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        if (profileHolder.isUserCheckedIn(eventRef)) {
+            Log.d(TAG, "User has checked in to " + event.getName());
+            binding.fab.setVisibility(View.GONE);
+        } else {
+            Log.d(TAG, "User has NOT checked in to " + event.getName());
+            binding.fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    handleChecnIn();
+                    binding.fab.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+    private void handleChecnIn() {
+        profileHolder.checkIn(eventRef);
+        Snackbar.make(binding.fab, "Awesome! You can now connect with others attending this event!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

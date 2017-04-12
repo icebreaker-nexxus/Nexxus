@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
@@ -31,7 +32,9 @@ public class SplashActivity extends BaseActivity {
             profileHolder.fetchProfle(new ProfileHolder.OnProfileReadyCallback() {
                 @Override
                 public void onSuccess(com.icebreakers.nexxus.models.Profile profile) {
+                    Log.d(TAG, "Calling EventListActivity");
                     Router.startEventListActivity(SplashActivity.this, profile);
+                    finish();
                 }
 
                 @Override

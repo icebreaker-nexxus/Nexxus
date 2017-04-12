@@ -12,8 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
@@ -35,6 +34,9 @@ import com.linkedin.platform.utils.Scope;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/3/17.
@@ -86,8 +88,11 @@ public class LoginActivity extends BaseActivity {
                 Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), Profile.class);
                 com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
                 NexxusSharePreferences.putProfileId(thisActivity, profile.id);
-                Database.instance().insertProfileValue(profile);
+                Database.instance().saveProfile(profile);
                 NexxusSharePreferences.putLoggedInMemberProfile(LoginActivity.this, profile);
+
+                Log.d(TAG, "Calling EventListActivity");
+
                 Router.startEventListActivity(LoginActivity.this, profile);
             }
 

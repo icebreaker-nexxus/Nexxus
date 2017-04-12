@@ -114,8 +114,6 @@ public class EventListActivity extends BaseActivity
 
         setSupportActionBar(toolbar);
 
-//        mLocationProvider = new LocationProvider(this, this);
-
         compositeSubscription = new CompositeSubscription();
 
         // Set up recyclerView
@@ -305,7 +303,7 @@ public class EventListActivity extends BaseActivity
                         || event.getGroup().getCategory().getId() == 34
                         || event.getGroup().getCategory().getId() == 2)) {
                     interestingEvents.add(event);
-                Log.d(TAG, "Event added: " + event.toString());
+//                Log.d(TAG, "Event added: " + event.toString());
                 }
         }
 

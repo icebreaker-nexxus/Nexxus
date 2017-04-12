@@ -47,4 +47,8 @@ public class NexxusApplication extends Application {
         }
         return new LinkedInClient(NexxusApplication.instance.getApplicationContext());
     }
+
+    public static NexxusApplication getInstance() {
+        return instance;
+    }
 }
