@@ -18,7 +18,6 @@ import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.clients.LinkedInClient;
-import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.internal.Profile;
 import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
@@ -91,9 +90,7 @@ public class LoginActivity extends BaseActivity {
                 Database.instance().saveProfile(profile);
                 NexxusSharePreferences.putLoggedInMemberProfile(LoginActivity.this, profile);
 
-                Log.d(TAG, "Calling EventListActivity");
-
-                Router.startEventListActivity(LoginActivity.this, profile);
+                startActivity(new Intent(LoginActivity.this, EventListActivity.class));
             }
 
             @Override

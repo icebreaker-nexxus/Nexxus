@@ -26,6 +26,7 @@ import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.EventListAdapter;
 import com.icebreakers.nexxus.clients.MeetupClient;
+import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
@@ -45,8 +46,6 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-
-import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
 
 public class EventListActivity extends BaseActivity
         implements LocationProvider.LocationCallback {
@@ -106,13 +105,11 @@ public class EventListActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
-
         ButterKnife.bind(this);
 
-        Intent intent = getIntent();
-        profile = Parcels.unwrap(intent.getParcelableExtra(PROFILE_EXTRA));
-
         setSupportActionBar(toolbar);
+
+        profile = ProfileHolder.getInstance(this).getProfile();
 
         compositeSubscription = new CompositeSubscription();
 

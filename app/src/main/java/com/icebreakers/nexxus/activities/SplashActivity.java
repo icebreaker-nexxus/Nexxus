@@ -9,7 +9,6 @@ import android.util.Log;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
-import com.icebreakers.nexxus.helpers.Router;
 import com.linkedin.platform.errors.LIApiError;
 
 /**
@@ -33,7 +32,7 @@ public class SplashActivity extends BaseActivity {
                 @Override
                 public void onSuccess(com.icebreakers.nexxus.models.Profile profile) {
                     Log.d(TAG, "Calling EventListActivity");
-                    Router.startEventListActivity(SplashActivity.this, profile);
+                    startActivity(new Intent(SplashActivity.this, EventListActivity.class));
                     finish();
                 }
 

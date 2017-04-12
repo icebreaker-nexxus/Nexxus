@@ -54,7 +54,7 @@ public class ProfileHolder {
                 // fetch from server
                 fetchProfileFromServer();
             } else {
-                Log.d(TAG, "Profile fetched successfully");
+                Log.d(TAG, "Profile fetched successfully " + currentProfile.firstName);
                 profile = currentProfile;
                 if (callback != null) {
                     callback.onSuccess(profile);
