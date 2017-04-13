@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
+import com.icebreakers.nexxus.listeners.MessageClickEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
@@ -55,6 +56,7 @@ public class ProfileFragment extends Fragment {
     private Profile profile;
     private Similarities similaritiesWithLoggedInMember;
     private boolean isSelfView;
+    private MessageClickEvent messageClickEvent;
 
     public static ProfileFragment newInstance(Profile profile) {
 
@@ -73,6 +75,7 @@ public class ProfileFragment extends Fragment {
         Profile loggedInMemberProfile = NexxusSharePreferences.getLoggedInMemberProfile(getActivity());
         similaritiesWithLoggedInMember = SimilaritiesFinder.findSimilarities(loggedInMemberProfile, profile);
         isSelfView = profile.id.equals(loggedInMemberProfile.id);
+        messageClickEvent = (MessageClickEvent) getActivity();
     }
 
     @Nullable
@@ -107,6 +110,10 @@ public class ProfileFragment extends Fragment {
             case android.R.id.home:
                 getActivity().onBackPressed();
                 return true;
+            case R.id.miMessage:
+                this.messageClickEvent.onMessageClickEvent(profile);
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
