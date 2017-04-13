@@ -5,26 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.clients.LinkedInClient;
-import com.icebreakers.nexxus.helpers.Router;
-import com.icebreakers.nexxus.models.internal.Profile;
-import com.icebreakers.nexxus.persistence.Database;
-import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
-import com.linkedin.platform.AccessToken;
-import com.linkedin.platform.LISession;
-import com.linkedin.platform.LISessionManager;
+import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.linkedin.platform.errors.LIApiError;
-import com.linkedin.platform.listeners.ApiListener;
-import com.linkedin.platform.listeners.ApiResponse;
-
-import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
 /**
  * Created by amodi on 4/4/17.
@@ -40,28 +25,20 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        AccessToken accessToken = NexxusSharePreferences.getLIAccessToken(this);
-        LISessionManager.getInstance(getApplicationContext()).init(accessToken);
-        LISession session = LISessionManager.getInstance(getApplicationContext()).getSession();
-        String profileId = NexxusSharePreferences.getProfileId(this);
-        if (session != null && session.isValid() && profileId != null) {
+        ProfileHolder profileHolder = ProfileHolder.getInstance(this);
 
-            Database.instance().databaseReference.child(PROFILE_TABLE).child(profileId)
-                                                 .addValueEventListener(new ValueEventListener() {
+        if (profileHolder.hasUserLoggedIn()) {
+            profileHolder.fetchProfle(new ProfileHolder.OnProfileReadyCallback() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    com.icebreakers.nexxus.models.Profile profile = dataSnapshot.getValue(com.icebreakers.nexxus.models.Profile.class);
-                    if (profile == null) {
-                        Log.e(TAG, "Cannot find profile for profileId " + dataSnapshot.getKey());
-                        fetchAndSaveProfileStartEventListActivity();
-                    } else {
-                        Router.startEventListActivity(SplashActivity.this, profile);
-                    }
+                public void onSuccess(com.icebreakers.nexxus.models.Profile profile) {
+                    Log.d(TAG, "Calling EventListActivity");
+                    startActivity(new Intent(SplashActivity.this, EventListActivity.class));
+                    finish();
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e(TAG, "Cannot find object in the database " + databaseError);
+                public void onError(LIApiError error) {
+
                 }
             });
         } else {
@@ -74,32 +51,10 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void run() {
-                Intent i = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(i);
-
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 // close this activity
                 finish();
             }
         }, SPLASH_TIME_OUT);
-    }
-
-    private void fetchAndSaveProfileStartEventListActivity() {
-        LinkedInClient linkedInClient = new LinkedInClient(getApplicationContext());
-        linkedInClient.fetchFullProfileInformation(new ApiListener() {
-            @Override
-            public void onApiSuccess(ApiResponse apiResponse) {
-                Gson gson = new GsonBuilder().create();
-                Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), Profile.class);
-                com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
-                Database.instance().insertProfileValue(profile);
-                NexxusSharePreferences.putLoggedInMemberProfile(SplashActivity.this, profile);
-                Router.startEventListActivity(SplashActivity.this, profile);
-            }
-
-            @Override
-            public void onApiError(LIApiError error) {
-                Log.e(TAG, "Error fetching profile information " + error);
-            }
-        });
     }
 }

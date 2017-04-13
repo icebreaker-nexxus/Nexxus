@@ -3,6 +3,7 @@ package com.icebreakers.nexxus.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.icebreakers.nexxus.models.internal.MeetupEventRef;
 
 import org.parceler.Parcel;
 
@@ -178,6 +179,10 @@ public class MeetupEvent {
     @Override
     public String toString() {
         return name;
+    }
+
+    public MeetupEventRef getEventRef() {
+        return new MeetupEventRef(id, group.getId(), group.getUrlname());
     }
 
 }

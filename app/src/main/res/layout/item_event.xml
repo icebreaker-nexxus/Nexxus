@@ -29,7 +29,7 @@
             android:id="@+id/tvEventName"
             android:layout_below="@id/ivImage"
             tools:text="hello_world hello_world hello_world hello_world hello_world hello_world"
-            style="@style/eventTitle"/>
+            style="@style/eventTitlePrimary"/>
 
         <com.github.curioustechizen.ago.RelativeTimeTextView
             android:id="@+id/tvTime"

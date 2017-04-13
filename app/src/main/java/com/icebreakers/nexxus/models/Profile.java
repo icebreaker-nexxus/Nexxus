@@ -1,6 +1,8 @@
 package com.icebreakers.nexxus.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.icebreakers.nexxus.models.internal.MeetupEventRef;
+
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class Profile {
 
     public List<Position> positionList;
 
-
+    public List<MeetupEventRef> meetupEventRefs = new ArrayList<>();
 
     @Parcel
     public static class LIDate {
@@ -143,6 +145,10 @@ public class Profile {
         profile.positionList = positionList;
 
         return profile;
+    }
+
+    public void addMeetupEventRef(MeetupEventRef eventRef) {
+        meetupEventRefs.add(eventRef);
     }
 
 }

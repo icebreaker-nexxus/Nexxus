@@ -16,18 +16,18 @@ public class Database {
     public static final String PROFILE_TABLE = "Profiles";
 
     private Database() {
-        this.databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
     public static Database instance() {
         if (instance == null) {
-            Database database = new Database();
-            instance = database;
+            instance = new Database();
         }
         return instance;
     }
 
-    public void insertProfileValue(Profile profile) {
+    public void saveProfile(Profile profile) {
         databaseReference.child(PROFILE_TABLE).child(profile.id).setValue(profile);
     }
+    
 }
