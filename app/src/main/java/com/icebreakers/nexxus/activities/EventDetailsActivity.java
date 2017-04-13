@@ -10,6 +10,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +27,7 @@ import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Venue;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
 import com.icebreakers.nexxus.utils.MapUtils;
+
 import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
@@ -34,7 +36,6 @@ import java.util.Date;
 public class EventDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = NexxusApplication.BASE_TAG + EventDetailsActivity.class.getName();
-    public static final String EVENT_EXTRA = "event";
 
     private MeetupEvent event;
     private MeetupEventRef eventRef;
@@ -76,7 +77,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
         Intent detailsIntent = getIntent();
-        event = Parcels.unwrap(detailsIntent.getParcelableExtra(EVENT_EXTRA));
+        event = Parcels.unwrap(detailsIntent.getParcelableExtra("event"));
         eventRef = event.getEventRef();
 
         profileHolder = ProfileHolder.getInstance(this);
@@ -143,7 +144,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private void handleChecnIn() {
         profileHolder.checkIn(eventRef);
-        Snackbar.make(binding.fab, "Awesome! You can now connect with others attending this event!", Snackbar.LENGTH_LONG)
+        Snackbar.make(binding.toolbar, "Awesome! You can now connect with others attending this event!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
     }
