@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +85,7 @@ public class ProfileFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setHasOptionsMenu(true);
         tvProfileName.setText(String.format(getString(R.string.full_name, profile.firstName, profile.lastName)));
         tvHeadline.setText(profile.headline);
         Glide.with(getActivity()).load(profile.pictureUrl).into(ivProfileImage);
@@ -90,6 +93,12 @@ public class ProfileFragment extends Fragment {
         insertExperienceSection();
         insertEducationSection();
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile_action, menu);
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
     @Override
