@@ -115,6 +115,8 @@ dependencies {
     // Relative time
     compile 'com.github.curioustechizen.android-ago:library:1.3.3'
 
+    compile 'com.github.stfalcon:chatkit:0.2.0'
+
     // For RxJava 2
     //compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.0.6'
 }
