@@ -261,7 +261,7 @@ public class EventListActivity extends BaseActivity
         CompositeSubscription compositeSubscription = new CompositeSubscription();
         compositeSubscription.add(MeetupClient.getInstance()
                 .rxfindEvents(location.getLatitude(), location.getLongitude())
-                .map(meetupEvents -> { return filterEvents(meetupEvents);})
+                .map(meetupEvents -> { return filterAndPersistEvents(meetupEvents);})
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<MeetupEvent>>() {
@@ -290,20 +290,38 @@ public class EventListActivity extends BaseActivity
         );
     }
 
-    private List<MeetupEvent> filterEvents(List<MeetupEvent> allEvents)
+    private List<MeetupEvent> filterAndPersistEvents(List<MeetupEvent> allEvents)
     {
         List<MeetupEvent> interestingEvents = new ArrayList<>();
+
+//        List<Profile> allProfiles = ProfileHolder.getInstance(this).getAllProfiles();
+//        List<Profile> curatedProfiles = new ArrayList<>();
+//        // remove current logged in member from profiles list
+//        for (Profile savedProfile : allProfiles) {
+//            if (!profile.id.equals(savedProfile.id)) {
+//                curatedProfiles.add(savedProfile);
+//            }
+//        }
+
+//        List<Event> eventsToPersist = new ArrayList<>();
 
         for (MeetupEvent event: allEvents) {
             if (event.getVenue() != null
                 && (event.getGroup().getCategory().getId() == 6
                         || event.getGroup().getCategory().getId() == 34
                         || event.getGroup().getCategory().getId() == 2)) {
-                    interestingEvents.add(event);
+
+                interestingEvents.add(event);
 //                Log.d(TAG, "Event added: " + event.toString());
+
+                // create Event object
+//                eventsToPersist.add(new Event(event.getId(), event.getName(), curatedProfiles));
+
                 }
         }
 
+        // save event references in database
+//        Database.instance().saveEvents(eventsToPersist);
         return interestingEvents;
     }
 

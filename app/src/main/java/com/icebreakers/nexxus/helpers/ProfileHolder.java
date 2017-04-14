@@ -20,6 +20,9 @@ import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
 /**
@@ -43,9 +46,11 @@ public class ProfileHolder {
         public void onError(LIApiError error);
     }
 
+    private static List<Profile> allProfiles = new ArrayList<>();
+
     private OnProfileReadyCallback callback = null;
 
-    private ValueEventListener valueEventListener = new ValueEventListener() {
+    private ValueEventListener currentProfileListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             Profile currentProfile = dataSnapshot.getValue(com.icebreakers.nexxus.models.Profile.class);
@@ -69,6 +74,23 @@ public class ProfileHolder {
         }
     };
 
+    private ValueEventListener allProfilesListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            allProfiles.clear();
+
+            for(DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
+                Profile profile = dataSnapshotChild.getValue(Profile.class);
+                allProfiles.add(profile);
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Log.e(TAG, "allProfilesListener: Cannot find object in the database " + databaseError);
+        }
+    };
+
     public static ProfileHolder getInstance(Context context) {
         if (instance == null) {
             Log.d(TAG, "Creating new ProfileHolder instance");
@@ -83,6 +105,8 @@ public class ProfileHolder {
         LISessionManager.getInstance(context).init(accessToken);
         session = LISessionManager.getInstance(context).getSession();
         profileId = NexxusSharePreferences.getProfileId(context);
+
+        fetchAllProfiles(allProfilesListener);
     }
 
     public boolean hasUserLoggedIn() {
@@ -97,7 +121,11 @@ public class ProfileHolder {
 
         if (listener != null) callback = listener;
 
-        fetchProfileFromDb(valueEventListener);
+        fetchProfileFromDb(currentProfileListener);
+    }
+
+    private void fetchAllProfiles(ValueEventListener listener) {
+        Database.instance().databaseReference.child(Database.PROFILE_TABLE).addValueEventListener(listener);
     }
 
     public Profile getProfile() {
@@ -117,6 +145,28 @@ public class ProfileHolder {
         return false;
     }
 
+    // ideally this should have a callback as an argument
+    public List<Profile> getAllProfiles() {
+        return allProfiles;
+    }
+
+    public List<Profile> getAttendees(MeetupEventRef eventRef) {
+        ArrayList<Profile> attendees = new ArrayList<>();
+        attendees.addAll(allProfiles);
+
+        // remove current user if not checked-in
+        if (!isUserCheckedIn(eventRef)) {
+            Log.d(TAG, "user has not checked in");
+            for (Profile attendee : allProfiles) {
+                if (attendee.id.equals(profile.id)) {
+                    Log.d(TAG, "Removing current user");
+                    attendees.remove(attendee);
+                }
+            }
+        }
+
+        return attendees;
+    }
 
     private void fetchProfileFromDb(final ValueEventListener listener) {
         Database.instance().databaseReference.child(PROFILE_TABLE).child(profileId)

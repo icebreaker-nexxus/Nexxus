@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,9 +22,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.adapters.ProfileImageAdapter;
 import com.icebreakers.nexxus.databinding.ActivityEventDetailsBinding;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.models.MeetupEvent;
+import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Venue;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
 import com.icebreakers.nexxus.utils.MapUtils;
@@ -32,6 +35,7 @@ import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
@@ -46,6 +50,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("h:mm a");
 
     ProfileHolder profileHolder;
+    List<Profile> attendees;
+    ProfileImageAdapter adapter;
 
     OnMapReadyCallback mapReadyCallback =  new OnMapReadyCallback() {
         @Override
@@ -140,10 +146,20 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
             });
         }
+
+        // Set up recyclerView for profileimages
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        attendees = profileHolder.getAttendees(eventRef);
+        Log.d(TAG, "Profiles # " + attendees.size());
+        adapter = new ProfileImageAdapter(attendees);
+        binding.rvProfileImages.setAdapter(adapter);
+        binding.rvProfileImages.setLayoutManager(layoutManager);
     }
 
     private void handleChecnIn() {
         profileHolder.checkIn(eventRef);
+        attendees.add(0, profileHolder.getProfile());
+        adapter.notifyItemInserted(0);
         Snackbar.make(binding.toolbar, "Awesome! You can now connect with others attending this event!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
