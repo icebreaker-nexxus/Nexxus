@@ -91,7 +91,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginTop="10dp"
         app:trimMode="trimModeLine"
-        app:trimLines="8"
+        app:trimLines="6"
         app:colorClickableText="@color/colorPrimary"
         android:autoLink="all"
         android:linksClickable="true"
