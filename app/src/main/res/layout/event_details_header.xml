@@ -38,7 +38,6 @@
         android:id="@+id/tvDate"
         tools:text="Tomorrow at 3pm"
         style="@style/eventDate"
-        android:fontFamily="SourceSansPro-Bold"
         android:text="Monday April 10"
         android:layout_marginTop="10dp"
         android:layout_below="@id/tvEventName"
