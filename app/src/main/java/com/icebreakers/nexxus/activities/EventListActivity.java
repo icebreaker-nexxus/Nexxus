@@ -372,9 +372,6 @@ public class EventListActivity extends BaseActivity
             case R.id.profile_nav:
                 Router.startProfileActivity(this, profile);
                 break;
-            case R.id.attendees_nav:
-                Router.startProfileListActivity(this, profile);
-                break;
             default:
                 break;
         }
