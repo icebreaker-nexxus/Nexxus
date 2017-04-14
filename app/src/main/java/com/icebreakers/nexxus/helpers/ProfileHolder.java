@@ -9,6 +9,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
+import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
 import com.icebreakers.nexxus.persistence.Database;
@@ -150,12 +151,12 @@ public class ProfileHolder {
         return allProfiles;
     }
 
-    public List<Profile> getAttendees(MeetupEventRef eventRef) {
+    public List<Profile> getAttendees(MeetupEvent event) {
         ArrayList<Profile> attendees = new ArrayList<>();
         attendees.addAll(allProfiles);
 
         // remove current user if not checked-in
-        if (!isUserCheckedIn(eventRef)) {
+        if (!isUserCheckedIn(event.getEventRef())) {
             Log.d(TAG, "user has not checked in");
             for (Profile attendee : allProfiles) {
                 if (attendee.id.equals(profile.id)) {
