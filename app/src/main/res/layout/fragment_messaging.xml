@@ -40,6 +40,9 @@
         android:id="@+id/messagesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:outcomingDefaultBubbleColor="@color/colorPrimary"
+        app:outcomingDefaultBubblePressedColor="@color/colorPrimary"
+        app:outcomingDefaultBubbleSelectedColor="@color/colorPrimary"
         android:layout_above="@id/input" />
 
 

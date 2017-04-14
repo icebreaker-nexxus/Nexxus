@@ -101,6 +101,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_profile_action, menu);
+        if (isSelfView) {
+            menu.findItem(R.id.miMessage).setVisible(false);
+        }
         super.onCreateOptionsMenu(menu,inflater);
     }
 
