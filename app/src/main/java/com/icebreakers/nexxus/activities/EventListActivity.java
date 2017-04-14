@@ -307,9 +307,11 @@ public class EventListActivity extends BaseActivity
 
         for (MeetupEvent event: allEvents) {
             if (event.getVenue() != null
-                && (event.getGroup().getCategory().getId() == 6
+                    && (event.getGroup().getCategory().getId() == 6
                         || event.getGroup().getCategory().getId() == 34
-                        || event.getGroup().getCategory().getId() == 2)) {
+                        || event.getGroup().getCategory().getId() == 2)
+                    && (event.getGroup().getKeyPhoto() != null
+                        || event.getGroup().getPhoto() != null)) {
 
                 interestingEvents.add(event);
 //                Log.d(TAG, "Event added: " + event.toString());

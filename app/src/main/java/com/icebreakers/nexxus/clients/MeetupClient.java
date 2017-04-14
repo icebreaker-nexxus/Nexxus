@@ -35,6 +35,8 @@ public class MeetupClient {
 
     public static final String API_KEY = BuildConfig.meetupApiKey;
 
+    private static final int RADIUS = 10;
+
     private static MeetupClient instance;
     private final MeetupAPI meetupAPI;
 
@@ -68,10 +70,9 @@ public class MeetupClient {
     }
 
     public Observable<List<MeetupEvent>> rxfindEvents(Double lat, Double lon) {
-        Integer radius = 3; //miles
         String fields = "group_key_photo, group_photo, group_category";
 
-        return meetupAPI.rxFindEvents(API_KEY, lat, lon, radius, fields, true);
+        return meetupAPI.rxFindEvents(API_KEY, lat, lon, RADIUS, fields, true);
     }
     
     private void findMeetupEvents() {

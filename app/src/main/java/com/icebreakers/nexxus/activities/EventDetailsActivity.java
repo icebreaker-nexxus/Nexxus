@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -112,28 +113,28 @@ public class EventDetailsActivity extends BaseActivity {
         profileHolder = ProfileHolder.getInstance(this);
         currentUser = profileHolder.getProfile();
 
-//        String imageURL = null;
-//        if (event.getGroup().getKeyPhoto() != null) {
-//            imageURL = event.getGroup().getKeyPhoto().getHighresLink();
-//        } else  if (event.getGroup().getPhoto() != null) {
-//            imageURL = event.getGroup().getPhoto().getHighresLink();
-//        }
-//
-//        if (imageURL != null) {
-//
-//            if (imageURL != null) {
-//                ivBackdrop.setVisibility(View.VISIBLE);
-//                Glide.with(this)
-//                        .load(imageURL)
-//                        .placeholder(R.drawable.loading)
-//                        .error(R.drawable.loading)
-//                        .into(ivBackdrop);
-//            } else {
-//                ivBackdrop.setVisibility(View.GONE);
-//            }
-//        } else {
-//            ivBackdrop.setVisibility(View.GONE);
-//       }
+        String imageURL = null;
+        if (event.getGroup().getKeyPhoto() != null) {
+            imageURL = event.getGroup().getKeyPhoto().getHighresLink();
+        } else  if (event.getGroup().getPhoto() != null) {
+            imageURL = event.getGroup().getPhoto().getHighresLink();
+        }
+
+        if (imageURL != null) {
+
+            if (imageURL != null) {
+                binding.ivBackdrop.setVisibility(View.VISIBLE);
+                Glide.with(this)
+                        .load(imageURL)
+                        .placeholder(R.drawable.loading)
+                        .error(R.drawable.loading)
+                        .into(binding.ivBackdrop);
+            } else {
+                binding.ivBackdrop.setVisibility(View.GONE);
+            }
+        } else {
+            binding.ivBackdrop.setVisibility(View.GONE);
+       }
 
         binding.header.tvEventName.setText(event.getName());
         if (event.getDescription() != null && !event.getDescription().isEmpty()) {
