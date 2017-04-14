@@ -10,4 +10,9 @@
         android:title="@string/profile"
         android:icon="@drawable/ic_profile" />
 
+    <item
+        android:id="@+id/logout_nav"
+        android:title="@string/logout"
+        android:icon="@drawable/ic_log_out" />
+
 </menu>

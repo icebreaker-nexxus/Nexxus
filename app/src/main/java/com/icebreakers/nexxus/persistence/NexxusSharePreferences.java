@@ -64,4 +64,8 @@ public class NexxusSharePreferences {
             return gson.fromJson(profileString, Profile.class);
         }
     }
+
+    public static void clearSharedPreferences(Context context) {
+        getSharedPrefernces(context).edit().clear().commit();
+    }
 }

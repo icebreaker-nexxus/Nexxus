@@ -22,6 +22,7 @@
     <string name="ok">Ok</string>
     <string name="worked_at">Worked at %s</string>
     <string name="studied_at">Studied at %s</string>
+    <string name="logout">Logout</string>
 
     <string name="google_maps_api_key">AIzaSyAnPKA09fo3xX3ndsrgcITOAfAZ3N2Ifps</string>
 </resources>
