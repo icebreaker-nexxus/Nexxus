@@ -11,7 +11,8 @@
         android:icon="@drawable/ic_profile" />
 
     <item
-        android:id="@+id/attendees_nav"
-        android:title="@string/attendees"
-        android:icon="@drawable/ic_attendees" />
+        android:id="@+id/logout_nav"
+        android:title="@string/logout"
+        android:icon="@drawable/ic_log_out" />
+
 </menu>

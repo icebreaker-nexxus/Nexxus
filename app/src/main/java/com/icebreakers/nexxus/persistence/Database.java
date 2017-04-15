@@ -3,7 +3,10 @@ package com.icebreakers.nexxus.persistence;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.icebreakers.nexxus.models.Message;
+import com.icebreakers.nexxus.models.Event;
 import com.icebreakers.nexxus.models.Profile;
+
+import java.util.List;
 
 /**
  * Created by amodi on 4/6/17.
@@ -16,6 +19,8 @@ public class Database {
 
     public static final String PROFILE_TABLE = "Profiles";
     public static final String MESSAGES_TABLE = "Messages";
+
+    public static final String EVENT_TABLE = "Events";
 
     private Database() {
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -38,5 +43,15 @@ public class Database {
 
     public void saveMessage(String messageRowId, Message message) {
         messagesTableReference().child(messageRowId).push().setValue(message);
+    }
+  
+    public void saveEvent(Event event) {
+        databaseReference.child(EVENT_TABLE).child(event.id).setValue(event);
+    }
+
+    public void saveEvents(List<Event> events) {
+        for (Event event : events) {
+            databaseReference.child(EVENT_TABLE).child(event.id).setValue(event);
+        }
     }
 }

@@ -8,8 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -20,11 +19,15 @@ import com.icebreakers.nexxus.listeners.ProfileClickListener;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
 import com.icebreakers.nexxus.persistence.Database;
+
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/8/17.
@@ -92,8 +95,8 @@ public class ProfileListFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
-                    Profile newListOfProfiles = dataSnapshotChild.getValue(Profile.class);
-                    profileList.add(newListOfProfiles);
+                    Profile profile = dataSnapshotChild.getValue(Profile.class);
+                    profileList.add(profile);
                 }
                 profileAdapter.updateSimilaritiesMap(SimilaritiesFinder.findSimilarities(profile, profileList));
                 profileAdapter.notifyDataSetChanged();
