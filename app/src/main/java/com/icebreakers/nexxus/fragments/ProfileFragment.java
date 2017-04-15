@@ -2,13 +2,17 @@ package com.icebreakers.nexxus.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +24,9 @@ import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.helpers.NestedScrollViewBehavior;
 import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
+import com.icebreakers.nexxus.listeners.MessageClickEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
@@ -49,10 +55,12 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.cardViewEducation) CardView educationCardView;
     @BindView(R.id.linearLayoutEducationSection) LinearLayout linearLayoutEducationSection;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.app_bar_layout) AppBarLayout appBarLayout;
 
     private Profile profile;
     private Similarities similaritiesWithLoggedInMember;
     private boolean isSelfView;
+    private MessageClickEvent messageClickEvent;
 
     public static ProfileFragment newInstance(Profile profile) {
 
@@ -71,6 +79,7 @@ public class ProfileFragment extends Fragment {
         Profile loggedInMemberProfile = NexxusSharePreferences.getLoggedInMemberProfile(getActivity());
         similaritiesWithLoggedInMember = SimilaritiesFinder.findSimilarities(loggedInMemberProfile, profile);
         isSelfView = profile.id.equals(loggedInMemberProfile.id);
+        messageClickEvent = (MessageClickEvent) getActivity();
     }
 
     @Nullable
@@ -83,6 +92,10 @@ public class ProfileFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setHasOptionsMenu(true);
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        layoutParams.setBehavior(new NestedScrollViewBehavior());
+
         tvProfileName.setText(String.format(getString(R.string.full_name, profile.firstName, profile.lastName)));
         tvHeadline.setText(profile.headline);
         Glide.with(getActivity()).load(profile.pictureUrl).into(ivProfileImage);
@@ -93,11 +106,24 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile_action, menu);
+        if (isSelfView) {
+            menu.findItem(R.id.miMessage).setVisible(false);
+        }
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
                 return true;
+            case R.id.miMessage:
+                this.messageClickEvent.onMessageClickEvent(profile);
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }

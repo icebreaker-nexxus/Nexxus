@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rlMessageWrapper"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="top"-->
+        <!--android:layout_alignParentBottom="true">-->
+
+        <!--<android.support.design.widget.TextInputEditText-->
+            <!--android:id="@+id/etMessage"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="@string/say_something"-->
+            <!--/>-->
+
+        <!--<Button-->
+            <!--android:id="@+id/btnSend"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/send"/>-->
+    <!--</RelativeLayout>-->
+
+    <com.stfalcon.chatkit.messages.MessageInput
+        android:id="@+id/input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:inputButtonDefaultBgColor="@color/colorAccent"
+        app:inputHint="@string/say_something"/>
+
+    <com.stfalcon.chatkit.messages.MessagesList
+        android:id="@+id/messagesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:outcomingDefaultBubbleColor="@color/colorPrimary"
+        app:outcomingDefaultBubblePressedColor="@color/colorPrimary"
+        app:outcomingDefaultBubbleSelectedColor="@color/colorPrimary"
+        android:layout_above="@id/input" />
+
+
+</RelativeLayout>
