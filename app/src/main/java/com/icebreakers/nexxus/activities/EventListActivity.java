@@ -20,30 +20,33 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.EventListAdapter;
 import com.icebreakers.nexxus.clients.MeetupClient;
+import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
-import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.icebreakers.nexxus.utils.EndlessRecyclerViewScrollListener;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.LocationProvider;
 import com.icebreakers.nexxus.utils.LogoutUtils;
+
 import org.parceler.Parcels;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EventListActivity extends BaseActivity
         implements LocationProvider.LocationCallback {
@@ -107,7 +110,7 @@ public class EventListActivity extends BaseActivity
 
         setSupportActionBar(toolbar);
 
-        profile = NexxusSharePreferences.getLoggedInMemberProfile(this);
+        profile = ProfileHolder.getInstance(this).getProfile();
 
         compositeSubscription = new CompositeSubscription();
 

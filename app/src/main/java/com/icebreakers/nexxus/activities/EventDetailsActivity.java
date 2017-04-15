@@ -191,7 +191,7 @@ public class EventDetailsActivity extends BaseActivity {
                 .setAction("Show me", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Router.startProfileActivity(EventDetailsActivity.this, currentUser);
+                        Router.startProfileListActivity(EventDetailsActivity.this, currentUser);
                     }
                 }).show();
 
