@@ -2,7 +2,9 @@ package com.icebreakers.nexxus.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,7 @@ import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.helpers.NestedScrollViewBehavior;
 import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
 import com.icebreakers.nexxus.listeners.MessageClickEvent;
 import com.icebreakers.nexxus.models.Profile;
@@ -52,6 +55,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.cardViewEducation) CardView educationCardView;
     @BindView(R.id.linearLayoutEducationSection) LinearLayout linearLayoutEducationSection;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.app_bar_layout) AppBarLayout appBarLayout;
 
     private Profile profile;
     private Similarities similaritiesWithLoggedInMember;
@@ -89,6 +93,9 @@ public class ProfileFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         setHasOptionsMenu(true);
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        layoutParams.setBehavior(new NestedScrollViewBehavior());
+
         tvProfileName.setText(String.format(getString(R.string.full_name, profile.firstName, profile.lastName)));
         tvHeadline.setText(profile.headline);
         Glide.with(getActivity()).load(profile.pictureUrl).into(ivProfileImage);
