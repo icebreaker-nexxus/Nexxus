@@ -26,7 +26,6 @@ import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.ProfileImageAdapter;
 import com.icebreakers.nexxus.databinding.ActivityEventDetailsBinding;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
-import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Venue;
@@ -81,7 +80,7 @@ public class EventDetailsActivity extends BaseActivity {
         public void onItemClicked(RecyclerView recyclerView, int position, View v) {
             if (profileHolder.isUserCheckedIn(eventRef)) {
                 // start ProfileListActivity
-                Router.startProfileListActivity(EventDetailsActivity.this, currentUser);
+                startActivity(new Intent(EventDetailsActivity.this, ProfileListActivity.class));
             } else {
                 final Snackbar snackbar = Snackbar.make(recyclerView, "Check-in to this event to view list of all attendees", Snackbar.LENGTH_LONG);
                 snackbar.setAction("Check-In", new View.OnClickListener() {
@@ -191,7 +190,7 @@ public class EventDetailsActivity extends BaseActivity {
                 .setAction("Show me", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Router.startProfileListActivity(EventDetailsActivity.this, currentUser);
+                        startActivity(new Intent(EventDetailsActivity.this, ProfileListActivity.class));
                     }
                 }).show();
 

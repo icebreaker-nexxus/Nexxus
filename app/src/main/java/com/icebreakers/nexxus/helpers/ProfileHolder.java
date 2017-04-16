@@ -122,11 +122,22 @@ public class ProfileHolder {
 
         if (listener != null) callback = listener;
 
-        fetchProfileFromDb(currentProfileListener);
+        if (profileId != null) {
+            fetchProfileFromDb(currentProfileListener);
+        } else {
+            fetchProfileFromServer();
+        }
     }
 
     private void fetchAllProfiles(ValueEventListener listener) {
         Database.instance().databaseReference.child(Database.PROFILE_TABLE).addValueEventListener(listener);
+    }
+
+    public void saveAceessToken(Context context) {
+        LISessionManager sessionManager = LISessionManager.getInstance(context);
+        session = sessionManager.getSession();
+        accessToken = session.getAccessToken();
+        NexxusSharePreferences.putLIAccessToken(context, accessToken);
     }
 
     public Profile getProfile() {

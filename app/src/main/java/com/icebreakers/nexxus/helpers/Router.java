@@ -1,12 +1,13 @@
 package com.icebreakers.nexxus.helpers;
 
 import android.content.Intent;
+
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.activities.BaseActivity;
 import com.icebreakers.nexxus.activities.MessagingActivity;
 import com.icebreakers.nexxus.activities.ProfileActivity;
-import com.icebreakers.nexxus.activities.ProfileListActivity;
 import com.icebreakers.nexxus.models.Profile;
+
 import org.parceler.Parcels;
 
 import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
@@ -21,12 +22,6 @@ public class Router {
 
     public static void startProfileActivity(BaseActivity activity, Profile profile) {
         Intent intent = new Intent(activity, ProfileActivity.class);
-        intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
-        activity.startActivity(intent);
-    }
-
-    public static void startProfileListActivity(BaseActivity activity, Profile profile) {
-        Intent intent = new Intent(activity, ProfileListActivity.class);
         intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
         activity.startActivity(intent);
     }

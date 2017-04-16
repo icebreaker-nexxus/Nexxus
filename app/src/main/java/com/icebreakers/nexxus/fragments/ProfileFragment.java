@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.helpers.NestedScrollViewBehavior;
+import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
 import com.icebreakers.nexxus.listeners.MessageClickEvent;
 import com.icebreakers.nexxus.models.Profile;
@@ -76,9 +77,9 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         profile = Parcels.unwrap(getArguments().getParcelable(PROFILE_EXTRA));
-        Profile loggedInMemberProfile = NexxusSharePreferences.getLoggedInMemberProfile(getActivity());
-        similaritiesWithLoggedInMember = SimilaritiesFinder.findSimilarities(loggedInMemberProfile, profile);
-        isSelfView = profile.id.equals(loggedInMemberProfile.id);
+        Profile cuurentProfile = ProfileHolder.getInstance(getContext()).getProfile();
+        similaritiesWithLoggedInMember = SimilaritiesFinder.findSimilarities(cuurentProfile, profile);
+        isSelfView = profile.id.equals(cuurentProfile.id);
         messageClickEvent = (MessageClickEvent) getActivity();
     }
 

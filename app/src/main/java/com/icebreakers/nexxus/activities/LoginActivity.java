@@ -1,6 +1,5 @@
 package com.icebreakers.nexxus.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -13,21 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.clients.LinkedInClient;
-import com.icebreakers.nexxus.models.internal.Profile;
-import com.icebreakers.nexxus.persistence.Database;
-import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
-import com.linkedin.platform.AccessToken;
-import com.linkedin.platform.LISession;
+import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.errors.LIAuthError;
-import com.linkedin.platform.listeners.ApiListener;
-import com.linkedin.platform.listeners.ApiResponse;
 import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.utils.Scope;
 
@@ -46,9 +36,6 @@ public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.btnLogin) Button loginButton;
 
-    private final Activity thisActivity = this;
-    private AccessToken accessToken;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,57 +46,42 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                LISessionManager.getInstance(getApplicationContext()).init(thisActivity, buildScope(), new AuthListener() {
+                LISessionManager.getInstance(getApplicationContext())
+                        .init(LoginActivity.this, Scope.build(Scope.R_FULLPROFILE, Scope.R_EMAILADDRESS), new AuthListener() {
                     @Override
                     public void onAuthSuccess() {
                         Log.i(TAG, "Login successful");
-                        // save the accessToken for future use
-                        saveAccessToken();
-                        fetchAndSaveProfileStartEventListActivity();
+                        onLoginSuccessful();
                     }
 
                     @Override
                     public void onAuthError(LIAuthError error) {
                         Log.e(TAG, "Login was not successful " + error );
-                        Toast.makeText(thisActivity, R.string.login_failure, Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, R.string.login_failure, Toast.LENGTH_LONG).show();
                     }
                 }, true);
             }
         });
     }
 
-    private void fetchAndSaveProfileStartEventListActivity() {
-        LinkedInClient linkedInClient = new LinkedInClient(getApplicationContext());
-        linkedInClient.fetchFullProfileInformation(new ApiListener() {
-            @Override
-            public void onApiSuccess(ApiResponse apiResponse) {
-                Gson gson = new GsonBuilder().create();
-                Profile internalProfile = gson.fromJson(apiResponse.getResponseDataAsString(), Profile.class);
-                com.icebreakers.nexxus.models.Profile profile = com.icebreakers.nexxus.models.Profile.convertFromInternalProfile(internalProfile);
-                NexxusSharePreferences.putProfileId(thisActivity, profile.id);
-                Database.instance().saveProfile(profile);
-                NexxusSharePreferences.putLoggedInMemberProfile(LoginActivity.this, profile);
+    private void onLoginSuccessful() {
+        // save the accessToken for future use
+        ProfileHolder profileHolder = ProfileHolder.getInstance(this);
+        profileHolder.saveAceessToken(LoginActivity.this);
 
+        profileHolder.fetchProfle(new ProfileHolder.OnProfileReadyCallback() {
+            @Override
+            public void onSuccess(com.icebreakers.nexxus.models.Profile profile) {
+                Log.d(TAG, "Calling EventListActivity");
                 startActivity(new Intent(LoginActivity.this, EventListActivity.class));
+                finish();
             }
 
             @Override
-            public void onApiError(LIApiError error) {
-                Log.e(TAG, "Error fetching profile information " + error);
+            public void onError(LIApiError error) {
+
             }
         });
-    }
-
-
-    private void saveAccessToken() {
-        LISessionManager sessionManager = LISessionManager.getInstance(getApplicationContext());
-        LISession session = sessionManager.getSession();
-        accessToken = session.getAccessToken();
-        NexxusSharePreferences.putLIAccessToken(thisActivity, accessToken);
-    }
-
-    private static Scope buildScope() {
-        return Scope.build(Scope.R_FULLPROFILE, Scope.R_EMAILADDRESS);
     }
 
     private void debugInformation() {

@@ -3,8 +3,8 @@ package com.icebreakers.nexxus.persistence;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+
 import com.google.gson.Gson;
-import com.icebreakers.nexxus.models.Profile;
 import com.linkedin.platform.AccessToken;
 
 /**
@@ -16,7 +16,6 @@ public class NexxusSharePreferences {
     private static final String NAME = "Nexxus";
     private static final String ACCESS_TOKEN_LI = "access_token_li";
     private static final String PROFILE_ID = "profile_id";
-    private static final String LOGGEDIN_PROFILE = "logged_in_profile";
 
     public static void putLIAccessToken(Context context, AccessToken accessToken) {
         Gson gson = new Gson();
@@ -47,22 +46,6 @@ public class NexxusSharePreferences {
 
     public static void putProfileId(Context context, String profileId) {
         getSharedPrefernces(context).edit().putString(PROFILE_ID, profileId).apply();
-    }
-
-    public static void putLoggedInMemberProfile(Context context, Profile profile) {
-        Gson gson = new Gson();
-        String profileGson = gson.toJson(profile);
-        getSharedPrefernces(context).edit().putString(LOGGEDIN_PROFILE, profileGson).apply();
-    }
-
-    public static Profile getLoggedInMemberProfile(Context context) {
-        Gson gson = new Gson();
-        String profileString = getSharedPrefernces(context).getString(LOGGEDIN_PROFILE, null);
-        if (profileString == null) {
-            return null;
-        } else {
-            return gson.fromJson(profileString, Profile.class);
-        }
     }
 
     public static void clearSharedPreferences(Context context) {

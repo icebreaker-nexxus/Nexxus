@@ -7,27 +7,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.helpers.MessagesHelper;
+import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.messaging.UIMessage;
 import com.icebreakers.nexxus.persistence.Database;
-import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
+
 import org.parceler.Parcels;
 
 import java.util.Calendar;
 import java.util.UUID;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/12/17.
@@ -57,7 +60,7 @@ public class MessagingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         messageToProfile = Parcels.unwrap(getArguments().getParcelable(PROFILE_EXTRA));
-        loggedInProfile = NexxusSharePreferences.getLoggedInMemberProfile(getContext());
+        loggedInProfile = ProfileHolder.getInstance(getContext()).getProfile();
         messagesRowId = MessagesHelper.getMessageRowId(loggedInProfile, messageToProfile);
 
     }
