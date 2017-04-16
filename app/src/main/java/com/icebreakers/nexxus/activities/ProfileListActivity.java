@@ -1,34 +1,55 @@
 package com.icebreakers.nexxus.activities;
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+
+import com.icebreakers.nexxus.NexxusApplication;
+import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.adapters.ProfileAdapter;
+import com.icebreakers.nexxus.helpers.ProfileHolder;
+import com.icebreakers.nexxus.helpers.Router;
+import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
+import com.icebreakers.nexxus.models.Profile;
+import com.icebreakers.nexxus.models.Similarities;
+import com.icebreakers.nexxus.utils.ItemClickSupport;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.fragments.ProfileListFragment;
-import com.icebreakers.nexxus.helpers.Router;
-import com.icebreakers.nexxus.listeners.ProfileClickListener;
-import com.icebreakers.nexxus.models.Profile;
-import org.parceler.Parcels;
-
-import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
 
 /**
  * Created by amodi on 4/8/17.
  */
 
-public class ProfileListActivity extends BaseActivity implements ProfileClickListener {
+public class ProfileListActivity extends BaseActivity {
 
+    private static final String TAG = NexxusApplication.BASE_TAG + ProfileListActivity.class.getSimpleName();
     @BindView(R.id.toolbar) Toolbar toolbar;
 
-    @Override
-    public void onClick(Profile profile) {
-        Router.startProfileActivity(this, profile);
-    }
+    @BindView(R.id.rvProfiles)
+    RecyclerView rvProfiles;
+
+    ProfileAdapter profileAdapter;
+    RecyclerView.LayoutManager layoutManager;
+    Profile currentProfile;
+    List<Profile> profiles;
+    List<Profile> allAttendees;
+    ProfileHolder profileHolder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,25 +62,144 @@ public class ProfileListActivity extends BaseActivity implements ProfileClickLis
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        Profile profile = Parcels.unwrap(intent.getParcelableExtra(PROFILE_EXTRA));
+        profileHolder = ProfileHolder.getInstance(this);
+        currentProfile = profileHolder.getProfile();
+        allAttendees = profileHolder.getAllProfiles();
 
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.profileListContainer, ProfileListFragment.newInstance(profile)).commit();
+        profiles = new ArrayList<>();
+        profiles.addAll(allAttendees);
+
+        // find similarities
+        Map<String, Similarities> similaritiesMap = SimilaritiesFinder.findSimilarities(currentProfile, profiles);
+
+        // set up recyclerview
+        profileAdapter = new ProfileAdapter(profiles, similaritiesMap);
+        rvProfiles.setAdapter(profileAdapter);
+        rvProfiles.setLayoutManager(new LinearLayoutManager(this));
+        // Add item click listener
+        ItemClickSupport.addTo(rvProfiles).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Profile profile = profiles.get(position);
+                Router.startProfileActivity(ProfileListActivity.this, profile);
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_profiles, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
+        EditText et = (EditText) searchView.findViewById(searchEditId);
+        et.setTextColor(Color.WHITE);
+        et.setHintTextColor(Color.WHITE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                performSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (profileAdapter.getItemCount() != allAttendees.size() && newText.isEmpty()) {
+                    Log.d(TAG, "Search query is empty, calling updateProfileList");
+                    updateProfileList(allAttendees);
+                }
+                return true;
+            }
+        });
+
+
+        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // SearchView is closing
+                updateProfileList(allAttendees);
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    private void performSearch(String query) {
+        List<Profile> matchedProfiles = new ArrayList<>();
+        List<Profile> allAttendees = profileHolder.getAllProfiles();
+        query = query.toLowerCase();
+
+        for (Profile profile: allAttendees) {
+            // check for name match
+            if (profile.firstName.toLowerCase().contains(query) || profile.lastName.toLowerCase().contains(query)) {
+                // name match
+                matchedProfiles.add(profile);
+                Log.d(TAG, "Matched NAME adding " + profile);
+            } else {
+                // check for education / school
+                if (profile.educationList != null) {
+                    for (Profile.Education education : profile.educationList) {
+                        if (education.schoolName.toLowerCase().contains(query)) {
+                            matchedProfiles.add(profile);
+                            Log.d(TAG, "Matched Education SchoolName adding " + profile);
+                            break;
+                        }
+                    }
+                }
+
+                // check for company name / title
+                if (profile.positionList != null) {
+                    for (Profile.Position position : profile.positionList) {
+                        if (position.companyName.toLowerCase().contains(query) || position.title.toLowerCase().contains(query)) {
+                            matchedProfiles.add(profile);
+                            Log.d(TAG, "Matched Position adding " + profile);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        updateProfileList(matchedProfiles);
+    }
+
+    private void updateProfileList(List<Profile> matchedProfiles) {
+        profiles.clear();
+        profiles.addAll(matchedProfiles);
+        profileAdapter.updateSimilaritiesMap(SimilaritiesFinder.findSimilarities(currentProfile, matchedProfiles));
+        profileAdapter.notifyDataSetChanged();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_search:
+                final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+                item.expandActionView();
+                searchView.requestFocus();
+                return true;
+
             case android.R.id.home:
                 onBackPressed();
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

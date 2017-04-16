@@ -9,16 +9,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.listeners.ProfileClickListener;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
 
 import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/8/17.
@@ -26,28 +27,25 @@ import java.util.Map;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder> {
 
-    private Context context;
-    private List<Profile> profileList;
+    private List<Profile> profiles;
     private Map<String, Similarities> similaritiesMap;
-    private ProfileClickListener profileClickListener;
 
-    public ProfileAdapter(ProfileClickListener profileClickListener, Context context, List<Profile> profileList, Map<String, Similarities> similaritiesMap) {
-        this.context = context;
-        this.profileList = profileList;
+    public ProfileAdapter(List<Profile> profileList, Map<String, Similarities> similaritiesMap) {
+        this.profiles = profileList;
         this.similaritiesMap = similaritiesMap;
-        this.profileClickListener = profileClickListener;
     }
-
 
     @Override
     public ProfileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.profile_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.profile_item, parent, false);
         return new ProfileViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ProfileViewHolder holder, int position) {
-        Profile profile = profileList.get(position);
+        final Profile profile = profiles.get(position);
+        final Context context = holder.itemView.getContext();
+
         if (profile.firstName != null && profile.lastName != null) {
             holder.profileNameText.setText(profile.firstName + " " + profile.lastName);
         } else {
@@ -55,7 +53,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         }
 
         holder.profileHeadlineText.setText(profile.headline);
+
         Glide.with(context).load(profile.pictureUrl).into(holder.profileImage);
+
         Similarities similarities = similaritiesMap.get(profile.id);
         if (similarities != null && similarities.numOfSimilarities >= 1) {
             if (similarities.numOfSimilarities > 1) {
@@ -80,7 +80,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
 
     @Override
     public int getItemCount() {
-        return profileList.size();
+        return profiles.size();
     }
 
     public void updateSimilaritiesMap(Map<String, Similarities> similaritiesMap) {
@@ -99,13 +99,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         public ProfileViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Profile profile = profileList.get(getAdapterPosition());
-                    profileClickListener.onClick(profile);
-                }
-            });
         }
     }
 }
