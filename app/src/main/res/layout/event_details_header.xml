@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/vSeparator1"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:layout_alignParentLeft="true"
         android:src="@drawable/ic_access_time"
         android:layout_marginRight="10dp"/>
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvTime"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:layout_alignParentLeft="true"
         android:src="@drawable/location"
         android:layout_marginRight="10dp"/>
