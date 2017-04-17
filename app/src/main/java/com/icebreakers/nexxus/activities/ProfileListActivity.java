@@ -14,7 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.ProfileAdapter;
@@ -28,9 +29,6 @@ import com.icebreakers.nexxus.utils.ItemClickSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/8/17.
@@ -97,6 +95,7 @@ public class ProfileListActivity extends BaseActivity {
         EditText et = (EditText) searchView.findViewById(searchEditId);
         et.setTextColor(Color.WHITE);
         et.setHintTextColor(Color.WHITE);
+        et.setHint(R.string.search_by);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

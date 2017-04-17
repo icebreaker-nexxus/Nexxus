@@ -125,8 +125,8 @@ public class EventDetailsActivity extends BaseActivity {
                 binding.ivBackdrop.setVisibility(View.VISIBLE);
                 Glide.with(this)
                         .load(imageURL)
-                        .placeholder(R.drawable.loading)
-                        .error(R.drawable.loading)
+                        .placeholder(R.drawable.layer_list_event)
+                        .error(R.drawable.layer_list_event)
                         .into(binding.ivBackdrop);
             } else {
                 binding.ivBackdrop.setVisibility(View.GONE);
