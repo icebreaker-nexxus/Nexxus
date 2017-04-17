@@ -42,6 +42,7 @@
         android:text="Monday April 10"
         android:layout_marginTop="10dp"
         android:layout_below="@id/tvEventName"
+        android:textSize="17dp"
         android:layout_toRightOf="@+id/ivTime"/>
 
     <TextView
@@ -49,6 +50,7 @@
         tools:text="3pm"
         style="@style/eventTime"
         android:layout_below="@id/tvDate"
+        android:textSize="17dp"
         android:layout_toRightOf="@+id/ivTime"/>
 
     <ImageView
@@ -68,6 +70,7 @@
         tools:text="Netflix"
         style="@style/eventDate"
         android:layout_below="@id/tvTime"
+        android:textSize="17dp"
         android:layout_toRightOf="@+id/ivLocation"/>
 
     <TextView
@@ -75,6 +78,7 @@
         tools:text="121 Albright Way"
         style="@style/eventTime"
         android:layout_below="@id/tvLocationTitle"
+        android:textSize="17dp"
         android:layout_toRightOf="@+id/ivTime"/>
 
     <LinearLayout
@@ -126,6 +130,7 @@
         android:autoLink="all"
         android:linksClickable="true"
         android:textAppearance="@style/TextAppearance.ArtDeco"
+        android:textSize="17dp"
         style="@style/eventDescription" />
 </RelativeLayout>
 </layout>
