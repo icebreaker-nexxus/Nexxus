@@ -77,12 +77,41 @@
         android:layout_below="@id/tvLocationTitle"
         android:layout_toRightOf="@+id/ivTime"/>
 
+    <LinearLayout
+        android:id="@+id/linearLayoutCheckInSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvLocationAddress"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/vSeparatorCheckin"
+            android:layout_width="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_height="1dp"
+            android:layout_below="@id/tvLocationAddress"
+            android:alpha="0.5"
+            android:background="@color/separator"/>
+
+        <Button
+            android:id="@+id/btnCheckin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@color/colorPrimary"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textAppearance="@style/TextAppearance.ArtDeco.Headline1.Small.Bold"
+            android:text="@string/checkin"/>
+
+    </LinearLayout>
+
     <View
         android:id="@+id/vSeparator2"
         android:layout_width="match_parent"
         android:layout_marginRight="5dp"
         android:layout_height="1dp"
-        android:layout_below="@id/tvLocationAddress"
+        android:layout_below="@id/linearLayoutCheckInSection"
         android:alpha="0.5"
         android:background="@color/separator"/>
 

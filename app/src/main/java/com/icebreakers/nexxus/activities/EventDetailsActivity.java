@@ -157,9 +157,12 @@ public class EventDetailsActivity extends BaseActivity {
         binding.mapview.onCreate(savedInstanceState);
         binding.mapview.getMapAsync(mapReadyCallback);
 
+        /*
+        Section to be removed after using checking Button
         if (profileHolder.isUserCheckedIn(eventRef)) {
             Log.d(TAG, "User has checked in to " + event.getName());
             binding.fab.setVisibility(View.GONE);
+            binding.header.linearLayoutCheckInSection.setVisibility(View.GONE);
         } else {
             Log.d(TAG, "User has NOT checked in to " + event.getName());
             binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +173,9 @@ public class EventDetailsActivity extends BaseActivity {
                 }
             });
         }
+         **/
+
+        setupCheckInSection();
 
         // Set up recyclerView for profileimages
         attendees = profileHolder.getAttendees(event);
@@ -182,10 +188,23 @@ public class EventDetailsActivity extends BaseActivity {
         ItemClickSupport.addTo(binding.rvProfileImages).setOnItemClickListener(profileImageClickListener);
     }
 
+    private void setupCheckInSection() {
+        if (profileHolder.isUserCheckedIn(eventRef)) {
+            binding.header.linearLayoutCheckInSection.setVisibility(View.GONE);
+        }
+        binding.header.btnCheckin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleCheckIn();
+            }
+        });
+    }
+
     private void handleCheckIn() {
         profileHolder.checkIn(eventRef);
         attendees.add(0, currentUser);
         adapter.notifyItemInserted(0);
+        binding.header.linearLayoutCheckInSection.setVisibility(View.GONE);
         make(binding.toolbar, getString(R.string.after_checkin), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.show_me), new View.OnClickListener() {
                     @Override
