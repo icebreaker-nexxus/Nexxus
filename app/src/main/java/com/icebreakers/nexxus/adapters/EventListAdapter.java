@@ -6,18 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
-import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.MeetupEvent;
+import com.icebreakers.nexxus.utils.DateTimeFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by radhikak on 4/7/17.
@@ -37,7 +35,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         TextView tvName;
 
         @BindView(R.id.tvTime)
-        RelativeTimeTextView tvTime;
+        TextView tvTime;
 
         @BindView(R.id.tvVenue)
         TextView tvVenue;
@@ -57,7 +55,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, null);
+        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event_v2, null);
         return new EventViewHolder(layoutView);
     }
 
@@ -67,7 +65,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         MeetupEvent event = events.get(position);
 
         holder.tvName.setText(event.getName());
-        holder.tvTime.setReferenceTime(event.getTime());
+        holder.tvTime.setText(DateTimeFormat.formatDateTimeForEvent(event.getTime()));
 
         // TODO expand address
         // We make sure venue is never null, hence no need to check
@@ -88,8 +86,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
                 holder.ivImage.setVisibility(View.VISIBLE);
                 Glide.with(holder.itemView.getContext())
                         .load(imageURL)
-                        .placeholder(R.drawable.loading)
-                        .error(R.drawable.loading)
+                        .placeholder(R.drawable.layer_list_event)
+                        .error(R.drawable.layer_list_event)
                         .into(holder.ivImage);
             } else {
                 holder.ivImage.setVisibility(View.GONE);

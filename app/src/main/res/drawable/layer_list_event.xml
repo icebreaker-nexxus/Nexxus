@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:drawable="@drawable/ic_event_list_grey"
+        android:id="@+id/event_with_padding"
+        android:top="50dp"
+        android:right="75dp"
+        android:bottom="50dp"
+        android:left="75dp" />
+</layer-list>
