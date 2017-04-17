@@ -82,8 +82,8 @@ public class EventDetailsActivity extends BaseActivity {
                 // start ProfileListActivity
                 startActivity(new Intent(EventDetailsActivity.this, ProfileListActivity.class));
             } else {
-                final Snackbar snackbar = Snackbar.make(recyclerView, "Check-in to this event to view list of all attendees", Snackbar.LENGTH_LONG);
-                snackbar.setAction("Check-In", new View.OnClickListener() {
+                final Snackbar snackbar = Snackbar.make(recyclerView, getString(R.string.before_checkin), Snackbar.LENGTH_LONG);
+                snackbar.setAction(getString(R.string.checkin), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 snackbar.dismiss();
@@ -186,8 +186,8 @@ public class EventDetailsActivity extends BaseActivity {
         profileHolder.checkIn(eventRef);
         attendees.add(0, currentUser);
         adapter.notifyItemInserted(0);
-        make(binding.toolbar, "Awesome! You can now connect with others attending this event!", Snackbar.LENGTH_LONG)
-                .setAction("Show me", new View.OnClickListener() {
+        make(binding.toolbar, getString(R.string.after_checkin), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.show_me), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(EventDetailsActivity.this, ProfileListActivity.class));
