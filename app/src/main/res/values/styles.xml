@@ -9,6 +9,10 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
     </style>
 
+    <style name="AppTheme.Translucent">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
     <style name="TextAppearance.ArtDeco" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/black_85</item>
         <item name="fontPath">fonts/SourceSansPro-Regular.ttf</item>
