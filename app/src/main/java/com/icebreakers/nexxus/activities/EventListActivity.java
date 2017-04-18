@@ -20,7 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
@@ -34,19 +35,15 @@ import com.icebreakers.nexxus.utils.EndlessRecyclerViewScrollListener;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.LocationProvider;
 import com.icebreakers.nexxus.utils.LogoutUtils;
-
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventListActivity extends BaseActivity
         implements LocationProvider.LocationCallback {
@@ -376,7 +373,7 @@ public class EventListActivity extends BaseActivity
                 Router.startProfileActivity(this, profile);
                 break;
             case R.id.logout_nav:
-                LogoutUtils.logout(this, getApplicationContext());
+                LogoutUtils.logout(this);
                 break;
             default:
                 break;
