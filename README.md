@@ -60,6 +60,10 @@ The following **bonus** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
+### Sprint 1
 <img src='./codepath-nexxus-sprint1.gif' title='Sprint 1 Video Walkthrough' width='' alt='Video Walkthrough' />
+
+### Sprint 2
+<img src='./codepath-nexxus-sprint2.gif' title='Sprint 2 Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
