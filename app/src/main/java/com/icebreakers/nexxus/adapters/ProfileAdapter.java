@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.Profile;
@@ -17,9 +18,6 @@ import com.icebreakers.nexxus.models.Similarities;
 
 import java.util.List;
 import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/8/17.
@@ -58,6 +56,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
 
         Similarities similarities = similaritiesMap.get(profile.id);
         if (similarities != null && similarities.numOfSimilarities >= 1) {
+            holder.similaritySection.setVisibility(View.VISIBLE);
             if (similarities.numOfSimilarities > 1) {
                 holder.profileSimilarityImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_common));
                 holder.profileSimilarityText.setText(String.format(context.getResources()
