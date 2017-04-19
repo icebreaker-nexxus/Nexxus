@@ -31,6 +31,7 @@
             android:name=".activities.EventDetailsActivity"
             android:label="@string/title_activity_event_details" />
         <activity android:name=".activities.MessagingActivity"/>
+        <activity android:name=".activities.NearbyActivity"/>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

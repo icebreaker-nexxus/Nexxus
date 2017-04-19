@@ -11,6 +11,11 @@
         android:icon="@drawable/ic_profile" />
 
     <item
+        android:id="@+id/nearby_nav"
+        android:title="@string/nearby"
+        android:icon="@drawable/ic_nearby" />
+
+    <item
         android:id="@+id/logout_nav"
         android:title="@string/logout"
         android:icon="@drawable/ic_log_out" />
