@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -92,8 +93,10 @@ public class EventListActivity extends BaseActivity
 
             // launch Event details activity
             MeetupEvent event = events.get(position);
+            eventListAdapter.
 
             Intent detailsActivityIntent = new Intent(EventListActivity.this, EventDetailsActivity.class);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, (View) , "profile");
             detailsActivityIntent.putExtra("event", Parcels.wrap(event));
             startActivity(detailsActivityIntent);
         }
