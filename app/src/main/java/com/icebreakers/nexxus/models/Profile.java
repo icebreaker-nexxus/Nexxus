@@ -59,7 +59,12 @@ public class Profile {
             if (obj == this)
                 return true;
             Education rhs = (Education) obj;
-            return this.schoolName.equals(rhs.schoolName);
+            if (this.schoolName != null && rhs.schoolName != null) {
+                return this.schoolName.equals(rhs.schoolName);
+            } else {
+                return false;
+            }
+
         }
 
         @Override
@@ -84,7 +89,12 @@ public class Profile {
             if (obj == this)
                 return true;
             Position rhs = (Position) obj;
-            return this.companyId.equals(rhs.companyId);
+            if (this.companyId != null && rhs.companyId != null) {
+                return this.companyId.equals(rhs.companyId);
+            } else {
+                return false;
+            }
+
         }
 
         @Override
