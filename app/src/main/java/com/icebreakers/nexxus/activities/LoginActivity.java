@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
+import com.icebreakers.nexxus.helpers.Router;
 import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.errors.LIAuthError;
@@ -72,7 +73,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(com.icebreakers.nexxus.models.Profile profile) {
                 Log.d(TAG, "Calling EventListActivity");
-                startActivity(new Intent(LoginActivity.this, EventListActivity.class));
+                Router.startProfileActivity(LoginActivity.this, profile);
                 finish();
             }
 
