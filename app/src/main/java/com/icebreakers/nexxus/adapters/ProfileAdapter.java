@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.Profile;
@@ -17,9 +18,6 @@ import com.icebreakers.nexxus.models.Similarities;
 
 import java.util.List;
 import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/8/17.
@@ -85,6 +83,15 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
 
     public void updateSimilaritiesMap(Map<String, Similarities> similaritiesMap) {
         this.similaritiesMap.putAll(similaritiesMap);
+    }
+
+    public void addProfile(Profile profile, Similarities similarities) {
+        this.profiles.add(profile);
+        this.similaritiesMap.put(profile.id, similarities);
+    }
+
+    public Profile getItemAtAdapterPosition(int position) {
+        return profiles.get(position);
     }
 
     class ProfileViewHolder extends RecyclerView.ViewHolder {

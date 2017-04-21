@@ -108,6 +108,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:10.2.1'
     // Google maps util lib
     compile 'com.google.maps.android:android-maps-utils:0.5'
+    //nearby
+    compile "com.google.android.gms:play-services-nearby:10.2.1"
 
     // ExpandableTextView
     compile 'com.borjabravo:readmoretextview:2.0.1'
