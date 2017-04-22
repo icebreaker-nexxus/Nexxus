@@ -102,6 +102,7 @@ public class EventListActivity extends BaseActivity
                                                                                                p1);
             detailsActivityIntent.putExtra("event", Parcels.wrap(event));
             startActivity(detailsActivityIntent, options.toBundle());
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     };
 
