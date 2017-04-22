@@ -5,6 +5,7 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -193,7 +194,8 @@ public class NearbyActivity extends BaseActivity implements GoogleApiClient.Conn
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 Profile profile = profileAdapter.getItemAtAdapterPosition(position);
-                Router.startProfileActivity(NearbyActivity.this, profile, null);
+                Pair<View, String> p1 = Pair.create(v.findViewById(R.id.profile_image), "profileImage");
+                Router.startProfileActivity(NearbyActivity.this, profile, p1);
             }
         });
     }
