@@ -20,6 +20,7 @@
             android:id="@+id/ivImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:transitionName="eventImage"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             tools:src="@drawable/ic_event_list"
@@ -45,6 +46,7 @@
                 android:id="@+id/tvEventName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:transitionName="eventName"
                 android:textAppearance="@style/TextAppearance.ArtDeco.Headline1.Bold"
                 tools:text="How to Go from 0-35,000 Monthly Unique Visitors in 6 Months"/>
 

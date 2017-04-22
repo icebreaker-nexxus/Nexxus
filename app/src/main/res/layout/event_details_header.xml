@@ -11,6 +11,7 @@
         android:layout_margin="5dp"
         android:layout_alignParentTop="true"
         android:textAlignment="viewStart"
+        android:transitionName="eventName"
         android:textAppearance="@style/TextAppearance.ArtDeco.Headline1.Big.Bold"
         tools:text="hello_world hello_world hello_world hello_world hello_world hello_world"
         style="@style/eventTitle"/>

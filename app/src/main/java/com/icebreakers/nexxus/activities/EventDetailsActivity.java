@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -125,8 +126,7 @@ public class EventDetailsActivity extends BaseActivity {
                 binding.ivBackdrop.setVisibility(View.VISIBLE);
                 Glide.with(this)
                         .load(imageURL)
-                        .placeholder(R.drawable.layer_list_event)
-                        .error(R.drawable.layer_list_event)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(binding.ivBackdrop);
             } else {
                 binding.ivBackdrop.setVisibility(View.GONE);
