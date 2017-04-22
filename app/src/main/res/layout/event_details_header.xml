@@ -120,9 +120,20 @@
         android:alpha="0.5"
         android:background="@color/separator"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvProfileImages"
+        android:layout_below="@id/vSeparator2"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        android:divider="@null"
+        android:layout_height="wrap_content" />
+
     <com.borjabravo.readmoretextview.ReadMoreTextView
         android:id="@+id/tvDescription"
-        android:layout_below="@id/vSeparator2"
+        android:layout_below="@id/rvProfileImages"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="10dp"
         app:trimMode="trimModeLine"

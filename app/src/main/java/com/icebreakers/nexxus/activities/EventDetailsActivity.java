@@ -181,11 +181,11 @@ public class EventDetailsActivity extends BaseActivity {
         attendees = profileHolder.getAttendees(event);
         Log.d(TAG, "Profiles # " + attendees.size());
         adapter = new ProfileImageAdapter(attendees);
-        binding.rvProfileImages.setAdapter(adapter);
-        binding.rvProfileImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.header.rvProfileImages.setAdapter(adapter);
+        binding.header.rvProfileImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         // Add item click listener
-        ItemClickSupport.addTo(binding.rvProfileImages).setOnItemClickListener(profileImageClickListener);
+        ItemClickSupport.addTo(binding.header.rvProfileImages).setOnItemClickListener(profileImageClickListener);
     }
 
     private void setupCheckInSection() {
