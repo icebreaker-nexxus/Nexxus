@@ -204,6 +204,7 @@ public class EventDetailsActivity extends BaseActivity {
         profileHolder.checkIn(eventRef);
         attendees.add(0, currentUser);
         adapter.notifyItemInserted(0);
+        binding.header.rvProfileImages.scrollToPosition(0);
         binding.header.linearLayoutCheckInSection.setVisibility(View.GONE);
         make(binding.toolbar, getString(R.string.after_checkin), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.show_me), new View.OnClickListener() {
