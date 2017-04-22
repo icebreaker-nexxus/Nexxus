@@ -2,6 +2,7 @@ package com.icebreakers.nexxus.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -114,6 +115,13 @@ public abstract class BaseEventListFragment extends Fragment implements EventFra
             @Override
             public void onRefresh() {
                 // TODO search for more events
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 1000);
                 // fetchMeetupEvents(lastKnownLocation);
             }
         });
