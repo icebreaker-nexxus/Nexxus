@@ -65,10 +65,10 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
             } else {
                 if (similarities.similarEducations.size() != 0) {
                     holder.profileSimilarityImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_education));
-                    holder.profileSimilarityText.setText(similarities.similarEducations.get(0).schoolName);
+                    holder.profileSimilarityText.setText(String.format(context.getResources().getString(R.string.also_studied_at), similarities.similarEducations.get(0).schoolName));
                 } else {
                     holder.profileSimilarityImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_work));
-                    holder.profileSimilarityText.setText(similarities.similarPositions.get(0).companyName);
+                    holder.profileSimilarityText.setText(String.format(context.getResources().getString(R.string.also_worked_at), similarities.similarPositions.get(0).companyName));
                 }
             }
         } else {
