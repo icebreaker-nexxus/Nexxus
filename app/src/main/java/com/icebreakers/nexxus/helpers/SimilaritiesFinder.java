@@ -31,8 +31,8 @@ public class SimilaritiesFinder {
                 // do not compare for self view
                 continue;
             }
-            List<Profile.Education> educationList = new ArrayList<>();
-            List<Profile.Position> positionList = new ArrayList<>();
+            Set<Profile.Education> educationList = new HashSet<>();
+            Set<Profile.Position> positionList = new HashSet<>();
 
             if (mainProfileEducationSet.size() >= 1) {
                 // compare only if there is something to compare against
@@ -55,7 +55,7 @@ public class SimilaritiesFinder {
                 }
             }
 
-            Similarities similarities = new Similarities(positionList, educationList);
+            Similarities similarities = new Similarities(new ArrayList<>(positionList), new ArrayList<>(educationList));
             similaritiesMap.put(profileToCompare.id, similarities);
         }
 

@@ -30,7 +30,6 @@ import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
 import com.icebreakers.nexxus.listeners.MessageClickEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
-import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import org.parceler.Parcels;
 
 import java.util.List;
@@ -130,7 +129,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void insertCommonSection() {
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.common_item, commonSection, false);
 
         if (isSelfView) {
             commonSection.setVisibility(View.GONE);
@@ -147,6 +145,7 @@ public class ProfileFragment extends Fragment {
         icebreakerSection.setVisibility(View.GONE);
         if (similaritiesWithLoggedInMember.similarPositions != null) {
             for (Profile.Position position : similaritiesWithLoggedInMember.similarPositions) {
+                View v = LayoutInflater.from(getContext()).inflate(R.layout.common_item, commonSection, false);
                 CommonItemViewHolder commonItemViewHolder = new CommonItemViewHolder(v);
                 commonItemViewHolder.commonImage.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_work));
                 commonItemViewHolder.commonAttributeText.setText(String.format(getString(R.string.worked_at), position.companyName));
@@ -156,6 +155,7 @@ public class ProfileFragment extends Fragment {
 
         if (similaritiesWithLoggedInMember.similarEducations != null) {
             for (Profile.Education education : similaritiesWithLoggedInMember.similarEducations) {
+                View v = LayoutInflater.from(getContext()).inflate(R.layout.common_item, commonSection, false);
                 CommonItemViewHolder commonItemViewHolder = new CommonItemViewHolder(v);
                 commonItemViewHolder.commonImage.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_education));
                 commonItemViewHolder.commonAttributeText.setText(String.format(getString(R.string.studied_at), education.schoolName));
