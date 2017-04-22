@@ -377,7 +377,7 @@ public class EventListActivity extends BaseActivity
                 //Router.startEventListActivity(this, profile);
                 break;
             case R.id.profile_nav:
-                Router.startProfileActivity(this, profile);
+                Router.startProfileActivity(this, profile, null);
                 break;
             case R.id.logout_nav:
                 LogoutUtils.logout(this);

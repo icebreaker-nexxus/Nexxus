@@ -193,7 +193,7 @@ public class NearbyActivity extends BaseActivity implements GoogleApiClient.Conn
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 Profile profile = profileAdapter.getItemAtAdapterPosition(position);
-                Router.startProfileActivity(NearbyActivity.this, profile);
+                Router.startProfileActivity(NearbyActivity.this, profile, null);
             }
         });
     }

@@ -1,5 +1,8 @@
 package com.icebreakers.nexxus.fragments;
 
+import android.animation.Animator;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -10,12 +13,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,6 +62,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.linearLayoutEducationSection) LinearLayout linearLayoutEducationSection;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.app_bar_layout) AppBarLayout appBarLayout;
+    @BindView(R.id.toolbar_background) View toolbarBackground;
 
     private Profile profile;
     private Similarities similaritiesWithLoggedInMember;
@@ -102,6 +109,11 @@ public class ProfileFragment extends Fragment {
         insertCommonSection();
         insertExperienceSection();
         insertEducationSection();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            setupAnimationOnEnter(view);
+        } else {
+            toolbarBackground.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 
@@ -126,6 +138,28 @@ public class ProfileFragment extends Fragment {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupAnimationOnEnter(View rootView) {
+        rootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                Log.v(TAG, "Starting animation");
+                view.removeOnLayoutChangeListener(this);
+                int x = toolbarBackground.getRight();
+                int y = toolbarBackground.getBottom();
+
+                int endRadius = (int) Math.hypot(rootView.getWidth(), rootView.getHeight());
+
+                Animator reveal = ViewAnimationUtils.createCircularReveal(toolbarBackground, x, y, 0, endRadius);
+                toolbarBackground.setVisibility(View.VISIBLE);
+                reveal.setInterpolator(new DecelerateInterpolator(2f));
+                reveal.setDuration(3000);
+                reveal.start();
+            }
+        });
+
     }
 
     private void insertCommonSection() {
