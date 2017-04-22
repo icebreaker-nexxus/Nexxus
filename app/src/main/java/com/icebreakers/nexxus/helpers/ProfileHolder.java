@@ -217,4 +217,10 @@ public class ProfileHolder {
         });
     }
 
+    public static void logout() {
+        instance = null;
+        accessToken = null;
+        session = null;
+    }
+
 }
