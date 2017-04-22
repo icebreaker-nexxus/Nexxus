@@ -33,6 +33,7 @@ import com.icebreakers.nexxus.models.internal.MeetupEventRef;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.MapUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
@@ -205,6 +206,8 @@ public class EventDetailsActivity extends BaseActivity {
         attendees.add(0, currentUser);
         adapter.notifyItemInserted(0);
         binding.header.linearLayoutCheckInSection.setVisibility(View.GONE);
+        EventBus.getDefault().post(event);
+
         make(binding.toolbar, getString(R.string.after_checkin), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.show_me), new View.OnClickListener() {
                     @Override

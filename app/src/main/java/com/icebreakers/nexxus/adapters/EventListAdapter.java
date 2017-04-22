@@ -6,8 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
@@ -16,6 +15,9 @@ import com.icebreakers.nexxus.utils.DateTimeFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by radhikak on 4/7/17.
@@ -49,8 +51,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         }
     }
 
-    public EventListAdapter(List<MeetupEvent> articles) {
-        this.events = articles;
+    public EventListAdapter(List<MeetupEvent> events) {
+        this.events = events;
     }
 
     @Override
