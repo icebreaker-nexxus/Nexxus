@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.EventListAdapter;
@@ -94,8 +97,11 @@ public class EventListActivity extends BaseActivity
             MeetupEvent event = events.get(position);
 
             Intent detailsActivityIntent = new Intent(EventListActivity.this, EventDetailsActivity.class);
+            Pair<View, String> p1 = Pair.create(v.findViewById(R.id.ivImage), "eventImage");
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(EventListActivity.this,
+                                                                                               p1);
             detailsActivityIntent.putExtra("event", Parcels.wrap(event));
-            startActivity(detailsActivityIntent);
+            startActivity(detailsActivityIntent, options.toBundle());
         }
     };
 
@@ -387,7 +393,7 @@ public class EventListActivity extends BaseActivity
     }
 
     private void setupNavigationHeader() {
-        Glide.with(this).load(profile.pictureUrl).into(navHeaderProfileImage);
+        Glide.with(this).load(profile.pictureUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(navHeaderProfileImage);
         navHeaderProfileName.setText(profile.firstName + " " + profile.lastName);
     }
 }
