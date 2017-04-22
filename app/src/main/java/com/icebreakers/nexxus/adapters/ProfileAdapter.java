@@ -86,6 +86,15 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         this.similaritiesMap.putAll(similaritiesMap);
     }
 
+    public void addProfile(Profile profile, Similarities similarities) {
+        this.profiles.add(profile);
+        this.similaritiesMap.put(profile.id, similarities);
+    }
+
+    public Profile getItemAtAdapterPosition(int position) {
+        return profiles.get(position);
+    }
+
     class ProfileViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.profile_name_text) TextView profileNameText;
