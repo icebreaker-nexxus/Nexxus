@@ -147,8 +147,8 @@ public class ProfileFragment extends Fragment {
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
                 Log.v(TAG, "Starting animation");
                 view.removeOnLayoutChangeListener(this);
-                int x = toolbarBackground.getRight();
-                int y = toolbarBackground.getBottom();
+                int x = collapsingToolbarLayout.getRight();
+                int y = collapsingToolbarLayout.getBottom();
 
                 int endRadius = (int) Math.hypot(rootView.getWidth(), rootView.getHeight());
 
