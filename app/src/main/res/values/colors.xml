@@ -8,4 +8,19 @@
     <color name="black_85">#D8000000</color>
     <color name="highlight">#FFC107</color>
     <color name="separator">#c0c0c0</color>
+
+    <color name="first_slide_background">#E91E63</color>
+    <color name="first_slide_buttons">#880E4F</color>
+
+    <color name="second_slide_background">#9C27B0</color>
+    <color name="second_slide_buttons">#4A148C</color>
+
+    <color name="third_slide_background">#F4511E</color>
+    <color name="third_slide_buttons">#BF360C</color>
+
+    <color name="fourth_slide_background">#673AB7</color>
+    <color name="fourth_slide_buttons">#311B92</color>
+
+    <!--Splash Screen-->
+    <item name="splash_background" type="color">@color/colorPrimary</item>
 </resources>

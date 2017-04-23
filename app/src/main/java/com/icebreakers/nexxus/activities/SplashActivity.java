@@ -42,16 +42,16 @@ public class SplashActivity extends BaseActivity {
                 }
             });
         } else {
-            startLoginActivity();
+            startOnboardingActivity();
         }
     }
 
-    private void startLoginActivity() {
+    private void startOnboardingActivity() {
         new Handler().postDelayed(new Runnable() {
 
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
                 // close this activity
                 finish();
             }

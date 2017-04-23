@@ -10,6 +10,11 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <style name="AppTheme.Onboarding">
+        <item name="android:textColor">@color/white</item>
+        <item name="fontPath">fonts/SourceSansPro-Regular.ttf</item>
+    </style>
+
     <style name="AppTheme.Translucent">
         <item name="android:windowTranslucentStatus">true</item>
     </style>

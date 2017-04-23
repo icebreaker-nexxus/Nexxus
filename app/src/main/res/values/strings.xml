@@ -38,6 +38,21 @@
     <string name="message_also_studied_at" formatted="false">Hey %s, looks like you have also studied at %s</string>
     <string name="message_things_in_common" formatted="false">Hey %s, looks like we have a few things in common</string>
 
+    <!-- onboarding strings -->
+    <string name="onboarding_find_attenedees">Know the attendees</string>
+    <string name="onboarding_find_attenedees_subtitle">Find similarities, network better</string>
+
+    <string name="onboarding_message">Engage with messaging</string>
+    <string name="onboarding_message_subtitle">Break the ice, send the message</string>
+
+    <string name="onboarding_search">Universal search</string>
+    <string name="onboarding_search_subtitle">Search by name, company, school</string>
+
+    <string name="onboarding_nearby">Nearby attendees</string>
+    <string name="onboarding_nearby_subtitle">Feeling shy? Use nearby to find out folks open to network</string>
+
+    <string name="start_networking">Get started</string>
+
     <string name="google_maps_api_key">AIzaSyAnPKA09fo3xX3ndsrgcITOAfAZ3N2Ifps</string>
     <string name="nearby_key">AIzaSyAKeW0hbeRA14tgyC672_Xyq8cUwaz0vtI</string>
 </resources>
