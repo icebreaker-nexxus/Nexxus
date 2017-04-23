@@ -16,8 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.ToxicBakery.viewpager.transforms.StackTransformer;
+import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.icebreakers.nexxus.NexxusApplication;
@@ -34,19 +33,17 @@ import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.utils.LocationProvider;
 import com.icebreakers.nexxus.utils.LogoutUtils;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventListActivity extends BaseActivity
         implements LocationProvider.LocationCallback {
@@ -114,7 +111,7 @@ public class EventListActivity extends BaseActivity
 
         adapter = new EventFragmentPagerAdapater(getSupportFragmentManager(), fragments);
         binding.viewpager.setAdapter(adapter);
-        binding.viewpager.setPageTransformer(true, new StackTransformer());
+        binding.viewpager.setPageTransformer(true, new AccordionTransformer());
         binding.tabs.setupWithViewPager(binding.viewpager);
 
         // navigation bar
