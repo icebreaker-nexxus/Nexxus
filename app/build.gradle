@@ -121,6 +121,12 @@ dependencies {
 
     compile 'pl.bclogic:pulsator4droid:1.0.3'
 
+    // viewpager transformations
+    compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
+
+    // EventBus
+    compile 'org.greenrobot:eventbus:3.0.0'
+
     // For RxJava 2
     //compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.0.6'
 }

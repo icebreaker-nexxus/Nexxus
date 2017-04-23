@@ -3,55 +3,61 @@ package com.icebreakers.nexxus.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
+import com.ToxicBakery.viewpager.transforms.StackTransformer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.adapters.EventListAdapter;
+import com.icebreakers.nexxus.adapters.EventFragmentPagerAdapater;
 import com.icebreakers.nexxus.clients.MeetupClient;
+import com.icebreakers.nexxus.databinding.ActivityEventListBinding;
+import com.icebreakers.nexxus.fragments.BaseEventListFragment;
+import com.icebreakers.nexxus.fragments.CheckedInEventListFragment;
+import com.icebreakers.nexxus.fragments.NearbyEventListFragment;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
-import com.icebreakers.nexxus.utils.EndlessRecyclerViewScrollListener;
-import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.LocationProvider;
 import com.icebreakers.nexxus.utils.LogoutUtils;
-import org.parceler.Parcels;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class EventListActivity extends BaseActivity
         implements LocationProvider.LocationCallback {
 
-    private static final String TAG = NexxusApplication.BASE_TAG + EventListActivity.class.getName();
+    private static final String TAG = NexxusApplication.BASE_TAG + EventListActivity.class.getSimpleName();
+
+    public interface EventListUpdate {
+        public void update(List<MeetupEvent> events);
+        public void add(MeetupEvent newEvent);
+        public void setRefreshing(boolean refreshing);
+    }
 
     /**
      * Id to identify a location permission request.
@@ -60,105 +66,67 @@ public class EventListActivity extends BaseActivity
 
     private LocationProvider mLocationProvider = null;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
-    @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout swipeRefreshLayout;
-
-    @BindView(R.id.rvEvents)
-    RecyclerView rvEvents;
-
-    @BindView(R.id.drawer)
-    DrawerLayout drawerLayout;
-
-    @BindView(R.id.navigationView)
-    NavigationView navigationView;
+    NearbyEventListFragment nearbyEventListFragment;
+    CheckedInEventListFragment checkedInEventListFragment;
 
     ImageView navHeaderProfileImage;
     TextView navHeaderProfileName;
     ActionBarDrawerToggle drawerToggle;
     Profile profile;
 
-    List<MeetupEvent> events = new ArrayList<>();
-    EventListAdapter eventListAdapter;
-
     private CompositeSubscription compositeSubscription;
-
-    EndlessRecyclerViewScrollListener scrollListener;
 
     Location lastKnownLocation;
 
-    ItemClickSupport.OnItemClickListener eventClickListener = new ItemClickSupport.OnItemClickListener() {
-        @Override
-        public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+    ActivityEventListBinding binding;
 
-            // launch Event details activity
-            MeetupEvent event = events.get(position);
+    EventFragmentPagerAdapater adapter;
 
-            Intent detailsActivityIntent = new Intent(EventListActivity.this, EventDetailsActivity.class);
-            Pair<View, String> p1 = Pair.create(v.findViewById(R.id.ivImage), "eventImage");
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(EventListActivity.this,
-                                                                                               p1);
-            detailsActivityIntent.putExtra("event", Parcels.wrap(event));
-            startActivity(detailsActivityIntent, options.toBundle());
+    private class EventList {
+        List<MeetupEvent> nearbyEvents;
+        List<MeetupEvent> checkedInEvents;
+
+        public EventList() {
+            nearbyEvents = new ArrayList<>();
+            checkedInEvents = new ArrayList<>();
         }
-    };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
-        setContentView(R.layout.activity_event_list);
-        ButterKnife.bind(this);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_event_list);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
 
         profile = ProfileHolder.getInstance(this).getProfile();
 
         compositeSubscription = new CompositeSubscription();
 
-        // Set up recyclerView
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        eventListAdapter = new EventListAdapter(events);
-        rvEvents.setAdapter(eventListAdapter);
-        rvEvents.setLayoutManager(layoutManager);
+        // Set up fragments and view pager
+        List<BaseEventListFragment> fragments = new ArrayList<>();
+        nearbyEventListFragment = NearbyEventListFragment.newInstance();
+        checkedInEventListFragment = CheckedInEventListFragment.newInstance();
 
-        // Retain an instance so that you can call `resetState()` for fresh searches
-        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Log.d(TAG, "inside onLoadMore");
+        fragments.add(nearbyEventListFragment.getTabPosition(), nearbyEventListFragment);
+        fragments.add(checkedInEventListFragment.getTabPosition(), checkedInEventListFragment);
 
-                // TODO Paging will have to be handled by searching for more events by increasing radius. - P1
-            }
-        };
-        // Adds the scroll listener to RecyclerView
-        rvEvents.addOnScrollListener(scrollListener);
-
-        // Add item click listener
-        ItemClickSupport.addTo(rvEvents).setOnItemClickListener(eventClickListener);
-
-        // setup swipe to refresh
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                android.R.color.white,
-                R.color.colorPrimary,
-                android.R.color.white);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // TODO search for more events
-                fetchMeetupEvents(lastKnownLocation);
-            }
-        });
+        adapter = new EventFragmentPagerAdapater(getSupportFragmentManager(), fragments);
+        binding.viewpager.setAdapter(adapter);
+        binding.viewpager.setPageTransformer(true, new StackTransformer());
+        binding.tabs.setupWithViewPager(binding.viewpager);
 
         // navigation bar
         drawerToggle = setupDrawerToggle();
-        setupDrawerContent(navigationView);
-        View v = navigationView.getHeaderView(0);
+        setupDrawerContent(binding.navigationView);
+        View v = binding.navigationView.getHeaderView(0);
         navHeaderProfileImage = (ImageView) v.findViewById(R.id.ivNavprofileImage);
         navHeaderProfileName = (TextView) v.findViewById(R.id.tvNavProfileName);
         setupNavigationHeader();
+
+        EventBus.getDefault().register(this);
+        Log.d(TAG, "EVENTBUG REGISTERED");
     }
 
     @Override
@@ -195,7 +163,7 @@ public class EventListActivity extends BaseActivity
             // sees the explanation, try again to request the permission.
                 Log.i(TAG,
                         "Displaying location permission rationale to provide additional context.");
-                Snackbar.make(swipeRefreshLayout, R.string.location_permission_rationale,
+                Snackbar.make(binding.tabs, R.string.location_permission_rationale,
                         Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.ok, new View.OnClickListener() {
                             @Override
@@ -236,6 +204,7 @@ public class EventListActivity extends BaseActivity
         }
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -255,21 +224,13 @@ public class EventListActivity extends BaseActivity
         Call<List<MeetupEvent>> eventsCall = MeetupClient.getInstance().findEvents(location.getLatitude(), location.getLongitude());
         Log.d(TAG, "Meetup find events request: " + eventsCall.request().url().toString());
 
-        // TODO Filter events based on categories with ids - with map
-        // = 2 (Career and Business)
-        // 6 Education and Learning
-        // 34 Tech
-
-
-        // TODO Sort this list with shortest distance - with map
-
         CompositeSubscription compositeSubscription = new CompositeSubscription();
         compositeSubscription.add(MeetupClient.getInstance()
                 .rxfindEvents(location.getLatitude(), location.getLongitude())
-                .map(meetupEvents -> { return filterAndPersistEvents(meetupEvents);})
+                .map(meetupEvents -> { return filterAndSeparate(meetupEvents);})
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<MeetupEvent>>() {
+                .subscribe(new Subscriber<EventList>() {
                     @Override
                     public void onCompleted() {
                         Log.e(TAG, "onCompleted");
@@ -278,63 +239,27 @@ public class EventListActivity extends BaseActivity
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "received error", e);
-                        swipeRefreshLayout.setRefreshing(false);
-                        // TODO handle this?
+                        BaseEventListFragment currentFragment = adapter.getRegisteredFragment(binding.viewpager.getCurrentItem());
+                        currentFragment.setRefreshing(false);
                     }
 
                     @Override
-                    public void onNext(List<MeetupEvent> meetupEvents) {
-                        swipeRefreshLayout.setRefreshing(false);
+                    public void onNext(EventList eventList) {
+                        BaseEventListFragment currentFragment = adapter.getRegisteredFragment(binding.viewpager.getCurrentItem());
+                        currentFragment.setRefreshing(false);
 
-                        Log.d(TAG, "onNext events #" + meetupEvents.size());
-                        events.addAll(meetupEvents);
-                        eventListAdapter.notifyDataSetChanged();
-
+                        Log.d(TAG, "onNext events #" + eventList.nearbyEvents.size());
+                        nearbyEventListFragment.update(eventList.nearbyEvents);
+                        checkedInEventListFragment.update(eventList.checkedInEvents);
                     }
                 })
         );
     }
 
-    private List<MeetupEvent> filterAndPersistEvents(List<MeetupEvent> allEvents)
-    {
-        List<MeetupEvent> interestingEvents = new ArrayList<>();
-
-//        List<Profile> allProfiles = ProfileHolder.getInstance(this).getAllProfiles();
-//        List<Profile> curatedProfiles = new ArrayList<>();
-//        // remove current logged in member from profiles list
-//        for (Profile savedProfile : allProfiles) {
-//            if (!profile.id.equals(savedProfile.id)) {
-//                curatedProfiles.add(savedProfile);
-//            }
-//        }
-
-//        List<Event> eventsToPersist = new ArrayList<>();
-
-        for (MeetupEvent event: allEvents) {
-            if (event.getVenue() != null
-                    && (event.getGroup().getCategory().getId() == 6
-                        || event.getGroup().getCategory().getId() == 34
-                        || event.getGroup().getCategory().getId() == 2)
-                    && (event.getGroup().getKeyPhoto() != null
-                        || event.getGroup().getPhoto() != null)) {
-
-                interestingEvents.add(event);
-//                Log.d(TAG, "Event added: " + event.toString());
-
-                // create Event object
-//                eventsToPersist.add(new Event(event.getId(), event.getName(), curatedProfiles));
-
-                }
-        }
-
-        // save event references in database
-//        Database.instance().saveEvents(eventsToPersist);
-        return interestingEvents;
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         compositeSubscription.unsubscribe();
     }
 
@@ -353,10 +278,38 @@ public class EventListActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private EventList filterAndSeparate(List<MeetupEvent> allEvents)
+    {
+        EventList eventList = new EventList();
+        // = 2 (Career and Business)
+        // 6 Education and Learning
+        // 34 Tech
+
+        ProfileHolder profileHolder = ProfileHolder.getInstance(this);
+
+        for (MeetupEvent event: allEvents) {
+            if (event.getVenue() != null
+                    && (event.getGroup().getCategory().getId() == 6
+                    || event.getGroup().getCategory().getId() == 34
+                    || event.getGroup().getCategory().getId() == 2)
+                    && (event.getGroup().getKeyPhoto() != null
+                    || event.getGroup().getPhoto() != null)) {
+
+                if (profileHolder.isUserCheckedIn(event.getEventRef())) {
+                    eventList.checkedInEvents.add(event);
+                }
+
+                eventList.nearbyEvents.add(event);
+            }
+        }
+
+        return eventList;
+    }
+
     private ActionBarDrawerToggle setupDrawerToggle() {
         // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
         // and will not render the hamburger icon without it.
-        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, binding.drawer, binding.toolbar, R.string.drawer_open,  R.string.drawer_close);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -390,11 +343,17 @@ public class EventListActivity extends BaseActivity
         }
 
         // Close the navigation drawer
-        drawerLayout.closeDrawers();
+        binding.drawer.closeDrawers();
     }
 
     private void setupNavigationHeader() {
         Glide.with(this).load(profile.pictureUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(navHeaderProfileImage);
         navHeaderProfileName.setText(profile.firstName + " " + profile.lastName);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MeetupEvent event) {
+        Log.d(TAG, "Checkin-event received " + event);
+        checkedInEventListFragment.add(event);
     }
 }
