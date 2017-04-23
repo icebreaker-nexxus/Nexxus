@@ -44,7 +44,7 @@ public class Database {
 
     }
 
-    public void saveMessageToProfile(Profile profile, MessageRef messageRef) {
+    public void saveMessageRefToProfile(Profile profile, MessageRef messageRef) {
         profile.messageRefs.add(messageRef);
         saveProfile(profile);
     }

@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
@@ -66,7 +67,7 @@ public class ProfileHolder {
     private ValueEventListener currentProfileListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            Profile currentProfile = dataSnapshot.getValue(com.icebreakers.nexxus.models.Profile.class);
+            Profile currentProfile = dataSnapshot.getValue(Profile.class);
             if (currentProfile == null) {
                 Log.e(TAG, "Cannot find profile for profileId " + dataSnapshot.getKey());
                 // fetch from server
@@ -109,13 +110,14 @@ public class ProfileHolder {
     private ChildEventListener incomingMessageListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Message message = dataSnapshot.getValue(Message.class);
-            EventBus.getDefault().postSticky(message);
+            Log.d(TAG, "incomingMessageListener: onChildAdded " + s);
         }
 
         @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            // do nothing
+        public void onChildChanged(DataSnapshot dataSnapshot, String key) {
+            Log.d(TAG, "incomingMessageListener: onChildChanged " + key);
+
+            handleIncomingMessage(key);
         }
 
         @Override
@@ -150,6 +152,7 @@ public class ProfileHolder {
         profileId = NexxusSharePreferences.getProfileId(context);
 
         fetchAllProfiles(allProfilesListener);
+        setupIncomingMessageListener(incomingMessageListener);
     }
 
 
@@ -228,12 +231,10 @@ public class ProfileHolder {
         return attendees;
     }
 
-    public void setMessagesListener() {
-
-        // TODO set this only for active profiles
-        // also set Incomimg message listener
-        String messagesRowId = MessagesHelper.getMessageRowId(profile.id, PROFILE_ID_SV);
-        setupIncomingMessageListener(messagesRowId);
+    public static void logout() {
+        instance = null;
+        accessToken = null;
+        session = null;
     }
 
     private void fetchProfileFromDb(final ValueEventListener listener) {
@@ -277,14 +278,31 @@ public class ProfileHolder {
         Database.instance().databaseReference.child(Database.PROFILE_TABLE).addValueEventListener(listener);
     }
 
-    private void setupIncomingMessageListener(String messagesRowId) {
-        Database.instance().messagesTableReference().child(messagesRowId).addChildEventListener(incomingMessageListener);
+    private void setupIncomingMessageListener(ChildEventListener messageListener) {
+        Database.instance().messagesTableReference().addChildEventListener(incomingMessageListener);
     }
 
-    public static void logout() {
-        instance = null;
-        accessToken = null;
-        session = null;
+
+    private void handleIncomingMessage(String key) {
+        StringTokenizer tokenizer = new StringTokenizer(key, "?");
+        int count = tokenizer.countTokens();
+        String id1 = tokenizer.nextToken();
+        String id2 = tokenizer.nextToken();
+
+        Log.d(TAG, "incomingMessageListener: onChildChanged id 1" + id1);
+        Log.d(TAG, "incomingMessageListener: onChildChanged id 2" + id2);
+
+        Profile otherProfile = null;
+        if (id1.equals(profileId)) {
+            otherProfile = profilesMap.get(id2);
+        } else if (id2.equals(profileId)) {
+            otherProfile = profilesMap.get(id1);
+        }
+        if (otherProfile != null) {
+            Log.d(TAG, "Recieved incoming message from " + otherProfile.firstName);
+            // notify registered listeners
+            EventBus.getDefault().postSticky(otherProfile);
+        }
     }
 
 }

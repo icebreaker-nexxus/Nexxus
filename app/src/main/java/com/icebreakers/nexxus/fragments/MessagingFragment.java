@@ -96,7 +96,7 @@ public class MessagingFragment extends Fragment {
                 message.id = UUID.randomUUID().toString();
                 message.senderId = loggedInProfile.id;
                 Database.instance().saveMessage(messagesRowId, message);
-                Database.instance().saveMessageToProfile(loggedInProfile, new MessageRef(messagesRowId, messageToProfile.id));
+                Database.instance().saveMessageRefToProfile(loggedInProfile, new MessageRef(messagesRowId, messageToProfile.id));
                 return true;
             }
         });

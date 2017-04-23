@@ -30,12 +30,13 @@ import com.icebreakers.nexxus.databinding.ActivityEventListBinding;
 import com.icebreakers.nexxus.fragments.BaseEventListFragment;
 import com.icebreakers.nexxus.fragments.CheckedInEventListFragment;
 import com.icebreakers.nexxus.fragments.NearbyEventListFragment;
+import com.icebreakers.nexxus.helpers.MessagesHelper;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
-import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.messaging.MessageRef;
+import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.utils.LocationProvider;
 import com.icebreakers.nexxus.utils.LogoutUtils;
 
@@ -437,12 +438,17 @@ public class EventListActivity extends BaseActivity
 
     // UI updates must run on MainThread
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(Message message) {
-        Log.d(TAG, "Message received " + message.text);
+    public void onEvent(Profile otherProfile) {
+        Log.d(TAG, "Message received from: " + otherProfile.firstName);
         binding.badger.setVisibility(View.VISIBLE);
 
-        Profile sender = ProfileHolder.getInstance(this).getProfile(message.id);
-        senders.add(sender);
+        // Add this to Profile's messageRefs
+        String messageRowId = MessagesHelper.getMessageRowId(profile.id, otherProfile.id);
+        MessageRef messageRef = new MessageRef(messageRowId, otherProfile.id);
+        Database.instance().saveMessageRefToProfile(profile, messageRef);
+
+        refreshDirectMessagesView(binding.navigationView);
+        EventBus.getDefault().removeStickyEvent(otherProfile);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
