@@ -1,6 +1,7 @@
 package com.icebreakers.nexxus.activities;
 
 import agency.tango.materialintroscreen.MaterialIntroActivity;
+import agency.tango.materialintroscreen.MessageButtonBehaviour;
 import agency.tango.materialintroscreen.SlideFragmentBuilder;
 import agency.tango.materialintroscreen.animations.IViewTranslation;
 import android.content.Intent;
@@ -53,7 +54,13 @@ public class OnboardingActivity extends MaterialIntroActivity {
                      .image(R.drawable.nearby)
                      .title(getString(R.string.onboarding_nearby))
                      .description(getString(R.string.onboarding_nearby_subtitle))
-                     .build());
+                     .build(),
+                 new MessageButtonBehaviour(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View v) {
+                         startActivity(new Intent(OnboardingActivity.this, LoginActivity.class));
+                     }
+                 }, getString(R.string.start_networking)));
 
     }
 
