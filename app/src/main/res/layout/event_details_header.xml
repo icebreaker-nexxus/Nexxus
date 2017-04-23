@@ -120,9 +120,20 @@
         android:alpha="0.5"
         android:background="@color/separator"/>
 
+    <TextView
+        android:id="@+id/tvHaveCheckedIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vSeparator2"
+        android:textAppearance="@style/TextAppearance.ArtDeco.Headline1.Small.Bold"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        tools:text="18 people have checked in"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvProfileImages"
-        android:layout_below="@id/vSeparator2"
+        android:layout_below="@id/tvHaveCheckedIn"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_marginTop="5dp"
@@ -131,9 +142,18 @@
         android:divider="@null"
         android:layout_height="wrap_content" />
 
+    <View
+        android:id="@+id/vSeparator3"
+        android:layout_width="match_parent"
+        android:layout_marginRight="5dp"
+        android:layout_height="1dp"
+        android:layout_below="@id/rvProfileImages"
+        android:alpha="0.5"
+        android:background="@color/separator"/>
+
     <com.borjabravo.readmoretextview.ReadMoreTextView
         android:id="@+id/tvDescription"
-        android:layout_below="@id/rvProfileImages"
+        android:layout_below="@id/vSeparator3"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="10dp"
         app:trimMode="trimModeLine"

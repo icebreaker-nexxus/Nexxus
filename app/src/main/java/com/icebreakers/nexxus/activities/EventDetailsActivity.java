@@ -188,6 +188,7 @@ public class EventDetailsActivity extends BaseActivity {
 
         // Add item click listener
         ItemClickSupport.addTo(binding.header.rvProfileImages).setOnItemClickListener(profileImageClickListener);
+        refreshNumberOfAttendees();
     }
 
     private void setupCheckInSection() {
@@ -208,6 +209,7 @@ public class EventDetailsActivity extends BaseActivity {
         adapter.notifyItemInserted(0);
         binding.header.rvProfileImages.scrollToPosition(0);
         binding.header.linearLayoutCheckInSection.setVisibility(View.GONE);
+        refreshNumberOfAttendees();
         EventBus.getDefault().post(event);
 
         make(binding.toolbar, getString(R.string.after_checkin), Snackbar.LENGTH_LONG)
@@ -218,6 +220,10 @@ public class EventDetailsActivity extends BaseActivity {
                     }
                 }).show();
 
+    }
+
+    private void refreshNumberOfAttendees() {
+        binding.header.tvHaveCheckedIn.setText(String.format(getString(R.string.have_checked_in), attendees.size()));
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
