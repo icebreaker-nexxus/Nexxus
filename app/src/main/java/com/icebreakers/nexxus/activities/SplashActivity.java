@@ -35,12 +35,11 @@ public class SplashActivity extends BaseActivity {
         ProfileHolder profileHolder = ProfileHolder.getInstance(this);
 
         if (profileHolder.hasUserLoggedIn()) {
-            profileHolder.forceFetchFromDB(new ProfileHolder.OnProfileReadyCallback() {
+            profileHolder.fetchProfle(new ProfileHolder.OnProfileReadyCallback() {
                 @Override
                 public void onSuccess(com.icebreakers.nexxus.models.Profile profile) {
                     Log.d(TAG, "Calling EventListActivity");
                     startActivity(new Intent(SplashActivity.this, EventListActivity.class));
-                    profileHolder.setMessagesListener();
                     finish();
                 }
 

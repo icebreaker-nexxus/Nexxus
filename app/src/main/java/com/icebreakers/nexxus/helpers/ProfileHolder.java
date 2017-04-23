@@ -30,12 +30,14 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import retrofit2.http.HEAD;
+
 import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
+
 
 /**
  * Created by radhikak on 4/11/17.
@@ -126,15 +128,13 @@ public class ProfileHolder {
 
             messagesRowIds.add(dataSnapshot.getKey());
 
-
         }
 
         @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String previousKey) {
-            Log.d(TAG, "incomingMessageListener: onChildChanged " + dataSnapshot.getKey());
-            handleIncomingMessage(dataSnapshot.getKey());
-            Message message = dataSnapshot.getValue(Message.class);
-            EventBus.getDefault().postSticky(message);
+        public void onChildChanged(DataSnapshot dataSnapshot, String key) {
+            Log.d(TAG, "incomingMessageListener: onChildChanged " + key);
+
+            handleIncomingMessage(key);
         }
 
         @Override
@@ -268,13 +268,6 @@ public class ProfileHolder {
             profile.messageIds.add(messagesRowId);
             Database.instance().saveProfile(profile);
         }
-
-        public void setMessagesListener() {
-
-        // TODO set this only for active profiles
-        // also set Incomimg message listener
-        String messagesRowId = MessagesHelper.getMessageRowId(profile.id, PROFILE_ID_SV);
-        setupIncomingMessageListener(messagesRowId);
     }
 
     private void fetchProfileFromDb(final ValueEventListener listener) {
@@ -349,10 +342,5 @@ public class ProfileHolder {
             EventBus.getDefault().post(otherProfile.firstName);
         }
     }
-
-    private void setupIncomingMessageListener(String messagesRowId) {
-        Database.instance().messagesTableReference().child(messagesRowId).addChildEventListener(incomingMessageListener);
-    }
-
 
 }

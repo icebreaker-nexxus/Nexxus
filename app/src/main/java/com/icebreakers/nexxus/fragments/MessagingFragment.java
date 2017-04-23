@@ -120,7 +120,7 @@ public class MessagingFragment extends Fragment {
                 emptyStateRelativeLayout.setVisibility(View.GONE);
 
                 GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id, loggedInProfile.id);
-                Database.instance().saveMessageToProfile(loggedInProfile, new MessageRef(messagesRowId, messageToProfile.id));
+                Database.instance().saveMessageRefToProfile(loggedInProfile, new MessageRef(messagesRowId, messageToProfile.id));
                 return true;
             }
         });

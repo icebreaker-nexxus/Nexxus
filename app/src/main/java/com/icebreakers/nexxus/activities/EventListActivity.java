@@ -30,11 +30,13 @@ import com.icebreakers.nexxus.databinding.ActivityEventListBinding;
 import com.icebreakers.nexxus.fragments.BaseEventListFragment;
 import com.icebreakers.nexxus.fragments.CheckedInEventListFragment;
 import com.icebreakers.nexxus.fragments.NearbyEventListFragment;
+import com.icebreakers.nexxus.helpers.MessagesHelper;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.messaging.MessageRef;
+import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.utils.LocationProvider;
 import com.icebreakers.nexxus.utils.LogoutUtils;
 
@@ -450,7 +452,7 @@ public class EventListActivity extends BaseActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(Profile profile) {
+    public void onEvent(Profile profile) {
         Log.d(TAG, "Updated Profile  received " + profile.firstName);
         this.profile = profile;
         refreshDirectMessagesView(binding.navigationView);
