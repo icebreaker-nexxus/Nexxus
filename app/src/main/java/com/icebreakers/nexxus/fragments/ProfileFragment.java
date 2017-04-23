@@ -13,6 +13,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -68,6 +70,7 @@ public class ProfileFragment extends Fragment {
     private Similarities similaritiesWithLoggedInMember;
     private boolean isSelfView;
     private MessageClickEvent messageClickEvent;
+    private boolean isTransitionHappening = false;
 
     public static ProfileFragment newInstance(Profile profile) {
 
@@ -145,21 +148,71 @@ public class ProfileFragment extends Fragment {
         rootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                Log.v(TAG, "Starting animation");
-                view.removeOnLayoutChangeListener(this);
-                int x = collapsingToolbarLayout.getRight();
-                int y = collapsingToolbarLayout.getBottom();
-
-                int endRadius = (int) Math.hypot(rootView.getWidth(), rootView.getHeight());
-
-                Animator reveal = ViewAnimationUtils.createCircularReveal(toolbarBackground, x, y, 0, endRadius);
-                toolbarBackground.setVisibility(View.VISIBLE);
-                reveal.setInterpolator(new DecelerateInterpolator(2f));
-                reveal.setDuration(3000);
-                reveal.start();
+                Log.v(TAG, "Starting animation...");
+                if (isSelfView) {
+                    startAnimation(rootView);
+                }
             }
         });
+        if (!isSelfView) {
+            Transition transition = TransitionInflater.from(getActivity())
+                                                      .inflateTransition(R.transition.changebounds_with_arcmotion);
+            getActivity().getWindow().setSharedElementEnterTransition(transition);
+            transition.addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+                    Log.v(TAG, "Transition is starting");
+                    isTransitionHappening = true;
+                    //startAnimation(rootView);
+                }
 
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    Log.d(TAG, "Transition has ended");
+                    startAnimation(rootView);
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+
+                }
+
+            });
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void startAnimation(View rootView) {
+        int x = (ivProfileImage.getRight() + ivProfileImage.getLeft())/2;
+        int y = (ivProfileImage.getBottom() + ivProfileImage.getTop())/2;
+
+        int endRadius = (int) Math.hypot(rootView.getWidth(), rootView.getHeight());
+
+        Animator reveal = ViewAnimationUtils.createCircularReveal(toolbarBackground, x, y, 0, endRadius);
+        toolbarBackground.setVisibility(View.VISIBLE);
+        reveal.setInterpolator(new DecelerateInterpolator(2f));
+        reveal.setDuration(4000);
+        reveal.start();
+    }
+
+    @Override
+    public void onStart() {
+        if (isTransitionHappening) {
+            Log.v(TAG, "Transition is happening, stay tuned!");
+        } else {
+            Log.v(TAG, "Transition is not happening");
+        }
+        super.onStart();
     }
 
     private void insertCommonSection() {
