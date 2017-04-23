@@ -82,6 +82,7 @@ public class EventDetailsActivity extends BaseActivity {
             if (profileHolder.isUserCheckedIn(eventRef)) {
                 // start ProfileListActivity
                 startActivity(new Intent(EventDetailsActivity.this, ProfileListActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
             } else {
                 final Snackbar snackbar = Snackbar.make(recyclerView, getString(R.string.before_checkin), Snackbar.LENGTH_LONG);
                 snackbar.setAction(getString(R.string.checkin), new View.OnClickListener() {

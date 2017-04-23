@@ -108,6 +108,7 @@ public class EventListActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
         setContentView(R.layout.activity_event_list);
         ButterKnife.bind(this);
 
@@ -376,7 +377,7 @@ public class EventListActivity extends BaseActivity
                 //Router.startEventListActivity(this, profile);
                 break;
             case R.id.profile_nav:
-                Router.startProfileActivity(this, profile);
+                Router.startProfileActivity(this, profile, null);
                 break;
             case R.id.logout_nav:
                 LogoutUtils.logout(this);

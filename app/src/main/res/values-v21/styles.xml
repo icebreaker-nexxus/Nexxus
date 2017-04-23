@@ -8,5 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/changebounds_with_arcmotion</item>
+        <item name="android:windowSharedElementExitTransition">@transition/changebounds_with_arcmotion</item>
     </style>
 </resources>

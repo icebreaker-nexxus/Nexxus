@@ -3,6 +3,7 @@ package com.icebreakers.nexxus.activities;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,7 +55,6 @@ public class ProfileListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_list);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.attendees));
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -79,7 +79,8 @@ public class ProfileListActivity extends BaseActivity {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 Profile profile = profiles.get(position);
-                Router.startProfileActivity(ProfileListActivity.this, profile);
+                Pair<View, String> p1 = Pair.create(v.findViewById(R.id.profile_image), "profileImage");
+                Router.startProfileActivity(ProfileListActivity.this, profile, p1);
             }
         });
     }
