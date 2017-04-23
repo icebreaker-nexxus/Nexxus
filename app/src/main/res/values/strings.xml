@@ -49,7 +49,7 @@
     <string name="onboarding_search_subtitle">Search by name, company, school</string>
 
     <string name="onboarding_nearby">Nearby attendees</string>
-    <string name="onboarding_nearby_subtitle">Feeling shy? Use the nearby feature to find out folks open to network</string>
+    <string name="onboarding_nearby_subtitle">Feeling shy? Use nearby to find out folks open to network</string>
 
     <string name="google_maps_api_key">AIzaSyAnPKA09fo3xX3ndsrgcITOAfAZ3N2Ifps</string>
     <string name="nearby_key">AIzaSyAKeW0hbeRA14tgyC672_Xyq8cUwaz0vtI</string>
