@@ -55,7 +55,6 @@ public class ProfileListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_list);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.attendees));
         getSupportActionBar().setHomeButtonEnabled(true);

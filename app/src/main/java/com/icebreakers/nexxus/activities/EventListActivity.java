@@ -102,13 +102,13 @@ public class EventListActivity extends BaseActivity
                                                                                                p1);
             detailsActivityIntent.putExtra("event", Parcels.wrap(event));
             startActivity(detailsActivityIntent, options.toBundle());
-            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
         setContentView(R.layout.activity_event_list);
         ButterKnife.bind(this);
 
