@@ -32,7 +32,7 @@ public class SplashActivity extends BaseActivity {
                 @Override
                 public void onSuccess(com.icebreakers.nexxus.models.Profile profile) {
                     Log.d(TAG, "Calling EventListActivity");
-                    startActivity(new Intent(SplashActivity.this, EventListActivity.class));
+                    startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
                     finish();
                 }
 
@@ -51,7 +51,7 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
                 // close this activity
                 finish();
             }
