@@ -1,5 +1,6 @@
 package com.icebreakers.nexxus.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
 import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
+import com.icebreakers.nexxus.models.messaging.MessageRef;
 import com.icebreakers.nexxus.models.messaging.UIMessage;
 import com.icebreakers.nexxus.persistence.Database;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -118,6 +120,7 @@ public class MessagingFragment extends Fragment {
                 emptyStateRelativeLayout.setVisibility(View.GONE);
 
                 GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id, loggedInProfile.id);
+                Database.instance().saveMessageToProfile(loggedInProfile, new MessageRef(messagesRowId, messageToProfile.id));
                 return true;
             }
         });
@@ -164,6 +167,7 @@ public class MessagingFragment extends Fragment {
         });
     }
 
+    @SuppressLint("StringFormatMatches")
     private void setupPrecannedMessage() {
         Similarities similarities = SimilaritiesFinder.findSimilarities(loggedInProfile, messageToProfile);
         if (similarities.numOfSimilarities != 0) {

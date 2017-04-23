@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -65,6 +66,7 @@ public class ProfileHolder {
     private static HashMap<String, Profile> profilesMap = new HashMap<>();
 
     private static Set<String> messagesRowIds = new HashSet<>();
+    private static List<Message> allMessages = new ArrayList<>();
 
     private OnProfileReadyCallback callback = null;
 
@@ -83,6 +85,9 @@ public class ProfileHolder {
 
                 Log.d(TAG, "Registering for push notification " + profile.id);
                 FirebaseMessaging.getInstance().subscribeToTopic(profile.id);
+
+                // post updated profile
+                EventBus.getDefault().post(profile);
                 if (callback != null) {
                     callback.onSuccess(profile);
                     callback = null;
@@ -128,6 +133,8 @@ public class ProfileHolder {
         public void onChildChanged(DataSnapshot dataSnapshot, String previousKey) {
             Log.d(TAG, "incomingMessageListener: onChildChanged " + dataSnapshot.getKey());
             handleIncomingMessage(dataSnapshot.getKey());
+            Message message = dataSnapshot.getValue(Message.class);
+            EventBus.getDefault().postSticky(message);
         }
 
         @Override
@@ -261,6 +268,13 @@ public class ProfileHolder {
             profile.messageIds.add(messagesRowId);
             Database.instance().saveProfile(profile);
         }
+
+        public void setMessagesListener() {
+
+        // TODO set this only for active profiles
+        // also set Incomimg message listener
+        String messagesRowId = MessagesHelper.getMessageRowId(profile.id, PROFILE_ID_SV);
+        setupIncomingMessageListener(messagesRowId);
     }
 
     private void fetchProfileFromDb(final ValueEventListener listener) {
@@ -335,5 +349,10 @@ public class ProfileHolder {
             EventBus.getDefault().post(otherProfile.firstName);
         }
     }
+
+    private void setupIncomingMessageListener(String messagesRowId) {
+        Database.instance().messagesTableReference().child(messagesRowId).addChildEventListener(incomingMessageListener);
+    }
+
 
 }

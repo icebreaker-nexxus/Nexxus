@@ -42,6 +42,8 @@ public class Profile {
 
     public HashMap<String, MessageRef> messageRefHashMap = new HashMap<>();
     public List<String> messageIds = new ArrayList<>();
+    public List<MessageRef> messageRefs = new ArrayList<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }
@@ -56,6 +58,7 @@ public class Profile {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
 
     @Parcel
     public static class LIDate {

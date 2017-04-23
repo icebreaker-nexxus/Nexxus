@@ -376,7 +376,7 @@ public class EventListActivity extends BaseActivity
         messagesMenuItem.getSubMenu().clear();
 
         // set Visiblity depending on direct messages
-        if (!profile.messageIds.isEmpty()) {
+        if (!profile.messageRefs.isEmpty()) {
             messagesMenuItem.setVisible(true);
             // add links to direct messages
             final SubMenu messageList = messagesMenuItem.getSubMenu();

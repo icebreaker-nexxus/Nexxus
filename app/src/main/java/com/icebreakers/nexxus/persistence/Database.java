@@ -52,10 +52,6 @@ public class Database {
   
     public void saveEvent(Event event) {
         databaseReference.child(EVENT_TABLE).child(event.id).setValue(event);
-    }
 
-    public void saveMessageRefToProfile(Profile profile, MessageRef messageRef) {
-//        profile.messageRefs.add(messageRef);
-//        saveProfile(profile);
     }
 }
