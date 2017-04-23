@@ -34,6 +34,9 @@
     <string name="before_checkin">"Check-in to the event to view all attendees</string>
     <string name="also_studied_at">Also studied at %s</string>
     <string name="also_worked_at">Also worked at %s</string>
+    <string name="message_also_worked_at" formatted="false">Hey %s, looks like you have also worked at %s</string>
+    <string name="message_also_studied_at" formatted="false">Hey %s, looks like you have also studied at %s</string>
+    <string name="message_things_in_common" formatted="false">Hey %s, looks like we have a few things in common</string>
 
     <string name="google_maps_api_key">AIzaSyAnPKA09fo3xX3ndsrgcITOAfAZ3N2Ifps</string>
     <string name="nearby_key">AIzaSyAKeW0hbeRA14tgyC672_Xyq8cUwaz0vtI</string>
