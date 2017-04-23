@@ -127,6 +127,8 @@ dependencies {
     // EventBus
     compile 'org.greenrobot:eventbus:3.0.0'
 
+    compile 'agency.tango.android:material-intro-screen:0.0.5'
+
     // For RxJava 2
     //compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.0.6'
 }
