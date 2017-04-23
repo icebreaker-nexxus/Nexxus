@@ -32,7 +32,7 @@
             android:label="@string/title_activity_event_details" />
         <activity android:name=".activities.MessagingActivity"/>
         <activity android:name=".activities.NearbyActivity"/>
-        <activity android:name=".activities.OnboardingActivity"/>
+        <activity android:name=".activities.OnboardingActivity" android:theme="@style/AppTheme.Onboarding" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
