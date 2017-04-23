@@ -7,7 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -15,22 +16,20 @@ import com.google.firebase.database.DatabaseError;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.helpers.MessagesHelper;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
+import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
 import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
+import com.icebreakers.nexxus.models.Similarities;
 import com.icebreakers.nexxus.models.messaging.UIMessage;
 import com.icebreakers.nexxus.persistence.Database;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
-
 import org.parceler.Parcels;
 
 import java.util.Calendar;
 import java.util.UUID;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/12/17.
@@ -47,6 +46,7 @@ public class MessagingFragment extends Fragment {
     Profile loggedInProfile;
     Profile messageToProfile;
     String messagesRowId;
+    boolean resetMessage = false;
 
     ProfileHolder profileHolder;
 
@@ -85,6 +85,7 @@ public class MessagingFragment extends Fragment {
         setupInputMessageListener();
         setupNewIncomingMessageListener();
         messagesList.setAdapter(messagesListAdapter);
+        setupPrecannedMessage();
         //bootstrapMessagesFromDatabase();
         return view;
     }
@@ -113,6 +114,9 @@ public class MessagingFragment extends Fragment {
         Database.instance().messagesTableReference().child(messagesRowId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (!resetMessage) {
+                    resetPrecannedMessage();
+                }
                 Message message = dataSnapshot.getValue(Message.class);
                 UIMessage uiMessage = MessagesHelper.convertFromDbMessageModelToUIMessage(message,
                                                                                           loggedInProfile,
@@ -140,6 +144,32 @@ public class MessagingFragment extends Fragment {
                 // do nothing
             }
         });
+    }
+
+    private void setupPrecannedMessage() {
+        Similarities similarities = SimilaritiesFinder.findSimilarities(loggedInProfile, messageToProfile);
+        if (similarities.numOfSimilarities != 0) {
+            if (similarities.numOfSimilarities > 1) {
+                setMessage(String.format(getString(R.string.message_things_in_common), messageToProfile.firstName, String.valueOf(
+                    similarities.numOfSimilarities
+                )));
+            } else {
+                if (similarities.similarEducations != null && similarities.similarEducations.size() != 0) {
+                    setMessage(String.format(getString(R.string.message_also_studied_at), messageToProfile.firstName, similarities.similarEducations.get(0).schoolName));
+                } else if (similarities.similarPositions != null && similarities.similarPositions.size() != 0) {
+                    setMessage(String.format(getString(R.string.message_also_worked_at), messageToProfile.firstName, similarities.similarPositions.get(0).companyName));
+                }
+            }
+        }
+    }
+
+    private void setMessage(String message) {
+        messageInput.getInputEditText().setText(message);
+    }
+
+    private void resetPrecannedMessage() {
+        resetMessage = true;
+        messageInput.getInputEditText().setText("");
     }
 
     // Please ignore the section below, kept for testing
