@@ -17,6 +17,7 @@ import com.icebreakers.nexxus.helpers.MessagesHelper;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
+import com.icebreakers.nexxus.models.messaging.MessageRef;
 import com.icebreakers.nexxus.models.messaging.UIMessage;
 import com.icebreakers.nexxus.persistence.Database;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -95,6 +96,7 @@ public class MessagingFragment extends Fragment {
                 message.id = UUID.randomUUID().toString();
                 message.senderId = loggedInProfile.id;
                 Database.instance().saveMessage(messagesRowId, message);
+                Database.instance().saveMessageToProfile(loggedInProfile, new MessageRef(messagesRowId, messageToProfile.id));
                 return true;
             }
         });
