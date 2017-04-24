@@ -8,10 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+<<<<<<< HEAD
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+=======
+
+>>>>>>> v1.0 Direct Messages in Navigation Drawer
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,10 +35,14 @@ import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
+
 import org.parceler.Parcels;
 
 import java.util.Calendar;
 import java.util.UUID;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/12/17.
@@ -121,6 +129,11 @@ public class MessagingFragment extends Fragment {
 
                 GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id, loggedInProfile.id);
                 Database.instance().saveMessageRefToProfile(loggedInProfile, new MessageRef(messagesRowId, messageToProfile.id));
+                message.receiverId = messageToProfile.id;
+
+
+                profileHolder.saveMessage(messagesRowId, message);
+
                 return true;
             }
         });

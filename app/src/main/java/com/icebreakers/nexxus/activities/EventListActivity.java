@@ -36,7 +36,6 @@ import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.messaging.MessageRef;
-import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.utils.LocationProvider;
 import com.icebreakers.nexxus.utils.LogoutUtils;
 
@@ -378,7 +377,7 @@ public class EventListActivity extends BaseActivity
         messagesMenuItem.getSubMenu().clear();
 
         // set Visiblity depending on direct messages
-        if (!profile.messageRefs.isEmpty()) {
+        if (!profile.messageIds.isEmpty()) {
             messagesMenuItem.setVisible(true);
             // add links to direct messages
             final SubMenu messageList = messagesMenuItem.getSubMenu();

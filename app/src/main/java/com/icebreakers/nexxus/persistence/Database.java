@@ -6,7 +6,6 @@ import com.icebreakers.nexxus.models.Event;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
-import com.icebreakers.nexxus.models.messaging.MessageRef;
 
 /**
  * Created by amodi on 4/6/17.

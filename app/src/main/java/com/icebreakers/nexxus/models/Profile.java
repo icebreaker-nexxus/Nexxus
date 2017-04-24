@@ -42,7 +42,6 @@ public class Profile {
 
     public HashMap<String, MessageRef> messageRefHashMap = new HashMap<>();
     public List<String> messageIds = new ArrayList<>();
-    public List<MessageRef> messageRefs = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

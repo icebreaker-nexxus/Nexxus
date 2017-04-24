@@ -34,8 +34,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import retrofit2.http.HEAD;
-
 import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
 
@@ -68,7 +66,6 @@ public class ProfileHolder {
     private static HashMap<String, Profile> profilesMap = new HashMap<>();
 
     private static Set<String> messagesRowIds = new HashSet<>();
-    private static List<Message> allMessages = new ArrayList<>();
 
     private OnProfileReadyCallback callback = null;
 
@@ -127,14 +124,12 @@ public class ProfileHolder {
             Log.d(TAG, "incomingMessageListener: onChildAdded " + dataSnapshot.getKey());
 
             messagesRowIds.add(dataSnapshot.getKey());
-
         }
 
         @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String key) {
-            Log.d(TAG, "incomingMessageListener: onChildChanged " + key);
-
-            handleIncomingMessage(key);
+        public void onChildChanged(DataSnapshot dataSnapshot, String previousKey) {
+            Log.d(TAG, "incomingMessageListener: onChildChanged " + dataSnapshot.getKey());
+            handleIncomingMessage(dataSnapshot.getKey());
         }
 
         @Override
