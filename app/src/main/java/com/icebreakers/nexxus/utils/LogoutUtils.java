@@ -1,6 +1,7 @@
 package com.icebreakers.nexxus.utils;
 
 import android.content.Intent;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.icebreakers.nexxus.activities.BaseActivity;
 import com.icebreakers.nexxus.activities.LoginActivity;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
@@ -17,6 +18,7 @@ public class LogoutUtils {
         LISessionManager.getInstance(activity).clearSession();
         NexxusSharePreferences.clearSharedPreferences(activity);
         activity.startActivity(new Intent(activity, LoginActivity.class));
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(ProfileHolder.getInstance(activity).getProfile().id);
         ProfileHolder.logout();
         activity.finish();
     }

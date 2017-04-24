@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
@@ -62,6 +63,8 @@ public class ProfileHolder {
             } else {
                 Log.d(TAG, "Profile fetched successfully " + currentProfile.firstName);
                 profile = currentProfile;
+                Log.d(TAG, "Registering for push notification " + profile.id);
+                FirebaseMessaging.getInstance().subscribeToTopic(profile.id);
                 if (callback != null) {
                     callback.onSuccess(profile);
                     callback = null;
@@ -200,6 +203,8 @@ public class ProfileHolder {
                 Database.instance().saveProfile(profile);
 
                 Log.d(TAG, "Profile fetched successfully");
+                Log.d(TAG, "Registering for push notification " + profileId);
+                FirebaseMessaging.getInstance().subscribeToTopic(profileId);
 
                 if (callback != null) {
                     callback.onSuccess(profile);

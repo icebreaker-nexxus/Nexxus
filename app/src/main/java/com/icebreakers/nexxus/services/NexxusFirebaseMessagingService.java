@@ -36,7 +36,7 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null)
         {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody());
+            sendNotification(remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getTitle());
 
         }
 
@@ -44,7 +44,7 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
         // message, here is where that should be initiated. See sendNotification method below.
     }
 
-    private void sendNotification(String messageBody) {
+    private void sendNotification(String messageBody, String title) {
 
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -56,7 +56,7 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-            .setContentTitle("FCM Message")
+            .setContentTitle(title != null ? title : "New Notification")
             .setSmallIcon(R.drawable.ic_nexxus)
             .setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary))
             .setContentText(messageBody)

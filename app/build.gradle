@@ -131,6 +131,8 @@ dependencies {
 
     compile 'com.google.firebase:firebase-messaging:10.2.1'
 
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+
     // For RxJava 2
     //compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.0.6'
 }
