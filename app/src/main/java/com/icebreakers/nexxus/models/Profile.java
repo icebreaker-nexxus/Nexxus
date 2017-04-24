@@ -7,6 +7,7 @@ import com.icebreakers.nexxus.models.messaging.MessageRef;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -39,7 +40,8 @@ public class Profile {
 
     public boolean active = false;
 
-    public List<MessageRef> messageRefs = new ArrayList<>();
+    public HashMap<String, MessageRef> messageRefHashMap = new HashMap<>();
+    public List<String> messageIds = new ArrayList<>();
 
     @Parcel
     public static class LIDate {

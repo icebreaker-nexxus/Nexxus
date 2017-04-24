@@ -17,7 +17,6 @@ import com.icebreakers.nexxus.helpers.MessagesHelper;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
-import com.icebreakers.nexxus.models.messaging.MessageRef;
 import com.icebreakers.nexxus.models.messaging.UIMessage;
 import com.icebreakers.nexxus.persistence.Database;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -49,6 +48,8 @@ public class MessagingFragment extends Fragment {
     Profile messageToProfile;
     String messagesRowId;
 
+    ProfileHolder profileHolder;
+
     public static MessagingFragment newInstance(Profile messageToProfile) {
 
         Bundle args = new Bundle();
@@ -60,8 +61,10 @@ public class MessagingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        profileHolder = ProfileHolder.getInstance(getContext());
         messageToProfile = Parcels.unwrap(getArguments().getParcelable(PROFILE_EXTRA));
-        loggedInProfile = ProfileHolder.getInstance(getContext()).getProfile();
+        loggedInProfile = profileHolder.getProfile();
         messagesRowId = MessagesHelper.getMessageRowId(loggedInProfile, messageToProfile);
 
     }
@@ -95,8 +98,11 @@ public class MessagingFragment extends Fragment {
                 message.text = charSequence.toString();
                 message.id = UUID.randomUUID().toString();
                 message.senderId = loggedInProfile.id;
-                Database.instance().saveMessage(messagesRowId, message);
-                Database.instance().saveMessageRefToProfile(loggedInProfile, new MessageRef(messagesRowId, messageToProfile.id));
+                message.receiverId = messageToProfile.id;
+
+
+                profileHolder.saveMessage(messagesRowId, message);
+
                 return true;
             }
         });

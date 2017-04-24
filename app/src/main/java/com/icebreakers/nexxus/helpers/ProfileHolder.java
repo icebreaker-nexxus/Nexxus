@@ -14,6 +14,7 @@ import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
+import com.icebreakers.nexxus.models.messaging.MessageRef;
 import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
@@ -27,7 +28,9 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
@@ -48,6 +51,8 @@ public class ProfileHolder {
 
     private static ProfileHolder instance = null;
 
+
+
     public interface OnProfileReadyCallback {
         public void onSuccess(Profile profile);
         public void onError(LIApiError error);
@@ -60,7 +65,7 @@ public class ProfileHolder {
     private static List<Profile> allProfiles = new ArrayList<>();
     private static HashMap<String, Profile> profilesMap = new HashMap<>();
 
-    private static List<Message> allMessages = new ArrayList<>();
+    private static Set<String> messagesRowIds = new HashSet<>();
 
     private OnProfileReadyCallback callback = null;
 
@@ -110,14 +115,43 @@ public class ProfileHolder {
     private ChildEventListener incomingMessageListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Log.d(TAG, "incomingMessageListener: onChildAdded " + s);
+            Log.d(TAG, "incomingMessageListener: onChildAdded " + dataSnapshot.getKey());
+
+            messagesRowIds.add(dataSnapshot.getKey());
+
+
         }
 
         @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String key) {
-            Log.d(TAG, "incomingMessageListener: onChildChanged " + key);
+        public void onChildChanged(DataSnapshot dataSnapshot, String previousKey) {
+            Log.d(TAG, "incomingMessageListener: onChildChanged " + dataSnapshot.getKey());
+            handleIncomingMessage(dataSnapshot.getKey());
 
-            handleIncomingMessage(key);
+            for(DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
+                Message message = dataSnapshotChild.getValue(Message.class);
+                Profile otherProfile = null;
+
+                if (message.senderId != null && message.receiverId != null) {
+
+                    if (message.senderId.equals(profileId)) {
+                        otherProfile = profilesMap.get(message.receiverId);
+                    } else if (message.receiverId.equals(profileId)) {
+                        otherProfile = profilesMap.get(message.senderId);
+                    }
+
+                    if (otherProfile != null) {
+                        Log.d(TAG, "Recieved incoming message from " + otherProfile.firstName);
+
+                        // save this reference in profile
+                        saveMessageRef(dataSnapshot.getKey(), otherProfile.id);
+
+                        // notify registered listeners
+                        EventBus.getDefault().postSticky(otherProfile);
+                    }
+                }
+
+                break;
+            }
         }
 
         @Override
@@ -231,10 +265,26 @@ public class ProfileHolder {
         return attendees;
     }
 
+    public void saveMessage(String messagesRowId, Message message) {
+        // save message reference in profile
+        saveMessageRef(messagesRowId, message.receiverId);
+
+        Database.instance().saveMessage(messagesRowId, message);
+
+    }
+
     public static void logout() {
         instance = null;
         accessToken = null;
         session = null;
+    }
+
+    private void saveMessageRef(String messagesRowId, String receiverId) {
+        if (!profile.messageRefHashMap.containsKey(messagesRowId)) {
+            profile.messageRefHashMap.put(messagesRowId, new MessageRef(messagesRowId, receiverId));
+            profile.messageIds.add(messagesRowId);
+            Database.instance().saveProfile(profile);
+        }
     }
 
     private void fetchProfileFromDb(final ValueEventListener listener) {

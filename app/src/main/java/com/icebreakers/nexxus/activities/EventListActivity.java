@@ -36,7 +36,6 @@ import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.messaging.MessageRef;
-import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.utils.LocationProvider;
 import com.icebreakers.nexxus.utils.LogoutUtils;
 
@@ -372,16 +371,16 @@ public class EventListActivity extends BaseActivity
         messagesMenuItem.getSubMenu().clear();
 
         // set Visiblity depending on direct messages
-        if (!profile.messageRefs.isEmpty()) {
+        if (!profile.messageIds.isEmpty()) {
             messagesMenuItem.setVisible(true);
             // add links to direct messages
             final SubMenu messageList = messagesMenuItem.getSubMenu();
 
-            int i = 0;
-            for (MessageRef messageRef : profile.messageRefs) {
+            for (String id : profile.messageIds) {
+                MessageRef messageRef = profile.messageRefHashMap.get(id);
                 Profile otherProfile = profileHolder.getProfile(messageRef.getOtherProfileId());
                 String name = otherProfile.firstName + " " + otherProfile.lastName;
-                messageList.add(Menu.NONE, profile.messageRefs.indexOf(messageRef), Menu.NONE, name);
+                messageList.add(Menu.NONE, profile.messageIds.indexOf(id), Menu.NONE, name);
             }
 
         } else {
@@ -411,9 +410,10 @@ public class EventListActivity extends BaseActivity
                 break;
         }
 
-        if (!profile.messageRefs.isEmpty()) {
-            if (menuItem.getItemId() < profile.messageRefs.size()) {
-                MessageRef messageRef = profile.messageRefs.get(menuItem.getItemId());
+        if (!profile.messageIds.isEmpty()) {
+            if (menuItem.getItemId() < profile.messageIds.size()) {
+                String key = profile.messageIds.get(menuItem.getItemId());
+                MessageRef messageRef = profile.messageRefHashMap.get(key);
 
                 if (messageRef != null) {
                     Router.startMessaginActivity(this, profileHolder.getProfile(messageRef.getOtherProfileId()));
@@ -445,7 +445,7 @@ public class EventListActivity extends BaseActivity
         // Add this to Profile's messageRefs
         String messageRowId = MessagesHelper.getMessageRowId(profile.id, otherProfile.id);
         MessageRef messageRef = new MessageRef(messageRowId, otherProfile.id);
-        Database.instance().saveMessageRefToProfile(profile, messageRef);
+//        Database.instance().saveMessageRefToProfile(profile, messageRef);
 
         refreshDirectMessagesView(binding.navigationView);
         EventBus.getDefault().removeStickyEvent(otherProfile);
