@@ -16,6 +16,7 @@ public class NexxusSharePreferences {
     private static final String NAME = "Nexxus";
     private static final String ACCESS_TOKEN_LI = "access_token_li";
     private static final String PROFILE_ID = "profile_id";
+    private static final String PUSH_REG_ID = "regId";
 
     public static void putLIAccessToken(Context context, AccessToken accessToken) {
         Gson gson = new Gson();
@@ -50,5 +51,9 @@ public class NexxusSharePreferences {
 
     public static void clearSharedPreferences(Context context) {
         getSharedPrefernces(context).edit().clear().commit();
+    }
+
+    public static void putPushRegistrationId(Context context, String pushRegistrationId) {
+        getSharedPrefernces(context).edit().putString(PUSH_REG_ID, pushRegistrationId).apply();
     }
 }
