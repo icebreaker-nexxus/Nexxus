@@ -31,6 +31,7 @@
     <string name="after_checkin">Connect with others attending this event</string>
     <string name="show_me">Show me</string>
     <string name="checkin">Check-In</string>
+    <string name="checkedin">Checked-In</string>
     <string name="before_checkin">"Check-in to the event to view all attendees</string>
     <string name="also_studied_at">Also studied at %s</string>
     <string name="also_worked_at">Also worked at %s</string>
