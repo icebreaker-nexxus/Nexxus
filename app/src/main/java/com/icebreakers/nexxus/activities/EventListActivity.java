@@ -30,7 +30,6 @@ import com.icebreakers.nexxus.databinding.ActivityEventListBinding;
 import com.icebreakers.nexxus.fragments.BaseEventListFragment;
 import com.icebreakers.nexxus.fragments.CheckedInEventListFragment;
 import com.icebreakers.nexxus.fragments.NearbyEventListFragment;
-import com.icebreakers.nexxus.helpers.MessagesHelper;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;

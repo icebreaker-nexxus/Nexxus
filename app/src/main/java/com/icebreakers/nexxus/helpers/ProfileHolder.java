@@ -87,6 +87,8 @@ public class ProfileHolder {
 
                 // post updated profile
                 EventBus.getDefault().post(profile);
+                EventBus.getDefault().postSticky(profile);
+                
                 if (callback != null) {
                     callback.onSuccess(profile);
                     callback = null;
