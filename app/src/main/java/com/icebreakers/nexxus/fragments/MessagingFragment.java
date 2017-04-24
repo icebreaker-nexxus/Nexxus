@@ -14,6 +14,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.clients.GoogleCloudFunctionClient;
 import com.icebreakers.nexxus.helpers.MessagesHelper;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
@@ -100,10 +101,10 @@ public class MessagingFragment extends Fragment {
                 message.id = UUID.randomUUID().toString();
                 message.senderId = loggedInProfile.id;
                 message.receiverId = messageToProfile.id;
-
-
+                
                 profileHolder.saveMessage(messagesRowId, message);
 
+                GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id);
                 return true;
             }
         });

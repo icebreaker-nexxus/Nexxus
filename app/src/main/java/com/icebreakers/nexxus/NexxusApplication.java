@@ -2,12 +2,12 @@ package com.icebreakers.nexxus;
 
 import android.app.Application;
 import android.util.Log;
-
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.icebreakers.nexxus.clients.LinkedInClient;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.persistence.Database;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 
@@ -32,6 +32,8 @@ public class NexxusApplication extends Application {
                                           .setFontAttrId(R.attr.fontPath)
                                           .build()
         );
+        FirebaseApp.initializeApp(this);
+        FirebaseMessaging.getInstance().subscribeToTopic("global");
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         Database.instance().databaseReference.keepSynced(true);
 
