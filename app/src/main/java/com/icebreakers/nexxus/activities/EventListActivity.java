@@ -30,7 +30,6 @@ import com.icebreakers.nexxus.databinding.ActivityEventListBinding;
 import com.icebreakers.nexxus.fragments.BaseEventListFragment;
 import com.icebreakers.nexxus.fragments.CheckedInEventListFragment;
 import com.icebreakers.nexxus.fragments.NearbyEventListFragment;
-import com.icebreakers.nexxus.helpers.MessagesHelper;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
@@ -438,17 +437,10 @@ public class EventListActivity extends BaseActivity
 
     // UI updates must run on MainThread
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(Profile otherProfile) {
-        Log.d(TAG, "Message received from: " + otherProfile.firstName);
+    public void onEvent(String firstName) {
+        Log.d(TAG, "Incoming Message received from: " + firstName);
         binding.badger.setVisibility(View.VISIBLE);
-
-        // Add this to Profile's messageRefs
-        String messageRowId = MessagesHelper.getMessageRowId(profile.id, otherProfile.id);
-        MessageRef messageRef = new MessageRef(messageRowId, otherProfile.id);
-//        Database.instance().saveMessageRefToProfile(profile, messageRef);
-
-        refreshDirectMessagesView(binding.navigationView);
-        EventBus.getDefault().removeStickyEvent(otherProfile);
+        EventBus.getDefault().removeStickyEvent(firstName);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -456,5 +448,6 @@ public class EventListActivity extends BaseActivity
         Log.d(TAG, "Updated Profile  received " + profile.firstName);
         this.profile = profile;
         refreshDirectMessagesView(binding.navigationView);
+        EventBus.getDefault().removeStickyEvent(profile);
     }
 }

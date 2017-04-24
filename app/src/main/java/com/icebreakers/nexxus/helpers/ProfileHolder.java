@@ -80,7 +80,7 @@ public class ProfileHolder {
             } else {
                 Log.d(TAG, "Profile fetched successfully " + currentProfile.firstName);
                 profile = currentProfile;
-                EventBus.getDefault().post(profile);
+                EventBus.getDefault().postSticky(profile);
                 if (callback != null) {
                     callback.onSuccess(profile);
                     callback = null;
@@ -126,32 +126,6 @@ public class ProfileHolder {
         public void onChildChanged(DataSnapshot dataSnapshot, String previousKey) {
             Log.d(TAG, "incomingMessageListener: onChildChanged " + dataSnapshot.getKey());
             handleIncomingMessage(dataSnapshot.getKey());
-
-            for(DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
-                Message message = dataSnapshotChild.getValue(Message.class);
-                Profile otherProfile = null;
-
-                if (message.senderId != null && message.receiverId != null) {
-
-                    if (message.senderId.equals(profileId)) {
-                        otherProfile = profilesMap.get(message.receiverId);
-                    } else if (message.receiverId.equals(profileId)) {
-                        otherProfile = profilesMap.get(message.senderId);
-                    }
-
-                    if (otherProfile != null) {
-                        Log.d(TAG, "Recieved incoming message from " + otherProfile.firstName);
-
-                        // save this reference in profile
-                        saveMessageRef(dataSnapshot.getKey(), otherProfile.id);
-
-                        // notify registered listeners
-                        EventBus.getDefault().postSticky(otherProfile);
-                    }
-                }
-
-                break;
-            }
         }
 
         @Override
@@ -335,12 +309,11 @@ public class ProfileHolder {
 
     private void handleIncomingMessage(String key) {
         StringTokenizer tokenizer = new StringTokenizer(key, "?");
-        int count = tokenizer.countTokens();
         String id1 = tokenizer.nextToken();
         String id2 = tokenizer.nextToken();
 
-        Log.d(TAG, "incomingMessageListener: onChildChanged id 1" + id1);
-        Log.d(TAG, "incomingMessageListener: onChildChanged id 2" + id2);
+        Log.d(TAG, "incomingMessageListener: onChildChanged id 1 " + id1);
+        Log.d(TAG, "incomingMessageListener: onChildChanged id 2 " + id2);
 
         Profile otherProfile = null;
         if (id1.equals(profileId)) {
@@ -350,8 +323,12 @@ public class ProfileHolder {
         }
         if (otherProfile != null) {
             Log.d(TAG, "Recieved incoming message from " + otherProfile.firstName);
+
+            // save this reference in profile
+            saveMessageRef(key, otherProfile.id);
+
             // notify registered listeners
-            EventBus.getDefault().postSticky(otherProfile);
+            EventBus.getDefault().post(otherProfile.firstName);
         }
     }
 
