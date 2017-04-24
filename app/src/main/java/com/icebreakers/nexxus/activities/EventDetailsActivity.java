@@ -2,16 +2,18 @@ package com.icebreakers.nexxus.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.maps.CameraUpdate;
@@ -33,7 +35,6 @@ import com.icebreakers.nexxus.models.Venue;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.MapUtils;
-
 import org.greenrobot.eventbus.EventBus;
 import org.parceler.Parcels;
 
@@ -193,22 +194,39 @@ public class EventDetailsActivity extends BaseActivity {
 
     private void setupCheckInSection() {
         if (profileHolder.isUserCheckedIn(eventRef)) {
-            binding.header.linearLayoutCheckInSection.setVisibility(View.GONE);
+            binding.header.btnCheckin.setText(getString(R.string.checkedin));
+            binding.header.btnCheckin.setBackgroundColor(ContextCompat.getColor(EventDetailsActivity.this, R.color.colorAccent));
+            binding.header.btnCheckin.setEnabled(false);
+            binding.header.btnCheckin.setClickable(false);
         }
         binding.header.btnCheckin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 handleCheckIn();
+
+                ColorDrawable[] color = {new ColorDrawable(ContextCompat.getColor(EventDetailsActivity.this, R.color.colorPrimary)),
+                    new ColorDrawable(ContextCompat.getColor(EventDetailsActivity.this, R.color.colorAccent))};
+
+                TransitionDrawable trans = new TransitionDrawable(color);
+                binding.header.btnCheckin.setBackground(trans);
+                trans.startTransition(1000);
+                binding.header.btnCheckin.setText(getString(R.string.checkedin));
+                binding.header.btnCheckin.setEnabled(false);
+                binding.header.btnCheckin.setClickable(false);
             }
         });
     }
 
     private void handleCheckIn() {
+        if (profileHolder.isUserCheckedIn(eventRef)) {
+            // do not allow multiple check-in from same user
+            return;
+        }
         profileHolder.checkIn(eventRef);
         attendees.add(0, currentUser);
         adapter.notifyItemInserted(0);
         binding.header.rvProfileImages.scrollToPosition(0);
-        binding.header.linearLayoutCheckInSection.setVisibility(View.GONE);
+        //binding.header.linearLayoutCheckInSection.setVisibility(View.GONE);
         refreshNumberOfAttendees();
         EventBus.getDefault().post(event);
 
