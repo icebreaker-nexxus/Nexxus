@@ -4,12 +4,14 @@ import agency.tango.materialintroscreen.MaterialIntroActivity;
 import agency.tango.materialintroscreen.MessageButtonBehaviour;
 import agency.tango.materialintroscreen.SlideFragmentBuilder;
 import agency.tango.materialintroscreen.animations.IViewTranslation;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
 import android.view.View;
 import com.icebreakers.nexxus.R;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class OnboardingActivity extends MaterialIntroActivity {
     @Override
@@ -69,5 +71,10 @@ public class OnboardingActivity extends MaterialIntroActivity {
         super.onFinish();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(base));
     }
 }
