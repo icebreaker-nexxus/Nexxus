@@ -11,8 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
@@ -24,6 +23,9 @@ import com.linkedin.platform.utils.Scope;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/3/17.

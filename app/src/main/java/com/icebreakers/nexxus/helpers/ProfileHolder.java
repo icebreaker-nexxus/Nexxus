@@ -3,6 +3,7 @@ package com.icebreakers.nexxus.helpers;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -10,8 +11,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.models.MeetupEvent;
+import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
+import com.icebreakers.nexxus.models.messaging.MessageRef;
 import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.AccessToken;
@@ -21,8 +24,14 @@ import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
@@ -32,7 +41,7 @@ import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
 public class ProfileHolder {
 
-    private static final String TAG = NexxusApplication.BASE_TAG + ProfileHolder.class.getName();
+    private static final String TAG = NexxusApplication.BASE_TAG + ProfileHolder.class.getSimpleName();
 
     private static AccessToken accessToken = null;
     private static String profileId;
@@ -42,19 +51,28 @@ public class ProfileHolder {
 
     private static ProfileHolder instance = null;
 
+
+
     public interface OnProfileReadyCallback {
         public void onSuccess(Profile profile);
         public void onError(LIApiError error);
     }
 
+    private static final String PROFILE_ID_RK = "-GKTP4lCqZ";
+    private static final String PROFILE_ID_AM = "4qHi9-qdlA";
+    private static final String PROFILE_ID_SV = "usFWMyY-h7";
+
     private static List<Profile> allProfiles = new ArrayList<>();
+    private static HashMap<String, Profile> profilesMap = new HashMap<>();
+
+    private static Set<String> messagesRowIds = new HashSet<>();
 
     private OnProfileReadyCallback callback = null;
 
     private ValueEventListener currentProfileListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            Profile currentProfile = dataSnapshot.getValue(com.icebreakers.nexxus.models.Profile.class);
+            Profile currentProfile = dataSnapshot.getValue(Profile.class);
             if (currentProfile == null) {
                 Log.e(TAG, "Cannot find profile for profileId " + dataSnapshot.getKey());
                 // fetch from server
@@ -62,6 +80,7 @@ public class ProfileHolder {
             } else {
                 Log.d(TAG, "Profile fetched successfully " + currentProfile.firstName);
                 profile = currentProfile;
+                EventBus.getDefault().postSticky(profile);
                 if (callback != null) {
                     callback.onSuccess(profile);
                     callback = null;
@@ -83,12 +102,45 @@ public class ProfileHolder {
             for(DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
                 Profile profile = dataSnapshotChild.getValue(Profile.class);
                 allProfiles.add(profile);
+                profilesMap.put(profile.id, profile);
             }
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
             Log.e(TAG, "allProfilesListener: Cannot find object in the database " + databaseError);
+        }
+    };
+
+    private ChildEventListener incomingMessageListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            Log.d(TAG, "incomingMessageListener: onChildAdded " + dataSnapshot.getKey());
+
+            messagesRowIds.add(dataSnapshot.getKey());
+
+
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String previousKey) {
+            Log.d(TAG, "incomingMessageListener: onChildChanged " + dataSnapshot.getKey());
+            handleIncomingMessage(dataSnapshot.getKey());
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+            // do nothing
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            // do nothing
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // do nothing
         }
     };
 
@@ -108,7 +160,9 @@ public class ProfileHolder {
         profileId = NexxusSharePreferences.getProfileId(context);
 
         fetchAllProfiles(allProfilesListener);
+        setupIncomingMessageListener(incomingMessageListener);
     }
+
 
     public boolean hasUserLoggedIn() {
         return session != null && session.isValid() && profileId != null;
@@ -129,10 +183,12 @@ public class ProfileHolder {
         }
     }
 
-    private void fetchAllProfiles(ValueEventListener listener) {
-        Database.instance().databaseReference.child(Database.PROFILE_TABLE).addValueEventListener(listener);
-    }
 
+    // USE only when profiel database schema changes
+    public void forceFetchFromDB(final OnProfileReadyCallback listener) {
+        callback = listener;
+        fetchProfileFromDb(currentProfileListener);
+    }
     public void saveAceessToken(Context context) {
         LISessionManager sessionManager = LISessionManager.getInstance(context);
         session = sessionManager.getSession();
@@ -142,6 +198,10 @@ public class ProfileHolder {
 
     public Profile getProfile() {
         return profile;
+    }
+
+    public Profile getProfile(String id) {
+        return profilesMap.get(id);
     }
 
     public void checkIn(MeetupEventRef eventRef) {
@@ -171,13 +231,34 @@ public class ProfileHolder {
             Log.d(TAG, "user has not checked in");
             for (Profile attendee : allProfiles) {
                 if (attendee.id.equals(profile.id)) {
-                    Log.d(TAG, "Removing current user");
                     attendees.remove(attendee);
                 }
             }
         }
 
         return attendees;
+    }
+
+    public void saveMessage(String messagesRowId, Message message) {
+        // save message reference in profile
+        saveMessageRef(messagesRowId, message.receiverId);
+
+        Database.instance().saveMessage(messagesRowId, message);
+
+    }
+
+    public static void logout() {
+        instance = null;
+        accessToken = null;
+        session = null;
+    }
+
+    private void saveMessageRef(String messagesRowId, String receiverId) {
+        if (!profile.messageRefHashMap.containsKey(messagesRowId)) {
+            profile.messageRefHashMap.put(messagesRowId, new MessageRef(messagesRowId, receiverId));
+            profile.messageIds.add(messagesRowId);
+            Database.instance().saveProfile(profile);
+        }
     }
 
     private void fetchProfileFromDb(final ValueEventListener listener) {
@@ -217,10 +298,38 @@ public class ProfileHolder {
         });
     }
 
-    public static void logout() {
-        instance = null;
-        accessToken = null;
-        session = null;
+    private void fetchAllProfiles(ValueEventListener listener) {
+        Database.instance().databaseReference.child(Database.PROFILE_TABLE).addValueEventListener(listener);
+    }
+
+    private void setupIncomingMessageListener(ChildEventListener messageListener) {
+        Database.instance().messagesTableReference().addChildEventListener(incomingMessageListener);
+    }
+
+
+    private void handleIncomingMessage(String key) {
+        StringTokenizer tokenizer = new StringTokenizer(key, "?");
+        String id1 = tokenizer.nextToken();
+        String id2 = tokenizer.nextToken();
+
+        Log.d(TAG, "incomingMessageListener: onChildChanged id 1 " + id1);
+        Log.d(TAG, "incomingMessageListener: onChildChanged id 2 " + id2);
+
+        Profile otherProfile = null;
+        if (id1.equals(profileId)) {
+            otherProfile = profilesMap.get(id2);
+        } else if (id2.equals(profileId)) {
+            otherProfile = profilesMap.get(id1);
+        }
+        if (otherProfile != null) {
+            Log.d(TAG, "Recieved incoming message from " + otherProfile.firstName);
+
+            // save this reference in profile
+            saveMessageRef(key, otherProfile.id);
+
+            // notify registered listeners
+            EventBus.getDefault().post(otherProfile.firstName);
+        }
     }
 
 }

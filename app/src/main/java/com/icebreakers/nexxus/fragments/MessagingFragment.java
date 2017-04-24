@@ -48,6 +48,8 @@ public class MessagingFragment extends Fragment {
     String messagesRowId;
     boolean resetMessage = false;
 
+    ProfileHolder profileHolder;
+
     public static MessagingFragment newInstance(Profile messageToProfile) {
 
         Bundle args = new Bundle();
@@ -59,8 +61,10 @@ public class MessagingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        profileHolder = ProfileHolder.getInstance(getContext());
         messageToProfile = Parcels.unwrap(getArguments().getParcelable(PROFILE_EXTRA));
-        loggedInProfile = ProfileHolder.getInstance(getContext()).getProfile();
+        loggedInProfile = profileHolder.getProfile();
         messagesRowId = MessagesHelper.getMessageRowId(loggedInProfile, messageToProfile);
 
     }
@@ -95,7 +99,11 @@ public class MessagingFragment extends Fragment {
                 message.text = charSequence.toString();
                 message.id = UUID.randomUUID().toString();
                 message.senderId = loggedInProfile.id;
-                Database.instance().saveMessage(messagesRowId, message);
+                message.receiverId = messageToProfile.id;
+
+
+                profileHolder.saveMessage(messagesRowId, message);
+
                 return true;
             }
         });

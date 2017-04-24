@@ -12,7 +12,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +33,7 @@ import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.Router;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
+import com.icebreakers.nexxus.models.messaging.MessageRef;
 import com.icebreakers.nexxus.utils.LocationProvider;
 import com.icebreakers.nexxus.utils.LogoutUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -49,6 +52,10 @@ public class EventListActivity extends BaseActivity
         implements LocationProvider.LocationCallback {
 
     private static final String TAG = NexxusApplication.BASE_TAG + EventListActivity.class.getSimpleName();
+
+    private static final int DIRECT_MESSAGES_MENU_ITEM_ID = 3;
+
+    private boolean navigationViewRefreshNeeded = false;
 
     public interface EventListUpdate {
         public void update(List<MeetupEvent> events);
@@ -69,6 +76,8 @@ public class EventListActivity extends BaseActivity
     ImageView navHeaderProfileImage;
     TextView navHeaderProfileName;
     ActionBarDrawerToggle drawerToggle;
+
+    ProfileHolder profileHolder;
     Profile profile;
 
     private CompositeSubscription compositeSubscription;
@@ -89,6 +98,8 @@ public class EventListActivity extends BaseActivity
         }
     }
 
+    List<Profile> senders = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +108,8 @@ public class EventListActivity extends BaseActivity
 
         setSupportActionBar(binding.toolbar);
 
-        profile = ProfileHolder.getInstance(this).getProfile();
+        profileHolder = ProfileHolder.getInstance(this);
+        profile = profileHolder.getProfile();
 
         compositeSubscription = new CompositeSubscription();
 
@@ -115,7 +127,7 @@ public class EventListActivity extends BaseActivity
         binding.tabs.setupWithViewPager(binding.viewpager);
 
         // navigation bar
-        drawerToggle = setupDrawerToggle();
+        setupDrawerToggle();
         setupDrawerContent(binding.navigationView);
         View v = binding.navigationView.getHeaderView(0);
         navHeaderProfileImage = (ImageView) v.findViewById(R.id.ivNavprofileImage);
@@ -282,8 +294,6 @@ public class EventListActivity extends BaseActivity
         // 6 Education and Learning
         // 34 Tech
 
-        ProfileHolder profileHolder = ProfileHolder.getInstance(this);
-
         for (MeetupEvent event: allEvents) {
             if (event.getVenue() != null
                     && (event.getGroup().getCategory().getId() == 6
@@ -303,13 +313,43 @@ public class EventListActivity extends BaseActivity
         return eventList;
     }
 
-    private ActionBarDrawerToggle setupDrawerToggle() {
+    private void setupDrawerToggle() {
         // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
         // and will not render the hamburger icon without it.
-        return new ActionBarDrawerToggle(this, binding.drawer, binding.toolbar, R.string.drawer_open,  R.string.drawer_close);
+
+        drawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                binding.drawer,         /* DrawerLayout object */
+                binding.toolbar,
+                R.string.drawer_open,  /* "open drawer" description */
+                R.string.drawer_close  /* "close drawer" description */
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                Log.d(TAG, "onDrawerClosed");
+
+                if (binding.badger.getVisibility() == View.VISIBLE) {
+                    binding.badger.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                Log.d(TAG, "onDrawerOpened");
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        binding.drawer.setDrawerListener(drawerToggle);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
+
+        refreshDirectMessagesView(navigationView);
+
         navigationView.setNavigationItemSelectedListener(
             new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -320,11 +360,38 @@ public class EventListActivity extends BaseActivity
             });
     }
 
+    private void refreshDirectMessagesView(NavigationView navigationView) {
+
+        Menu menu = navigationView.getMenu();
+        MenuItem messagesMenuItem = menu.getItem(DIRECT_MESSAGES_MENU_ITEM_ID);
+        messagesMenuItem.getSubMenu().clear();
+
+        // set Visiblity depending on direct messages
+        if (!profile.messageIds.isEmpty()) {
+            messagesMenuItem.setVisible(true);
+            // add links to direct messages
+            final SubMenu messageList = messagesMenuItem.getSubMenu();
+
+            for (String id : profile.messageIds) {
+                MessageRef messageRef = profile.messageRefHashMap.get(id);
+                Profile otherProfile = profileHolder.getProfile(messageRef.getOtherProfileId());
+                String name = otherProfile.firstName + " " + otherProfile.lastName;
+                messageList.add(Menu.NONE, profile.messageIds.indexOf(id), Menu.NONE, name);
+            }
+
+        } else {
+            messagesMenuItem.setVisible(false);
+        }
+    }
+
     public void selectDrawerItem(MenuItem menuItem) {
+
+        Log.d(TAG, "selectDrawerItem: menuItem ID" + menuItem.getItemId());
+        Log.d(TAG, "selectDrawerItem: menuItem title" + menuItem.getTitle());
         // Create a new fragment and specify the fragment to show based on nav item clicked
+
         switch(menuItem.getItemId()) {
             case R.id.event_list_nav:
-                //Router.startEventListActivity(this, profile);
                 break;
             case R.id.profile_nav:
                 Router.startProfileActivity(this, profile, null);
@@ -337,6 +404,17 @@ public class EventListActivity extends BaseActivity
                 break;
             default:
                 break;
+        }
+
+        if (!profile.messageIds.isEmpty()) {
+            if (menuItem.getItemId() < profile.messageIds.size()) {
+                String key = profile.messageIds.get(menuItem.getItemId());
+                MessageRef messageRef = profile.messageRefHashMap.get(key);
+
+                if (messageRef != null) {
+                    Router.startMessaginActivity(this, profileHolder.getProfile(messageRef.getOtherProfileId()));
+                }
+            }
         }
 
         // Close the navigation drawer
@@ -352,5 +430,21 @@ public class EventListActivity extends BaseActivity
     public void onMessageEvent(MeetupEvent event) {
         Log.d(TAG, "Checkin-event received " + event);
         checkedInEventListFragment.add(event);
+    }
+
+    // UI updates must run on MainThread
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(String firstName) {
+        Log.d(TAG, "Incoming Message received from: " + firstName);
+        binding.badger.setVisibility(View.VISIBLE);
+        EventBus.getDefault().removeStickyEvent(firstName);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Profile profile) {
+        Log.d(TAG, "Updated Profile  received " + profile.firstName);
+        this.profile = profile;
+        refreshDirectMessagesView(binding.navigationView);
+        EventBus.getDefault().removeStickyEvent(profile);
     }
 }

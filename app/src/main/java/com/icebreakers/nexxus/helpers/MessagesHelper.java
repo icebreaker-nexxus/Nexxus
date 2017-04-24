@@ -19,6 +19,14 @@ public class MessagesHelper {
         }
     }
 
+    public static String getMessageRowId(String id1, String id2) {
+        if (id1.compareTo(id2) > 0) {
+            return generateMessageId(id1, id2);
+        } else {
+            return generateMessageId(id2, id1);
+        }
+    }
+
     private static String generateMessageId(String id1, String id2) {
         return id1 + "?" + id2;
     }
