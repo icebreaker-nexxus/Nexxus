@@ -9,10 +9,20 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.activities.ProfileActivity;
+import com.icebreakers.nexxus.activities.MessagingActivity;
+import com.icebreakers.nexxus.helpers.ProfileHolder;
+import com.icebreakers.nexxus.models.Profile;
+import com.icebreakers.nexxus.persistence.Database;
+import org.parceler.Parcels;
+
+import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
+import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
 /**
  * Created by amodi on 4/23/17.
@@ -21,6 +31,7 @@ import com.icebreakers.nexxus.activities.ProfileActivity;
 public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = NexxusFirebaseMessagingService.class.getSimpleName();
+    private static final String MESSAGE_TYPE = "message";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -33,20 +44,56 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
 
         // Check if message contains a notification payload.
 
-        if (remoteMessage.getNotification() != null)
-        {
+        if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getTitle());
+            String fromId = remoteMessage.getData().get("fromId");
+            String toId = remoteMessage.getData().get("toId");
+            String type = remoteMessage.getData().get("type");
 
+            // make sure logged in user profile is present
+            Profile profile = ProfileHolder.getInstance(getApplicationContext()).getProfile();
+            if (profile == null) {
+                // messed up, return;
+                return;
+            }
+            if (!profile.id.equals(toId)) {
+                // not my notification
+                return;
+            }
+
+
+            if (MESSAGE_TYPE.equalsIgnoreCase(type)) {
+                Database.instance().databaseReference.child(PROFILE_TABLE).child(fromId)
+                                                     .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Profile profileToMessage = dataSnapshot.getValue(Profile.class);
+                        if (profileToMessage == null) {
+                            return;
+                        }
+                        Log.d(TAG, "Got the profile for push notification...");
+                        sendMessageNotification(remoteMessage.getNotification().getBody(),
+                                                remoteMessage.getNotification().getTitle(),
+                                                profileToMessage);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
         }
-
-        // Also if you intend on generating your own notifications as a result of a received         FCM
-        // message, here is where that should be initiated. See sendNotification method below.
     }
 
-    private void sendNotification(String messageBody, String title) {
+    private void sendMessageNotification(String messageBody, String title, Profile profile) {
+        Intent intent = new Intent(NexxusFirebaseMessagingService.this, MessagingActivity.class);
+        intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
+        sendNotification(intent, title, messageBody);
+    }
 
-        Intent intent = new Intent(this, ProfileActivity.class);
+    private void sendNotification(Intent intent, String title, String messageBody) {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
 

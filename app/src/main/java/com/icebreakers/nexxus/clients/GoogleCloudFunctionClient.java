@@ -18,11 +18,11 @@ public class GoogleCloudFunctionClient {
     private static final String TAG = GoogleCloudFunctionClient.class.getSimpleName();
 
     // fix this to be less hacky if time permits
-    public static void sendPushNotification(String fromName, String toid) {
+    public static void sendPushNotification(String fromName, String toid, String fromId) {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-            .url(String.format("https://us-central1-nexxus-42eaf.cloudfunctions.net/sendPushNotificationForMessage?from=%s&to=%s", fromName, toid))
+            .url(String.format("https://us-central1-nexxus-42eaf.cloudfunctions.net/sendPushNotificationForMessage?fromName=%s&toId=%s&fromId=%s", fromName, toid, fromId))
             .build();
 
         client.newCall(request).enqueue(new Callback() {

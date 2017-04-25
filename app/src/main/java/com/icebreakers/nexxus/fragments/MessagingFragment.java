@@ -97,7 +97,7 @@ public class MessagingFragment extends Fragment {
                 message.id = UUID.randomUUID().toString();
                 message.senderId = loggedInProfile.id;
                 Database.instance().saveMessage(messagesRowId, message);
-                GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id);
+                GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id, loggedInProfile.id);
                 return true;
             }
         });
