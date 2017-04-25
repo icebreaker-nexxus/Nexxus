@@ -145,26 +145,30 @@ public class ProfileListActivity extends BaseActivity {
                 // name match
                 matchedProfiles.add(profile);
                 Log.d(TAG, "Matched NAME adding " + profile);
-            } else if (profile.educationList != null) {
-                // check for education / school
-                for (Profile.Education education : profile.educationList) {
-                    if (education.schoolName.toLowerCase().contains(query)) {
-                        matchedProfiles.add(profile);
-                        Log.d(TAG, "Matched Education SchoolName adding " + profile);
-                        break;
-                    }
-                }
-            } else if (profile.positionList != null) {
-                // check for company name / title
-                for (Profile.Position position : profile.positionList) {
-                    if (position.companyName.toLowerCase().contains(query) || position.title.toLowerCase().contains(query)) {
-                        matchedProfiles.add(profile);
-                        Log.d(TAG, "Matched Position adding " + profile);
-                        break;
-                    }
-                }
             } else if (profile.headline.toLowerCase().contains(query)) {
                 matchedProfiles.add(profile);
+            } else {
+                // check for education / school
+                if (profile.educationList != null) {
+                    for (Profile.Education education : profile.educationList) {
+                        if (education.schoolName.toLowerCase().contains(query)) {
+                            matchedProfiles.add(profile);
+                            Log.d(TAG, "Matched Education SchoolName adding " + profile);
+                            break;
+                        }
+                    }
+                }
+
+                // check for company name / title
+                if (profile.positionList != null) {
+                    for (Profile.Position position : profile.positionList) {
+                        if (position.companyName.toLowerCase().contains(query) || position.title.toLowerCase().contains(query)) {
+                            matchedProfiles.add(profile);
+                            Log.d(TAG, "Matched Position adding " + profile);
+                            break;
+                        }
+                    }
+                }
             }
         }
 
