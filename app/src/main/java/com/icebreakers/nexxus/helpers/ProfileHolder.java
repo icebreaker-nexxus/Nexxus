@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.icebreakers.nexxus.NexxusApplication;
@@ -42,6 +43,8 @@ public class ProfileHolder {
 
     private static ProfileHolder instance = null;
 
+    private Context context;
+
     public interface OnProfileReadyCallback {
         public void onSuccess(Profile profile);
         public void onError(LIApiError error);
@@ -62,6 +65,8 @@ public class ProfileHolder {
             } else {
                 Log.d(TAG, "Profile fetched successfully " + currentProfile.firstName);
                 profile = currentProfile;
+                Log.d(TAG, "Registering for push notification " + profile.id);
+                FirebaseMessaging.getInstance().subscribeToTopic(profile.id);
                 if (callback != null) {
                     callback.onSuccess(profile);
                     callback = null;
@@ -106,7 +111,7 @@ public class ProfileHolder {
         LISessionManager.getInstance(context).init(accessToken);
         session = LISessionManager.getInstance(context).getSession();
         profileId = NexxusSharePreferences.getProfileId(context);
-
+        this.context = context;
         fetchAllProfiles(allProfilesListener);
     }
 
@@ -141,12 +146,20 @@ public class ProfileHolder {
     }
 
     public Profile getProfile() {
+        // something is wrong, profile is null, falling back to getting profile from sharedpreference so we do not crash
+        if (profile == null) {
+            Log.e(TAG, "Getting profile from sharedpreferences");
+            profile = NexxusSharePreferences.getLoggedInMemberProfile(context);
+        }
         return profile;
     }
 
     public void checkIn(MeetupEventRef eventRef) {
         profile.addMeetupEventRef(eventRef);
         Database.instance().saveProfile(profile);
+        if (context != null) {
+            NexxusSharePreferences.putLoggedInMemberProfile(context, profile);
+        }
     }
 
     public boolean isUserCheckedIn(MeetupEventRef eventRef) {
@@ -200,6 +213,8 @@ public class ProfileHolder {
                 Database.instance().saveProfile(profile);
 
                 Log.d(TAG, "Profile fetched successfully");
+                Log.d(TAG, "Registering for push notification " + profileId);
+                FirebaseMessaging.getInstance().subscribeToTopic(profileId);
 
                 if (callback != null) {
                     callback.onSuccess(profile);

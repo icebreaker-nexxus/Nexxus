@@ -14,7 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.activities.EventDetailsActivity;
@@ -24,14 +25,12 @@ import com.icebreakers.nexxus.adapters.EventListAdapter;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.utils.EndlessRecyclerViewScrollListener;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
-
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import static com.icebreakers.nexxus.activities.EventDetailsActivity.EVENT_EXTRA;
 
 /**
  * Created by radhikak on 4/21/17.
@@ -61,12 +60,11 @@ public abstract class BaseEventListFragment extends Fragment implements EventFra
             MeetupEvent event = events.get(position);
 
             Intent detailsActivityIntent = new Intent(getActivity(), EventDetailsActivity.class);
-            detailsActivityIntent.putExtra("event", Parcels.wrap(event));
+            detailsActivityIntent.putExtra(EVENT_EXTRA, Parcels.wrap(event));
 
             Pair<View, String> p1 = Pair.create(v.findViewById(R.id.ivImage), "eventImage");
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                     p1);
-            detailsActivityIntent.putExtra("event", Parcels.wrap(event));
             startActivity(detailsActivityIntent, options.toBundle());
         }
     };
