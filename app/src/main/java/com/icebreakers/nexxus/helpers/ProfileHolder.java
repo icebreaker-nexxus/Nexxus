@@ -43,6 +43,8 @@ public class ProfileHolder {
 
     private static ProfileHolder instance = null;
 
+    private Context context;
+
     public interface OnProfileReadyCallback {
         public void onSuccess(Profile profile);
         public void onError(LIApiError error);
@@ -109,7 +111,7 @@ public class ProfileHolder {
         LISessionManager.getInstance(context).init(accessToken);
         session = LISessionManager.getInstance(context).getSession();
         profileId = NexxusSharePreferences.getProfileId(context);
-
+        this.context = context;
         fetchAllProfiles(allProfilesListener);
     }
 
@@ -144,12 +146,20 @@ public class ProfileHolder {
     }
 
     public Profile getProfile() {
+        // something is wrong, profile is null, falling back to getting profile from sharedpreference so we do not crash
+        if (profile == null) {
+            Log.e(TAG, "Getting profile from sharedpreferences");
+            profile = NexxusSharePreferences.getLoggedInMemberProfile(context);
+        }
         return profile;
     }
 
     public void checkIn(MeetupEventRef eventRef) {
         profile.addMeetupEventRef(eventRef);
         Database.instance().saveProfile(profile);
+        if (context != null) {
+            NexxusSharePreferences.putLoggedInMemberProfile(context, profile);
+        }
     }
 
     public boolean isUserCheckedIn(MeetupEventRef eventRef) {
