@@ -1,5 +1,6 @@
 package com.icebreakers.nexxus.services;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -61,6 +62,11 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
                 return;
             }
 
+            if (profile.id.equals(fromId)) {
+                // not my notification
+                return;
+            }
+
 
             if (MESSAGE_TYPE.equalsIgnoreCase(type)) {
                 Database.instance().databaseReference.child(PROFILE_TABLE).child(fromId)
@@ -109,7 +115,8 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
             .setContentText(messageBody)
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent);
+            .setContentIntent(pendingIntent)
+            .setPriority(Notification.PRIORITY_HIGH);
 
         NotificationManager notificationManager =
             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
