@@ -16,13 +16,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.activities.EventDetailsActivity;
 import com.icebreakers.nexxus.activities.MessagingActivity;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
+import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.persistence.Database;
 import org.parceler.Parcels;
 
+import static com.icebreakers.nexxus.activities.EventDetailsActivity.EVENT_EXTRA;
 import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
+import static com.icebreakers.nexxus.persistence.Database.MEETUP_EVENT_TABLE;
 import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
 /**
@@ -33,6 +37,7 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = NexxusFirebaseMessagingService.class.getSimpleName();
     private static final String MESSAGE_TYPE = "message";
+    private static final String CHECKIN_TYPE = "checkin";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -57,15 +62,15 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
                 // messed up, return;
                 return;
             }
-            if (!profile.id.equals(toId)) {
+            if (!profile.id.equals(toId) && !toId.equals("global")) {
                 // not my notification
                 return;
             }
 
-            if (profile.id.equals(fromId)) {
-                // not my notification
-                return;
-            }
+//            if (profile.id.equals(fromId)) {
+//                // not my notification
+//                return;
+//            }
 
 
             if (MESSAGE_TYPE.equalsIgnoreCase(type)) {
@@ -90,12 +95,41 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
                 });
 
             }
+
+            if (CHECKIN_TYPE.equalsIgnoreCase(type)) {
+                String eventId = remoteMessage.getData().get("eventId");
+                Database.instance().databaseReference.child(MEETUP_EVENT_TABLE).child(eventId)
+                     .addListenerForSingleValueEvent(new ValueEventListener() {
+                         @Override
+                         public void onDataChange(DataSnapshot dataSnapshot) {
+                             MeetupEvent meetupEvent = dataSnapshot.getValue(MeetupEvent.class);
+                             if (meetupEvent == null) {
+                                 return;
+                             }
+                             Log.d(TAG, "Got the meetupEvent for push notification...");
+                             sendEventNotification(remoteMessage.getNotification().getBody(),
+                                                     remoteMessage.getNotification().getTitle(),
+                                                     meetupEvent);
+                         }
+
+                         @Override
+                         public void onCancelled(DatabaseError databaseError) {
+
+                         }
+                                                     });
+            }
         }
     }
 
     private void sendMessageNotification(String messageBody, String title, Profile profile) {
         Intent intent = new Intent(NexxusFirebaseMessagingService.this, MessagingActivity.class);
         intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
+        sendNotification(intent, title, messageBody);
+    }
+
+    private void sendEventNotification(String messageBody, String title, MeetupEvent meetupEvent) {
+        Intent intent = new Intent(NexxusFirebaseMessagingService.this, EventDetailsActivity.class);
+        intent.putExtra(EVENT_EXTRA, Parcels.wrap(meetupEvent));
         sendNotification(intent, title, messageBody);
     }
 

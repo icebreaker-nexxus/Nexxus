@@ -27,12 +27,14 @@ import com.google.maps.android.ui.IconGenerator;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.ProfileImageAdapter;
+import com.icebreakers.nexxus.clients.GoogleCloudFunctionClient;
 import com.icebreakers.nexxus.databinding.ActivityEventDetailsBinding;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Venue;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
+import com.icebreakers.nexxus.persistence.Database;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.MapUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -47,6 +49,8 @@ import static android.support.design.widget.Snackbar.make;
 public class EventDetailsActivity extends BaseActivity {
 
     private static final String TAG = NexxusApplication.BASE_TAG + EventDetailsActivity.class.getName();
+
+    public static final String EVENT_EXTRA = "event";
 
     private MeetupEvent event;
     private MeetupEventRef eventRef;
@@ -110,7 +114,7 @@ public class EventDetailsActivity extends BaseActivity {
         getSupportActionBar().setTitle("");
 
         Intent detailsIntent = getIntent();
-        event = Parcels.unwrap(detailsIntent.getParcelableExtra("event"));
+        event = Parcels.unwrap(detailsIntent.getParcelableExtra(EVENT_EXTRA));
         eventRef = event.getEventRef();
 
         profileHolder = ProfileHolder.getInstance(this);
@@ -237,7 +241,8 @@ public class EventDetailsActivity extends BaseActivity {
                         startActivity(new Intent(EventDetailsActivity.this, ProfileListActivity.class));
                     }
                 }).show();
-
+        GoogleCloudFunctionClient.sendEventCheckInNotification(currentUser.firstName, currentUser.id, eventRef.getEventId());
+        Database.instance().saveMeetupEvent(event);
     }
 
     private void refreshNumberOfAttendees() {
