@@ -19,10 +19,19 @@ public class GoogleCloudFunctionClient {
 
     // fix this to be less hacky if time permits
     public static void sendPushNotification(String fromName, String toid, String fromId) {
+        sendPush(String.format("https://us-central1-nexxus-42eaf.cloudfunctions.net/sendPushNotificationForMessage?fromName=%s&toId=%s&fromId=%s", fromName, toid, fromId));
+    }
+
+    public static void sendEventCheckInNotification(String fromName, String fromId, String eventId) {
+        String body = fromName + " co-worker from LinkedIn checked-in";
+        sendPush(String.format("https://us-central1-nexxus-42eaf.cloudfunctions.net/sendPushNotificationForEventCheckIn?fromName=%s&toId=%s&fromId=%s&body=%s&eventId=%s", fromName, "global", fromId, body, eventId));
+    }
+
+    public static void sendPush(String url) {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-            .url(String.format("https://us-central1-nexxus-42eaf.cloudfunctions.net/sendPushNotificationForMessage?fromName=%s&toId=%s&fromId=%s", fromName, toid, fromId))
+            .url(url)
             .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -38,6 +47,5 @@ public class GoogleCloudFunctionClient {
             }
         });
     }
-
 
 }
