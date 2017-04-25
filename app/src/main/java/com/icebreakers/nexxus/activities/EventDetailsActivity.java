@@ -86,20 +86,7 @@ public class EventDetailsActivity extends BaseActivity {
     private ItemClickSupport.OnItemClickListener profileImageClickListener = new ItemClickSupport.OnItemClickListener() {
         @Override
         public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-            if (profileHolder.isUserCheckedIn(eventRef)) {
-                // start ProfileListActivity
-                startActivity(new Intent(EventDetailsActivity.this, ProfileListActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.left_out);
-            } else {
-                final Snackbar snackbar = Snackbar.make(recyclerView, getString(R.string.before_checkin), Snackbar.LENGTH_LONG);
-                snackbar.setAction(getString(R.string.checkin), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                snackbar.dismiss();
-                                handleCheckIn();
-                            }
-                        }).show();
-            }
+            handleClickOnProfileFacepile();
         }
     };
 
@@ -165,24 +152,6 @@ public class EventDetailsActivity extends BaseActivity {
         binding.mapview.onCreate(savedInstanceState);
         binding.mapview.getMapAsync(mapReadyCallback);
 
-        /*
-        Section to be removed after using checking Button
-        if (profileHolder.isUserCheckedIn(eventRef)) {
-            Log.d(TAG, "User has checked in to " + event.getName());
-            binding.fab.setVisibility(View.GONE);
-            binding.header.linearLayoutCheckInSection.setVisibility(View.GONE);
-        } else {
-            Log.d(TAG, "User has NOT checked in to " + event.getName());
-            binding.fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    handleCheckIn();
-                    binding.fab.setVisibility(View.GONE);
-                }
-            });
-        }
-         **/
-
         setupCheckInSection();
 
         // Set up recyclerView for profileimages
@@ -191,6 +160,13 @@ public class EventDetailsActivity extends BaseActivity {
         adapter = new ProfileImageAdapter(attendees);
         binding.header.rvProfileImages.setAdapter(adapter);
         binding.header.rvProfileImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        binding.header.rvProfileImages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleClickOnProfileFacepile();
+            }
+        });
 
         // Add item click listener
         ItemClickSupport.addTo(binding.header.rvProfileImages).setOnItemClickListener(profileImageClickListener);
@@ -220,6 +196,23 @@ public class EventDetailsActivity extends BaseActivity {
                 binding.header.btnCheckin.setClickable(false);
             }
         });
+    }
+
+    private void handleClickOnProfileFacepile() {
+        if (profileHolder.isUserCheckedIn(eventRef)) {
+            // start ProfileListActivity
+            startActivity(new Intent(EventDetailsActivity.this, ProfileListActivity.class));
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        } else {
+            final Snackbar snackbar = Snackbar.make(binding.header.rvProfileImages, getString(R.string.before_checkin), Snackbar.LENGTH_LONG);
+            snackbar.setAction(getString(R.string.checkin), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                    handleCheckIn();
+                }
+            }).show();
+        }
     }
 
     private void handleCheckIn() {
