@@ -29,7 +29,7 @@ public class OnboardingActivity extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                      .backgroundColor(R.color.first_slide_background)
                      .buttonsColor(R.color.first_slide_buttons)
-                     .image(R.drawable.attendees)
+                     .image(R.drawable.attendees_compressed)
                      .title(getString(R.string.onboarding_find_attenedees))
                      .description(getString(R.string.onboarding_find_attenedees_subtitle))
                      .build());
@@ -37,7 +37,7 @@ public class OnboardingActivity extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                      .backgroundColor(R.color.second_slide_background)
                      .buttonsColor(R.color.second_slide_buttons)
-                     .image(R.drawable.messaging)
+                     .image(R.drawable.messaging_compressed)
                      .title(getString(R.string.onboarding_message))
                      .description(getString(R.string.onboarding_message_subtitle))
                      .build());
@@ -45,7 +45,7 @@ public class OnboardingActivity extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                      .backgroundColor(R.color.third_slide_background)
                      .buttonsColor(R.color.third_slide_buttons)
-                     .image(R.drawable.search)
+                     .image(R.drawable.search_compressed)
                      .title(getString(R.string.onboarding_search))
                      .description(getString(R.string.onboarding_search_subtitle))
                      .build());
@@ -53,7 +53,7 @@ public class OnboardingActivity extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                      .backgroundColor(R.color.fourth_slide_background)
                      .buttonsColor(R.color.fourth_slide_buttons)
-                     .image(R.drawable.nearby)
+                     .image(R.drawable.nearby_compressed)
                      .title(getString(R.string.onboarding_nearby))
                      .description(getString(R.string.onboarding_nearby_subtitle))
                      .build(),
