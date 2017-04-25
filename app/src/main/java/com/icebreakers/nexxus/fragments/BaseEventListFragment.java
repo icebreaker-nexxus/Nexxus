@@ -14,8 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.activities.EventDetailsActivity;
@@ -25,10 +24,15 @@ import com.icebreakers.nexxus.adapters.EventListAdapter;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.utils.EndlessRecyclerViewScrollListener;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
+
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 import static com.icebreakers.nexxus.activities.EventDetailsActivity.EVENT_EXTRA;
 
@@ -40,12 +44,14 @@ public abstract class BaseEventListFragment extends Fragment implements EventFra
 
     private static final String TAG = NexxusApplication.BASE_TAG + BaseEventListFragment.class.getSimpleName();
 
-
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.rvEvents)
     RecyclerView rvEvents;
+
+    @BindView(R.id.progressBar)
+    MaterialProgressBar progressBar;
 
     EndlessRecyclerViewScrollListener scrollListener;
 
@@ -134,6 +140,9 @@ public abstract class BaseEventListFragment extends Fragment implements EventFra
 
     @Override
     public void update(List<MeetupEvent> newEvents) {
+        if (progressBar.getVisibility() == View.VISIBLE)
+            progressBar.setVisibility(View.GONE);
+
         events.addAll(newEvents);
         eventListAdapter.notifyDataSetChanged();
     }
