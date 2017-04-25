@@ -8,14 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-<<<<<<< HEAD
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-=======
 
->>>>>>> v1.0 Direct Messages in Navigation Drawer
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +23,6 @@ import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
 import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
-import com.icebreakers.nexxus.models.messaging.MessageRef;
 import com.icebreakers.nexxus.models.messaging.UIMessage;
 import com.icebreakers.nexxus.persistence.Database;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -117,9 +111,8 @@ public class MessagingFragment extends Fragment {
                 message.id = UUID.randomUUID().toString();
                 message.senderId = loggedInProfile.id;
                 message.receiverId = messageToProfile.id;
-                
-                profileHolder.saveMessage(messagesRowId, message);
 
+                profileHolder.saveMessage(messagesRowId, message);
 
                 if (isEmptyStateVisible) {
                     emptyStateRelativeLayout.setVisibility(View.GONE);
@@ -128,11 +121,6 @@ public class MessagingFragment extends Fragment {
                 emptyStateRelativeLayout.setVisibility(View.GONE);
 
                 GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id, loggedInProfile.id);
-                Database.instance().saveMessageRefToProfile(loggedInProfile, new MessageRef(messagesRowId, messageToProfile.id));
-                message.receiverId = messageToProfile.id;
-
-
-                profileHolder.saveMessage(messagesRowId, message);
 
                 return true;
             }

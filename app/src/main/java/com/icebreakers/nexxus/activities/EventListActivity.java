@@ -101,8 +101,6 @@ public class EventListActivity extends BaseActivity
         }
     }
 
-    List<Profile> senders = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -443,10 +441,11 @@ public class EventListActivity extends BaseActivity
 
     // UI updates must run on MainThread
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(String firstName) {
-        Log.d(TAG, "Incoming Message received from: " + firstName);
+    public void onEvent(String id) {
+        Profile sender = profileHolder.getProfile(id);
+        Log.d(TAG, "Incoming Message received from: " + sender.firstName);
         binding.badger.setVisibility(View.VISIBLE);
-        EventBus.getDefault().removeStickyEvent(firstName);
+        EventBus.getDefault().removeStickyEvent(id);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

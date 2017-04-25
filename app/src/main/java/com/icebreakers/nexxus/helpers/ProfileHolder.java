@@ -58,10 +58,6 @@ public class ProfileHolder {
         public void onError(LIApiError error);
     }
 
-    private static final String PROFILE_ID_RK = "-GKTP4lCqZ";
-    private static final String PROFILE_ID_AM = "4qHi9-qdlA";
-    private static final String PROFILE_ID_SV = "usFWMyY-h7";
-
     private static List<Profile> allProfiles = new ArrayList<>();
     private static HashMap<String, Profile> profilesMap = new HashMap<>();
 
@@ -86,9 +82,8 @@ public class ProfileHolder {
                 FirebaseMessaging.getInstance().subscribeToTopic(profile.id);
 
                 // post updated profile
-                EventBus.getDefault().post(profile);
                 EventBus.getDefault().postSticky(profile);
-                
+
                 if (callback != null) {
                     callback.onSuccess(profile);
                     callback = null;
@@ -248,9 +243,7 @@ public class ProfileHolder {
     public void saveMessage(String messagesRowId, Message message) {
         // save message reference in profile
         saveMessageRef(messagesRowId, message.receiverId);
-
         Database.instance().saveMessage(messagesRowId, message);
-
     }
 
     public static void logout() {
@@ -260,6 +253,7 @@ public class ProfileHolder {
     }
 
     private void saveMessageRef(String messagesRowId, String receiverId) {
+        // save only for new conversation
         if (!profile.messageRefHashMap.containsKey(messagesRowId)) {
             profile.messageRefHashMap.put(messagesRowId, new MessageRef(messagesRowId, receiverId));
             profile.messageIds.add(messagesRowId);
@@ -311,7 +305,7 @@ public class ProfileHolder {
     }
 
     private void setupIncomingMessageListener(ChildEventListener messageListener) {
-        Database.instance().messagesTableReference().addChildEventListener(incomingMessageListener);
+        Database.instance().messagesTableReference().addChildEventListener(messageListener);
     }
 
 
@@ -336,7 +330,7 @@ public class ProfileHolder {
             saveMessageRef(key, otherProfile.id);
 
             // notify registered listeners
-            EventBus.getDefault().post(otherProfile.firstName);
+            EventBus.getDefault().postSticky(otherProfile.id);
         }
     }
 
