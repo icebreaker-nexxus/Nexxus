@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
+import com.icebreakers.nexxus.persistence.NexxusSharePreferences;
 import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.errors.LIAuthError;
@@ -69,6 +70,7 @@ public class LoginActivity extends BaseActivity {
         // save the accessToken for future use
         ProfileHolder profileHolder = ProfileHolder.getInstance(this);
         profileHolder.saveAceessToken(LoginActivity.this);
+        NexxusSharePreferences.putLoggedInMemberProfile(this, profileHolder.getProfile());
 
         profileHolder.fetchProfle(new ProfileHolder.OnProfileReadyCallback() {
             @Override

@@ -52,8 +52,6 @@ public class ProfileHolder {
 
     private static ProfileHolder instance = null;
 
-
-
     public interface OnProfileReadyCallback {
         public void onSuccess(Profile profile);
         public void onError(LIApiError error);
@@ -162,7 +160,6 @@ public class ProfileHolder {
         LISessionManager.getInstance(context).init(accessToken);
         session = LISessionManager.getInstance(context).getSession();
         profileId = NexxusSharePreferences.getProfileId(context);
-
         fetchAllProfiles(allProfilesListener);
         setupIncomingMessageListener(incomingMessageListener);
     }
@@ -208,9 +205,10 @@ public class ProfileHolder {
         return profilesMap.get(id);
     }
 
-    public void checkIn(MeetupEventRef eventRef) {
+    public void checkIn(Context context, MeetupEventRef eventRef) {
         profile.addMeetupEventRef(eventRef);
         Database.instance().saveProfile(profile);
+        NexxusSharePreferences.putLoggedInMemberProfile(context, profile);
     }
 
     public boolean isUserCheckedIn(MeetupEventRef eventRef) {
