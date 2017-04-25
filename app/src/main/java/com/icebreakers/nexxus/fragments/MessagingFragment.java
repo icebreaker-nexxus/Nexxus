@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
@@ -41,12 +43,15 @@ public class MessagingFragment extends Fragment {
 
     @BindView(R.id.messagesList) MessagesList messagesList;
     @BindView(R.id.input) MessageInput messageInput;
+    @BindView(R.id.empty_state) RelativeLayout emptyStateRelativeLayout;
+    @BindView(R.id.tvWhySerious) TextView whySerious;
 
     MessagesListAdapter<UIMessage> messagesListAdapter;
     Profile loggedInProfile;
     Profile messageToProfile;
     String messagesRowId;
     boolean resetMessage = false;
+    boolean isEmptyStateVisible = true;
 
     public static MessagingFragment newInstance(Profile messageToProfile) {
 
@@ -82,6 +87,7 @@ public class MessagingFragment extends Fragment {
         setupNewIncomingMessageListener();
         messagesList.setAdapter(messagesListAdapter);
         setupPrecannedMessage();
+        whySerious.setText(String.format(getString(R.string.why_so_serious), loggedInProfile.firstName));
         //bootstrapMessagesFromDatabase();
         return view;
     }
@@ -95,6 +101,11 @@ public class MessagingFragment extends Fragment {
                 message.text = charSequence.toString();
                 message.id = UUID.randomUUID().toString();
                 message.senderId = loggedInProfile.id;
+                if (isEmptyStateVisible) {
+                    emptyStateRelativeLayout.setVisibility(View.GONE);
+                    isEmptyStateVisible = false;
+                }
+                emptyStateRelativeLayout.setVisibility(View.GONE);
                 Database.instance().saveMessage(messagesRowId, message);
                 return true;
             }
@@ -106,6 +117,10 @@ public class MessagingFragment extends Fragment {
         Database.instance().messagesTableReference().child(messagesRowId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (isEmptyStateVisible) {
+                    emptyStateRelativeLayout.setVisibility(View.GONE);
+                    isEmptyStateVisible = false;
+                }
                 if (!resetMessage) {
                     resetPrecannedMessage();
                 }

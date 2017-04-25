@@ -2,31 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools">
 
-
-
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/rlMessageWrapper"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:gravity="top"-->
-        <!--android:layout_alignParentBottom="true">-->
-
-        <!--<android.support.design.widget.TextInputEditText-->
-            <!--android:id="@+id/etMessage"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:hint="@string/say_something"-->
-            <!--/>-->
-
-        <!--<Button-->
-            <!--android:id="@+id/btnSend"-->
-            <!--android:layout_alignParentEnd="true"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/send"/>-->
-    <!--</RelativeLayout>-->
 
     <com.stfalcon.chatkit.messages.MessageInput
         android:id="@+id/input"
@@ -44,6 +22,44 @@
         app:outcomingDefaultBubblePressedColor="@color/colorPrimary"
         app:outcomingDefaultBubbleSelectedColor="@color/colorPrimary"
         android:layout_above="@id/input" />
+
+    <RelativeLayout
+        android:id="@+id/empty_state"
+        android:layout_above="@id/input"
+        android:background="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivNoMessage"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/no_message"/>
+
+        <TextView
+            android:id="@+id/tvWhySerious"
+            android:layout_below="@id/ivNoMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/warm_grey"
+            android:textSize="17sp"
+            tools:text="Aditya, why so serious?"/>
+
+        <TextView
+            android:layout_below="@id/tvWhySerious"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/warm_grey"
+            android:textSize="17sp"
+            android:text="@string/send_a_message"/>
+
+
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

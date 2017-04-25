@@ -39,6 +39,8 @@
     <string name="message_also_studied_at" formatted="false">Hey %s, looks like you have also studied at %s</string>
     <string name="message_things_in_common" formatted="false">Hey %s, looks like we have a few things in common</string>
     <string name="have_checked_in">%d people have checked in</string>
+    <string name="why_so_serious">%s, why so serious?</string>
+    <string name="send_a_message">Send a message :)</string>
 
     <!-- onboarding strings -->
     <string name="onboarding_find_attenedees">Know the attendees</string>
