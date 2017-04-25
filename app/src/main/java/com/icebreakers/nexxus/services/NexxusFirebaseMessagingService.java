@@ -67,10 +67,10 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
                 return;
             }
 
-//            if (profile.id.equals(fromId)) {
-//                // not my notification
-//                return;
-//            }
+            if (profile.id.equals(fromId)) {
+                // not my notification
+                return;
+            }
 
 
             if (MESSAGE_TYPE.equalsIgnoreCase(type)) {
