@@ -28,8 +28,10 @@ import com.icebreakers.nexxus.models.Similarities;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by amodi on 4/8/17.
@@ -135,6 +137,7 @@ public class ProfileListActivity extends BaseActivity {
     }
 
     private void performSearch(String query) {
+        Set<Profile> matchedProfileSet = new HashSet<>();
         List<Profile> matchedProfiles = new ArrayList<>();
         List<Profile> allAttendees = profileHolder.getAllProfiles();
         query = query.toLowerCase();
@@ -143,16 +146,16 @@ public class ProfileListActivity extends BaseActivity {
             // check for name match
             if (profile.firstName.toLowerCase().contains(query) || profile.lastName.toLowerCase().contains(query)) {
                 // name match
-                matchedProfiles.add(profile);
+                matchedProfileSet.add(profile);
                 Log.d(TAG, "Matched NAME adding " + profile);
             } else if (profile.headline.toLowerCase().contains(query)) {
-                matchedProfiles.add(profile);
+                matchedProfileSet.add(profile);
             } else {
                 // check for education / school
                 if (profile.educationList != null) {
                     for (Profile.Education education : profile.educationList) {
                         if (education.schoolName.toLowerCase().contains(query)) {
-                            matchedProfiles.add(profile);
+                            matchedProfileSet.add(profile);
                             Log.d(TAG, "Matched Education SchoolName adding " + profile);
                             break;
                         }
@@ -163,7 +166,7 @@ public class ProfileListActivity extends BaseActivity {
                 if (profile.positionList != null) {
                     for (Profile.Position position : profile.positionList) {
                         if (position.companyName.toLowerCase().contains(query) || position.title.toLowerCase().contains(query)) {
-                            matchedProfiles.add(profile);
+                            matchedProfileSet.add(profile);
                             Log.d(TAG, "Matched Position adding " + profile);
                             break;
                         }
@@ -171,7 +174,7 @@ public class ProfileListActivity extends BaseActivity {
                 }
             }
         }
-
+        matchedProfiles.addAll(matchedProfileSet);
         updateProfileList(matchedProfiles);
     }
 
