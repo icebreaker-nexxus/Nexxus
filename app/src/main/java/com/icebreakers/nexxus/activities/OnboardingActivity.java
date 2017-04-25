@@ -71,6 +71,7 @@ public class OnboardingActivity extends MaterialIntroActivity {
         super.onFinish();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
