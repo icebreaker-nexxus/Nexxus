@@ -117,7 +117,7 @@ public class MessagingFragment extends Fragment {
                 }
                 emptyStateRelativeLayout.setVisibility(View.GONE);
 
-                GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id);
+                GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id, loggedInProfile.id);
                 return true;
             }
         });
