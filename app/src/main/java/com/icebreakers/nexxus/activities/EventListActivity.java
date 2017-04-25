@@ -18,6 +18,7 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -36,17 +37,19 @@ import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.messaging.MessageRef;
 import com.icebreakers.nexxus.utils.LocationProvider;
 import com.icebreakers.nexxus.utils.LogoutUtils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EventListActivity extends BaseActivity
         implements LocationProvider.LocationCallback {
@@ -136,6 +139,12 @@ public class EventListActivity extends BaseActivity
 
         EventBus.getDefault().register(this);
         Log.d(TAG, "EVENTBUG REGISTERED");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_event_list, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
