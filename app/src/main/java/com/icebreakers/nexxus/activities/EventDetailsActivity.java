@@ -47,6 +47,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
+
 import static android.support.design.widget.Snackbar.make;
 
 public class EventDetailsActivity extends BaseActivity {
@@ -170,6 +172,8 @@ public class EventDetailsActivity extends BaseActivity {
         adapter = new ProfileImageAdapter(attendees);
         binding.header.rvProfileImages.setAdapter(adapter);
         binding.header.rvProfileImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.header.rvProfileImages.setItemAnimator(new LandingAnimator());
+        binding.header.rvProfileImages.getItemAnimator().setAddDuration(800);
 
         binding.header.rvProfileImages.setOnClickListener(new View.OnClickListener() {
             @Override
