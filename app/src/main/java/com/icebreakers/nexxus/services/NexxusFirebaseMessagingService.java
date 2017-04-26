@@ -26,7 +26,6 @@ import org.parceler.Parcels;
 
 import static com.icebreakers.nexxus.activities.EventDetailsActivity.EVENT_EXTRA;
 import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
-import static com.icebreakers.nexxus.persistence.Database.MEETUP_EVENT_TABLE;
 import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
 /**
@@ -98,25 +97,27 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
 
             if (CHECKIN_TYPE.equalsIgnoreCase(type)) {
                 String eventId = remoteMessage.getData().get("eventId");
-                Database.instance().databaseReference.child(MEETUP_EVENT_TABLE).child(eventId)
-                     .addListenerForSingleValueEvent(new ValueEventListener() {
-                         @Override
-                         public void onDataChange(DataSnapshot dataSnapshot) {
-                             MeetupEvent meetupEvent = dataSnapshot.getValue(MeetupEvent.class);
-                             if (meetupEvent == null) {
-                                 return;
-                             }
-                             Log.d(TAG, "Got the meetupEvent for push notification...");
-                             sendEventNotification(remoteMessage.getNotification().getBody(),
-                                                     remoteMessage.getNotification().getTitle(),
-                                                     meetupEvent);
-                         }
-
-                         @Override
-                         public void onCancelled(DatabaseError databaseError) {
-
-                         }
-                                                     });
+                // hard coding to get
+                sendEventNotification(remoteMessage.getNotification().getBody(),
+                                      remoteMessage.getNotification().getTitle(),
+                                      MeetupEvent.getCodePathEvent());
+//                Database.instance().databaseReference.child(MEETUP_EVENT_TABLE).child(eventId)
+//                     .addListenerForSingleValueEvent(new ValueEventListener() {
+//                         @Override
+//                         public void onDataChange(DataSnapshot dataSnapshot) {
+//                             MeetupEvent meetupEvent = dataSnapshot.getValue(MeetupEvent.class);
+//                             if (meetupEvent == null) {
+//                                 return;
+//                             }
+//                             Log.d(TAG, "Got the meetupEvent for push notification...");
+//
+//                         }
+//
+//                         @Override
+//                         public void onCancelled(DatabaseError databaseError) {
+//
+//                         }
+//                                                     });
             }
         }
     }
