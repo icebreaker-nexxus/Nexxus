@@ -32,6 +32,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 import static com.icebreakers.nexxus.activities.EventDetailsActivity.EVENT_EXTRA;
@@ -101,7 +102,7 @@ public abstract class BaseEventListFragment extends Fragment implements EventFra
         // Set up recyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         eventListAdapter = new EventListAdapter(events);
-        rvEvents.setAdapter(eventListAdapter);
+        rvEvents.setAdapter(new SlideInRightAnimationAdapter(eventListAdapter));
         rvEvents.setLayoutManager(layoutManager);
 
         // Retain an instance so that you can call `resetState()` for fresh searches

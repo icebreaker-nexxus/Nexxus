@@ -37,7 +37,6 @@ import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Venue;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
 import com.icebreakers.nexxus.persistence.Database;
-import com.icebreakers.nexxus.utils.DateTimeFormat;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.MapUtils;
 
@@ -153,7 +152,7 @@ public class EventDetailsActivity extends BaseActivity {
         } else {
             binding.header.tvTime.setText(TIME_FORMAT.format(new Date(event.getTime())));
         }
-        
+
         // We make sure that venue is never null
         binding.header.tvLocationTitle.setText(event.getVenue().getName());
         String address = String.format("%s, %s", event.getVenue().getAddress1(), event.getVenue().getCity());

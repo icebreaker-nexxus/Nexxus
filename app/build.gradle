@@ -136,6 +136,9 @@ dependencies {
     // material progressbar
     compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
 
+    // recyclerview animators
+    compile 'jp.wasabeef:recyclerview-animators:2.2.3'
+
     // For RxJava 2
     //compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.0.6'
 }

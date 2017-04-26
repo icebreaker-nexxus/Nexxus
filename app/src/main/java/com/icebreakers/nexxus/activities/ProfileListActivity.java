@@ -15,8 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.adapters.ProfileAdapter;
@@ -32,6 +31,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter;
 
 /**
  * Created by amodi on 4/8/17.
@@ -74,7 +77,7 @@ public class ProfileListActivity extends BaseActivity {
 
         // set up recyclerview
         profileAdapter = new ProfileAdapter(profiles, similaritiesMap);
-        rvProfiles.setAdapter(profileAdapter);
+        rvProfiles.setAdapter(new SlideInRightAnimationAdapter(profileAdapter));
         rvProfiles.setLayoutManager(new LinearLayoutManager(this));
         // Add item click listener
         ItemClickSupport.addTo(rvProfiles).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
