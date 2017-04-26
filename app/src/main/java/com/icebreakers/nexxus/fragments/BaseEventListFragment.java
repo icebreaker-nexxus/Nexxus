@@ -14,7 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.activities.EventDetailsActivity;
@@ -24,16 +25,12 @@ import com.icebreakers.nexxus.adapters.EventListAdapter;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.utils.EndlessRecyclerViewScrollListener;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
-
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter;
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 import static com.icebreakers.nexxus.activities.EventDetailsActivity.EVENT_EXTRA;
 
@@ -102,7 +99,7 @@ public abstract class BaseEventListFragment extends Fragment implements EventFra
         // Set up recyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         eventListAdapter = new EventListAdapter(events);
-        rvEvents.setAdapter(new SlideInRightAnimationAdapter(eventListAdapter));
+        rvEvents.setAdapter(new SlideInBottomAnimationAdapter(eventListAdapter));
         rvEvents.setLayoutManager(layoutManager);
 
         // Retain an instance so that you can call `resetState()` for fresh searches

@@ -101,6 +101,7 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
                 sendEventNotification(remoteMessage.getNotification().getBody(),
                                       remoteMessage.getNotification().getTitle(),
                                       MeetupEvent.getCodePathEvent());
+
 //                Database.instance().databaseReference.child(MEETUP_EVENT_TABLE).child(eventId)
 //                     .addListenerForSingleValueEvent(new ValueEventListener() {
 //                         @Override
