@@ -23,7 +23,7 @@ public class GoogleCloudFunctionClient {
     }
 
     public static void sendEventCheckInNotification(String fromName, String fromId, String eventId) {
-        String body = fromName + " co-worker from LinkedIn checked-in";
+        String body = fromName + " who also studied at UCLA checked-in";
         sendPush(String.format("https://us-central1-nexxus-42eaf.cloudfunctions.net/sendPushNotificationForEventCheckIn?fromName=%s&toId=%s&fromId=%s&body=%s&eventId=%s", fromName, "global", fromId, body, eventId));
     }
 
