@@ -11,14 +11,8 @@ public class MeetupEventRef {
 
     private String eventId;
 
-    private Long groupId;
-
-    private String groupUrlname;
-
-    public MeetupEventRef(String eventId, Long groupId, String groupUrlname) {
+    public MeetupEventRef(String eventId) {
         this.eventId = eventId;
-        this.groupId = groupId;
-        this.groupUrlname = groupUrlname;
     }
 
     public MeetupEventRef() {}
@@ -29,21 +23,5 @@ public class MeetupEventRef {
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getGroupUrlname() {
-        return groupUrlname;
-    }
-
-    public void setGroupUrlname(String groupUrlname) {
-        this.groupUrlname = groupUrlname;
     }
 }

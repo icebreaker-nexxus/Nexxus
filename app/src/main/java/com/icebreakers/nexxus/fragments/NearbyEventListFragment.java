@@ -2,6 +2,10 @@ package com.icebreakers.nexxus.fragments;
 
 import android.graphics.drawable.Drawable;
 
+import com.icebreakers.nexxus.models.MeetupEvent;
+
+import java.util.List;
+
 /**
  * Created by amodi on 4/12/17.
  */
@@ -25,5 +29,15 @@ public class NearbyEventListFragment extends BaseEventListFragment {
 
     public static NearbyEventListFragment newInstance() {
         return new NearbyEventListFragment();
+    }
+
+    @Override
+    public void update(List<MeetupEvent> newEvents) {
+        if (events.isEmpty()) {
+            MeetupEvent codePathEvent = MeetupEvent.getCodePathEvent();
+            events.add(0, codePathEvent);
+        }
+
+        super.update(newEvents);
     }
 }

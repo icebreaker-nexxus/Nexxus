@@ -13,7 +13,6 @@ import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.utils.DateTimeFormat;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,9 +26,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
     private static final String TAG = NexxusApplication.BASE_TAG + EventListAdapter.class.getName();
     List<MeetupEvent> events;
-
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd");
-    final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
 
@@ -65,23 +61,29 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     public void onBindViewHolder(EventViewHolder holder, int position) {
 
         MeetupEvent event = events.get(position);
-
         holder.tvName.setText(event.getName());
-        holder.tvTime.setText(DateTimeFormat.formatDateTimeForEvent(event.getTime()));
 
-        // TODO expand address
+        if (event.fakeEvent && event.getId().equals(MeetupEvent.EVENT_ID_CODEPATH)) {
+            holder.tvTime.setText("Happening now");
+        } else {
+            holder.tvTime.setText(DateTimeFormat.formatDateTimeForEvent(event.getTime()));
+        }
+
         // We make sure venue is never null, hence no need to check
         String address = String.format("%s, %s", event.getVenue().getAddress1(), event.getVenue().getCity());
         holder.tvVenue.setText(address);
 
         String imageURL = null;
 
-        if (event.getGroup().getKeyPhoto() != null) {
-            imageURL = event.getGroup().getKeyPhoto().getHighresLink();
-        } else  if (event.getGroup().getPhoto() != null) {
-            imageURL = event.getGroup().getPhoto().getHighresLink();
+        if (event.fakeEvent && event.getId().equals(MeetupEvent.EVENT_ID_CODEPATH)) {
+            imageURL = event.imageUrl;
+        } else {
+            if (event.getGroup().getKeyPhoto() != null) {
+                imageURL = event.getGroup().getKeyPhoto().getHighresLink();
+            } else if (event.getGroup().getPhoto() != null) {
+                imageURL = event.getGroup().getPhoto().getHighresLink();
+            }
         }
-
         if (imageURL != null) {
 
             if (imageURL != null) {

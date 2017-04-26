@@ -109,10 +109,14 @@ public class EventDetailsActivity extends BaseActivity {
         currentUser = profileHolder.getProfile();
 
         String imageURL = null;
-        if (event.getGroup().getKeyPhoto() != null) {
-            imageURL = event.getGroup().getKeyPhoto().getHighresLink();
-        } else  if (event.getGroup().getPhoto() != null) {
-            imageURL = event.getGroup().getPhoto().getHighresLink();
+        if (event.fakeEvent && event.getId().equals(MeetupEvent.EVENT_ID_CODEPATH)) {
+            imageURL = event.imageUrl;
+        } else {
+            if (event.getGroup().getKeyPhoto() != null) {
+                imageURL = event.getGroup().getKeyPhoto().getHighresLink();
+            } else if (event.getGroup().getPhoto() != null) {
+                imageURL = event.getGroup().getPhoto().getHighresLink();
+            }
         }
 
         if (imageURL != null) {
