@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.maps.CameraUpdate;
@@ -36,8 +37,10 @@ import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Venue;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
 import com.icebreakers.nexxus.persistence.Database;
+import com.icebreakers.nexxus.utils.DateTimeFormat;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 import com.icebreakers.nexxus.utils.MapUtils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.parceler.Parcels;
 
@@ -144,9 +147,13 @@ public class EventDetailsActivity extends BaseActivity {
         binding.header.ivTime.setColorFilter(getResources().getColor(android.R.color.darker_gray));
         binding.header.tvDate.setText(DATE_FORMAT.format(new Date(event.getTime())));
 
-        // TODO Set relative time or start time - end time if available.
-        binding.header.tvTime.setText(TIME_FORMAT.format(new Date(event.getTime())));
 
+        if (event.fakeEvent && event.getId().equals(MeetupEvent.EVENT_ID_CODEPATH)) {
+            binding.header.tvTime.setText("7 PM - 9 PM");
+        } else {
+            binding.header.tvTime.setText(TIME_FORMAT.format(new Date(event.getTime())));
+        }
+        
         // We make sure that venue is never null
         binding.header.tvLocationTitle.setText(event.getVenue().getName());
         String address = String.format("%s, %s", event.getVenue().getAddress1(), event.getVenue().getCity());

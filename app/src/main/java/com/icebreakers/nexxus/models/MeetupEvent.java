@@ -14,7 +14,6 @@ public class MeetupEvent {
 
     public static final String EVENT_ID_CODEPATH = "codepath-event";
 
-
     @SerializedName("created")
     @Expose
     private Long created;
@@ -197,7 +196,7 @@ public class MeetupEvent {
         MeetupEvent codePathEvent = new MeetupEvent();
         codePathEvent.fakeEvent = true;
         codePathEvent.id = EVENT_ID_CODEPATH;
-        codePathEvent.name = "CodePath Android Bootcamp";
+        codePathEvent.name = "Netflix + CodePath Android Bootcamp";
         codePathEvent.time = new Date().getTime();
 
         codePathEvent.venue = new Venue();
@@ -216,9 +215,8 @@ public class MeetupEvent {
                 "The in-person class will take place at the beautiful Netflix campus in Los Gatos. Throughout the course, Netflix engineers will be helping out as mentors and presenting talks about their real-world mobile use cases.";
 
 
-        codePathEvent.imageUrl = "https://i.imgur.com/XgxWfyF.png";
+        codePathEvent.imageUrl = "http://cdn.bgr.com/2016/02/netflix-sign-2.jpg?quality=98&strip=all"; //"https://i.imgur.com/XgxWfyF.png";
 
         return codePathEvent;
     }
-
 }
