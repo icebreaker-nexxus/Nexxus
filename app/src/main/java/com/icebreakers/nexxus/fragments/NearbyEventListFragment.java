@@ -3,6 +3,7 @@ package com.icebreakers.nexxus.fragments;
 import android.graphics.drawable.Drawable;
 
 import com.icebreakers.nexxus.models.MeetupEvent;
+import com.icebreakers.nexxus.persistence.Database;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class NearbyEventListFragment extends BaseEventListFragment {
         if (events.isEmpty()) {
             MeetupEvent codePathEvent = MeetupEvent.getCodePathEvent();
             events.add(0, codePathEvent);
+            Database.instance().saveMeetupEvent(codePathEvent);
         }
 
         super.update(newEvents);
