@@ -1,7 +1,6 @@
 package com.icebreakers.nexxus.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,22 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.R;
-import com.icebreakers.nexxus.activities.MessagingActivity;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
 
-import org.parceler.Parcels;
-
 import java.util.List;
 import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
 
 /**
  * Created by amodi on 4/8/17.
@@ -43,7 +35,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
 
     @Override
     public ProfileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_profile, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.profile_item, parent, false);
         return new ProfileViewHolder(view);
     }
 
@@ -59,15 +51,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         }
 
         holder.profileHeadlineText.setText(profile.headline);
-
-        holder.ivMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, MessagingActivity.class);
-                intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
-                context.startActivity(intent);
-            }
-        });
 
         Glide.with(context).load(profile.pictureUrl).into(holder.profileImage);
 
@@ -120,7 +103,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         @BindView(R.id.profile_similarity_text) TextView profileSimilarityText;
         @BindView(R.id.similarity_image) ImageView profileSimilarityImage;
         @BindView(R.id.similarity_section) LinearLayout similaritySection;
-        @BindView(R.id.ivMessage) ImageView ivMessage;
 
         public ProfileViewHolder(View itemView) {
             super(itemView);
