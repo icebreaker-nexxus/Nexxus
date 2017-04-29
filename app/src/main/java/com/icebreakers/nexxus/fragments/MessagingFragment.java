@@ -1,5 +1,6 @@
 package com.icebreakers.nexxus.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,8 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,10 +29,14 @@ import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
+
 import org.parceler.Parcels;
 
 import java.util.Calendar;
 import java.util.UUID;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/12/17.
@@ -54,6 +58,8 @@ public class MessagingFragment extends Fragment {
     boolean resetMessage = false;
     boolean isEmptyStateVisible = true;
 
+    ProfileHolder profileHolder;
+
     public static MessagingFragment newInstance(Profile messageToProfile) {
 
         Bundle args = new Bundle();
@@ -65,8 +71,11 @@ public class MessagingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        profileHolder = ProfileHolder.getInstance(getContext());
+
         messageToProfile = Parcels.unwrap(getArguments().getParcelable(PROFILE_EXTRA));
-        loggedInProfile = ProfileHolder.getInstance(getContext()).getProfile();
+        loggedInProfile = profileHolder.getProfile();
         messagesRowId = MessagesHelper.getMessageRowId(loggedInProfile, messageToProfile);
 
     }
@@ -102,13 +111,20 @@ public class MessagingFragment extends Fragment {
                 message.text = charSequence.toString();
                 message.id = UUID.randomUUID().toString();
                 message.senderId = loggedInProfile.id;
+                message.receiverId = messageToProfile.id;
+
+                // save message and messageRef to profile
+                profileHolder.saveMessage(messagesRowId, message);
+
                 if (isEmptyStateVisible) {
                     emptyStateRelativeLayout.setVisibility(View.GONE);
                     isEmptyStateVisible = false;
                 }
                 emptyStateRelativeLayout.setVisibility(View.GONE);
-                Database.instance().saveMessage(messagesRowId, message);
+
+                // send push notification
                 GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id, loggedInProfile.id);
+
                 return true;
             }
         });
@@ -155,6 +171,7 @@ public class MessagingFragment extends Fragment {
         });
     }
 
+    @SuppressLint("StringFormatMatches")
     private void setupPrecannedMessage() {
         Similarities similarities = SimilaritiesFinder.findSimilarities(loggedInProfile, messageToProfile);
         if (similarities.numOfSimilarities != 0) {

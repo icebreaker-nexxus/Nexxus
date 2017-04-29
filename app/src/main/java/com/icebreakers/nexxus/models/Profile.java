@@ -2,10 +2,12 @@ package com.icebreakers.nexxus.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
+import com.icebreakers.nexxus.models.messaging.MessageRef;
 
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,6 +37,10 @@ public class Profile {
     public List<Position> positionList;
 
     public List<MeetupEventRef> meetupEventRefs = new ArrayList<>();
+
+    public HashMap<String, MessageRef> messageRefHashMap = new HashMap<>();
+
+    public List<String> messageIds = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

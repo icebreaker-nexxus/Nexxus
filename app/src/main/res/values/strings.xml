@@ -59,4 +59,5 @@
 
     <string name="google_maps_api_key">AIzaSyAnPKA09fo3xX3ndsrgcITOAfAZ3N2Ifps</string>
     <string name="nearby_key">AIzaSyAKeW0hbeRA14tgyC672_Xyq8cUwaz0vtI</string>
+    <string name="direct_message">Direct Message</string>
 </resources>
