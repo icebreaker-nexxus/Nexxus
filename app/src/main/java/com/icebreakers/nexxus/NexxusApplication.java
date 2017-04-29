@@ -19,7 +19,7 @@ public class NexxusApplication extends Application {
 
     public static final String BASE_TAG = "NX: ";
 
-    private static final String TAG = BASE_TAG + NexxusApplication.class.getName();
+    private static final String TAG = BASE_TAG + NexxusApplication.class.getSimpleName();
 
     private static NexxusApplication instance;
 

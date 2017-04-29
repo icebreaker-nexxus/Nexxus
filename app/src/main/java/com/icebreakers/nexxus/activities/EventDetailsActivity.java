@@ -53,7 +53,7 @@ import static android.support.design.widget.Snackbar.make;
 
 public class EventDetailsActivity extends BaseActivity {
 
-    private static final String TAG = NexxusApplication.BASE_TAG + EventDetailsActivity.class.getName();
+    private static final String TAG = NexxusApplication.BASE_TAG + EventDetailsActivity.class.getSimpleName();
 
     public static final String EVENT_EXTRA = "event";
 

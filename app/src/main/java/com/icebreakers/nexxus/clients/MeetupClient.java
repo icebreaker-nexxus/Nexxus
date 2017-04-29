@@ -29,7 +29,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class MeetupClient {
 
-    private static final String TAG = NexxusApplication.BASE_TAG + MeetupClient.class.getName();
+    private static final String TAG = NexxusApplication.BASE_TAG + MeetupClient.class.getSimpleName();
 
     public static final String BASE_URL = "https://api.meetup.com";
 

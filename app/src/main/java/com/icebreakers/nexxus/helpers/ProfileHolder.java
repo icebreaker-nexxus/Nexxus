@@ -33,7 +33,7 @@ import static com.icebreakers.nexxus.persistence.Database.PROFILE_TABLE;
 
 public class ProfileHolder {
 
-    private static final String TAG = NexxusApplication.BASE_TAG + ProfileHolder.class.getName();
+    private static final String TAG = NexxusApplication.BASE_TAG + ProfileHolder.class.getSimpleName();
 
     private static AccessToken accessToken = null;
     private static String profileId;
