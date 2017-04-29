@@ -234,7 +234,7 @@ public class EventDetailsActivity extends BaseActivity {
             // do not allow multiple check-in from same user
             return;
         }
-        profileHolder.checkIn(eventRef);
+        profileHolder.checkIn(this, eventRef);
         attendees.add(0, currentUser);
         adapter.notifyItemInserted(0);
         binding.header.rvProfileImages.scrollToPosition(0);
