@@ -196,26 +196,26 @@ public class MeetupEvent {
         MeetupEvent codePathEvent = new MeetupEvent();
         codePathEvent.fakeEvent = true;
         codePathEvent.id = EVENT_ID_CODEPATH;
-        codePathEvent.name = "Netflix + CodePath Android Bootcamp";
+        codePathEvent.name = "Netflix CodePath Demo Day";
         codePathEvent.time = new Date().getTime();
 
         codePathEvent.venue = new Venue();
-        codePathEvent.venue.setName("Netflix");
+        codePathEvent.venue.setName("Netflix HQ");
         codePathEvent.venue.setAddress1("121 Albright way");
         codePathEvent.venue.setCity("Los Gatos");
         codePathEvent.venue.setLat(37.257103);
         codePathEvent.venue.setLon(-121.964178);
 
-        codePathEvent.description = "We are partnering with Netflix to provide our accelerated 8-week Android evening bootcamp starting on March 6th. The course was designed to cover all the major topics required to build Android apps according to current industry best practices incorporating the following elements:\n" +
-                "Weekly 2 hour session to review key mobile concepts and topics.\n" +
-                "Weekly lab session to collaborate on projects and complete coding challenges.\n" +
-                "Weekly app assignments to immediately apply each new topic introduced.\n" +
-                "Group project to design and develop a complete app with a team over the course.\n" +
-                "At the end of the program, your group will present at Demo Day and you will join our CodePath alumni network which provides access to curated events, opportunities to network with other alums, and priority selection for future classes.\n" +
-                "The in-person class will take place at the beautiful Netflix campus in Los Gatos. Throughout the course, Netflix engineers will be helping out as mentors and presenting talks about their real-world mobile use cases.";
+        codePathEvent.description = "Over the past couple months, CodePath and Netflix have partnered  to provide an intense Android bootcamp for practicing software engineers to develop knowlege and skill in industry standard Android development.\n" +
+                "\n" +
+                "Less than 3% of applicants were accepted into the bootcamp and the course required participants to spend 20+ hours a week on top of their full time jobs for 8 weeks. Netflix supported the course by providing design and engineering mentorship as well as hosting the class at their headquarters in Los Gatos. In the later half of the course, students formed teams and worked together to build polished Android applications.\n" +
+                "\n" +
+                "On May 8th, 2017 participants will showcase their final projects in front of an all engineering audience of CodePath alumni, Netflix engineers, and influential technology leaders judging the winning apps.\n" +
+                "\n" +
+                "Complimentary food and alcohol will be served. Netflix will be providing swag and prizes to attendees and demo day winners.  ";
 
-
-        codePathEvent.imageUrl = "http://cdn.bgr.com/2016/02/netflix-sign-2.jpg?quality=98&strip=all"; //"https://i.imgur.com/XgxWfyF.png";
+        codePathEvent.imageUrl = "https://i2.wp.com/blog.codepath.com/wp-content/uploads/2017/01/Netflix-Image-2.jpg";
+                //"http://cdn.bgr.com/2016/02/netflix-sign-2.jpg?quality=98&strip=all"; //"https://i.imgur.com/XgxWfyF.png";
 
         return codePathEvent;
     }

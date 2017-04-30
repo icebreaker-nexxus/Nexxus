@@ -150,7 +150,7 @@ public class EventDetailsActivity extends BaseActivity {
 
 
         if (event.fakeEvent && event.getId().equals(MeetupEvent.EVENT_ID_CODEPATH)) {
-            binding.header.tvTime.setText("7 PM - 9 PM");
+            binding.header.tvTime.setText("6:30 PM");
         } else {
             binding.header.tvTime.setText(TIME_FORMAT.format(new Date(event.getTime())));
         }
