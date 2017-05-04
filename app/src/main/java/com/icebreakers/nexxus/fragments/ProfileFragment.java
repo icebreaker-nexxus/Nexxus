@@ -112,6 +112,9 @@ public class ProfileFragment extends Fragment {
         insertCommonSection();
         insertExperienceSection();
         insertEducationSection();
+        if (profile.profileColor != 0 && profile.profileColor != -1) {
+            toolbarBackground.setBackgroundColor(profile.profileColor);
+        }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             setupAnimationOnEnter(view);
         } else {

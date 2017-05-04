@@ -139,6 +139,8 @@ dependencies {
     // recyclerview animators
     compile 'jp.wasabeef:recyclerview-animators:2.2.3'
 
+    compile 'com.android.support:palette-v7:25.2.0'
+
     // For RxJava 2
     //compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.0.6'
 }

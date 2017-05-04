@@ -42,6 +42,8 @@ public class Profile {
 
     public List<String> messageIds = new ArrayList<>();
 
+    public int profileColor;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }

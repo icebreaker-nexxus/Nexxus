@@ -1,7 +1,9 @@
 package com.icebreakers.nexxus.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
@@ -59,7 +63,16 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
 
         holder.profileHeadlineText.setText(profile.headline);
 
-        Glide.with(context).load(profile.pictureUrl).into(holder.profileImage);
+        Glide.with(context)
+             .load(profile.pictureUrl)
+             .asBitmap()
+             .into(new BitmapImageViewTarget(holder.profileImage) {
+            @Override
+            public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                super.onResourceReady(bitmap, anim);
+                profile.profileColor = new Palette.Builder(bitmap).generate().getMutedColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            }
+        });
 
         Similarities similarities = similaritiesMap.get(profile.id);
         if (similarities != null && similarities.numOfSimilarities >= 1) {
