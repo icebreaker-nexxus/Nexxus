@@ -31,6 +31,7 @@ import java.util.Map;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder> {
 
+    private boolean isInitialLoad = true;
     private int lastAnimatedPosition = -1;
     private List<Profile> profiles;
     private Map<String, Similarities> similaritiesMap;
@@ -116,7 +117,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
     }
 
     private void runEnterAnimation(View view, int position) {
-        if (position >= 4) {
+
+        if (!isInitialLoad && position >= 4) {
             return;
         }
 
@@ -129,6 +131,11 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
                 .setDuration(2000)
                 .start();
         }
+    }
+
+    public void notifyAdapter() {
+        isInitialLoad = false;
+        notifyDataSetChanged();
     }
 
     public void resetLastAnimationItem() {
@@ -149,4 +156,5 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
             ButterKnife.bind(this, itemView);
         }
     }
+
 }

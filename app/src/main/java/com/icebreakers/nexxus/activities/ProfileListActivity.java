@@ -154,7 +154,7 @@ public class ProfileListActivity extends BaseActivity {
         profiles.addAll(matchedProfiles);
         profileAdapter.updateSimilaritiesMap(SimilaritiesFinder.findSimilarities(currentProfile, matchedProfiles));
         profileAdapter.resetLastAnimationItem();
-        profileAdapter.notifyDataSetChanged();
+        profileAdapter.notifyAdapter();
     }
 
     @Override
