@@ -214,7 +214,8 @@ public class MeetupEvent {
                 "\n" +
                 "Complimentary food and alcohol will be served. Netflix will be providing swag and prizes to attendees and demo day winners.  ";
 
-        codePathEvent.imageUrl = "https://i2.wp.com/blog.codepath.com/wp-content/uploads/2017/01/Netflix-Image-2.jpg";
+        codePathEvent.imageUrl = "http://thetvpage.com/wp-content/uploads/2016/01/netflix-logo.jpg";
+        //"https://i2.wp.com/blog.codepath.com/wp-content/uploads/2017/01/Netflix-Image-2.jpg";
                 //"http://cdn.bgr.com/2016/02/netflix-sign-2.jpg?quality=98&strip=all"; //"https://i.imgur.com/XgxWfyF.png";
 
         return codePathEvent;
