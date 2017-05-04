@@ -5,6 +5,7 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +51,7 @@ public class NearbyActivity extends BaseActivity implements GoogleApiClient.Conn
     @BindView(R.id.pulse) PulsatorLayout pulsatorLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.rvProfiles) RecyclerView recyclerView;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
 
     private GoogleApiClient googleApiClient;
     private Message activeMessage;
@@ -97,7 +99,7 @@ public class NearbyActivity extends BaseActivity implements GoogleApiClient.Conn
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         profileIds = new HashSet<>();
         layoutManager = new LinearLayoutManager(this);
-        profileAdapter = new ProfileAdapter(new ArrayList<>(), new HashMap<>());
+        profileAdapter = new ProfileAdapter(coordinatorLayout, this, new ArrayList<>(), new HashMap<>());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(profileAdapter);
 

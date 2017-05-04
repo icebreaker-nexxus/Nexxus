@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.R;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
+import com.icebreakers.nexxus.utils.AnimationUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -25,12 +27,16 @@ import java.util.Map;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder> {
 
+    private int lastAnimatedPosition = -1;
     private List<Profile> profiles;
     private Map<String, Similarities> similaritiesMap;
+    private Context context;
+    private View view;
 
-    public ProfileAdapter(List<Profile> profileList, Map<String, Similarities> similaritiesMap) {
+    public ProfileAdapter(View view, Context context, List<Profile> profileList, Map<String, Similarities> similaritiesMap) {
         this.profiles = profileList;
         this.similaritiesMap = similaritiesMap;
+        this.context = context;
     }
 
     @Override
@@ -41,6 +47,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
 
     @Override
     public void onBindViewHolder(ProfileViewHolder holder, int position) {
+        runEnterAnimation(holder.itemView, position);
         final Profile profile = profiles.get(position);
         final Context context = holder.itemView.getContext();
 
@@ -93,6 +100,26 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
 
     public Profile getItemAtAdapterPosition(int position) {
         return profiles.get(position);
+    }
+
+    private void runEnterAnimation(View view, int position) {
+        if (position >= 4) {
+            return;
+        }
+
+        if (position > lastAnimatedPosition) {
+            lastAnimatedPosition = position;
+            view.setTranslationY(AnimationUtils.getScreenHeight(context));
+            view.animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(5.f))
+                .setDuration(2000)
+                .start();
+        }
+    }
+
+    public void resetLastAnimationItem() {
+        lastAnimatedPosition = -1;
     }
 
     class ProfileViewHolder extends RecyclerView.ViewHolder {

@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,7 +33,6 @@ import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.Similarities;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
-import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,6 +50,7 @@ public class ProfileListActivity extends BaseActivity {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.searchtoolbar) Toolbar searchToolbar;
     @BindView(R.id.rvProfiles) RecyclerView rvProfiles;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
 
     MenuItem searchItem;
     Menu searchMenu;
@@ -82,8 +83,8 @@ public class ProfileListActivity extends BaseActivity {
         Map<String, Similarities> similaritiesMap = SimilaritiesFinder.findSimilarities(currentProfile, profiles);
 
         // set up recyclerview
-        profileAdapter = new ProfileAdapter(profiles, similaritiesMap);
-        rvProfiles.setAdapter(new SlideInRightAnimationAdapter(profileAdapter));
+        profileAdapter = new ProfileAdapter(coordinatorLayout, this, profiles, similaritiesMap);
+        rvProfiles.setAdapter(profileAdapter);
         rvProfiles.setLayoutManager(new LinearLayoutManager(this));
         // Add item click listener
         ItemClickSupport.addTo(rvProfiles).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -152,6 +153,7 @@ public class ProfileListActivity extends BaseActivity {
         profiles.clear();
         profiles.addAll(matchedProfiles);
         profileAdapter.updateSimilaritiesMap(SimilaritiesFinder.findSimilarities(currentProfile, matchedProfiles));
+        profileAdapter.resetLastAnimationItem();
         profileAdapter.notifyDataSetChanged();
     }
 
