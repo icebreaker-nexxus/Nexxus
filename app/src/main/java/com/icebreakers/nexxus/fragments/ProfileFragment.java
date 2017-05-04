@@ -23,6 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -114,6 +116,13 @@ public class ProfileFragment extends Fragment {
         insertEducationSection();
         if (profile.profileColor != 0 && profile.profileColor != -1) {
             toolbarBackground.setBackgroundColor(profile.profileColor);
+            appBarLayout.setBackgroundColor(profile.profileColor);
+            collapsingToolbarLayout.setContentScrimColor(profile.profileColor);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getActivity().getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(profile.profileColor);
+            }
         }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             setupAnimationOnEnter(view);
