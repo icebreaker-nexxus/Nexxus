@@ -35,6 +35,7 @@ import com.icebreakers.nexxus.models.Similarities;
 import com.icebreakers.nexxus.utils.ItemClickSupport;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,7 @@ public class ProfileListActivity extends BaseActivity {
     List<Profile> profiles;
     List<Profile> allAttendees;
     ProfileHolder profileHolder;
+    Map<String, Similarities> similaritiesMap;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,9 +80,9 @@ public class ProfileListActivity extends BaseActivity {
 
         profiles = new ArrayList<>();
         profiles.addAll(allAttendees);
-
         // find similarities
-        Map<String, Similarities> similaritiesMap = SimilaritiesFinder.findSimilarities(currentProfile, profiles);
+        similaritiesMap = SimilaritiesFinder.findSimilarities(currentProfile, profiles);
+        sortAttendees();
 
         // set up recyclerview
         profileAdapter = new ProfileAdapter(coordinatorLayout, this, profiles, similaritiesMap);
@@ -152,6 +154,7 @@ public class ProfileListActivity extends BaseActivity {
     private void updateProfileList(List<Profile> matchedProfiles) {
         profiles.clear();
         profiles.addAll(matchedProfiles);
+        sortAttendees();
         profileAdapter.updateSimilaritiesMap(SimilaritiesFinder.findSimilarities(currentProfile, matchedProfiles));
         profileAdapter.resetLastAnimationItem();
         profileAdapter.notifyAdapter();
@@ -304,5 +307,36 @@ public class ProfileListActivity extends BaseActivity {
         }
         // start the animation
         anim.start();
+    }
+
+    private void sortAttendees() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            profiles.sort(new Comparator<Profile>() {
+                @Override
+                public int compare(Profile profile, Profile t1) {
+                    Similarities similarities1 = similaritiesMap.get(profile.id);
+                    Similarities similarities2 = similaritiesMap.get(t1.id);
+                    if ((similarities1 == null) && (similarities2 == null)) {
+                        return 0;
+                    }
+                    if (similarities1 == null && similarities2.numOfSimilarities > 0) {
+                        return 1;
+                    }
+                    if (similarities2 == null && similarities1.numOfSimilarities > 0) {
+                        return -1;
+                    }
+                    if (similarities1 == null || similarities2 == null) {
+                        return 0;
+                    }
+                    if (similarities1.numOfSimilarities > similarities2.numOfSimilarities) {
+                        return -1;
+                    } else if (similarities1.numOfSimilarities < similarities2.numOfSimilarities) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+        }
     }
 }
