@@ -167,7 +167,7 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
 
     private PendingIntent getReplyPendingIntent(String senderProfileId, String receiverProfileId, int notificationId) {
         Intent intent;
-        intent = NotificationBroadcastReceiver.getReplyMessageIntent(this, senderProfileId, receiverProfileId, notificationId);
+        intent = NotificationBroadcastReceiver.getReplyMessageIntent(this, receiverProfileId, senderProfileId, notificationId);
         return PendingIntent.getBroadcast(getApplicationContext(), 100, intent,
                                           PendingIntent.FLAG_UPDATE_CURRENT);
     }
