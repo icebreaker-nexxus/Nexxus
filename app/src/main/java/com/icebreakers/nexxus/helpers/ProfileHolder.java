@@ -126,7 +126,7 @@ public class ProfileHolder {
 
             for(DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
                 Message message = dataSnapshotChild.getValue(Message.class);
-                handleIncomingMessage(dataSnapshot.getKey(), message);
+                //handleIncomingMessage(dataSnapshot.getKey(), message);
                 break;
             }
 
