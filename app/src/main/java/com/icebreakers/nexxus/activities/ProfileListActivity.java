@@ -109,43 +109,59 @@ public class ProfileListActivity extends BaseActivity {
 
     }
 
-    private void performSearch(String query) {
+    private void performSearch(String searchQuery) {
         Set<Profile> matchedProfileSet = new HashSet<>();
         List<Profile> matchedProfiles = new ArrayList<>();
         List<Profile> allAttendees = profileHolder.getAllProfiles();
-        query = query.toLowerCase();
+        searchQuery = searchQuery.toLowerCase();
+        String[] queries = searchQuery.split(" ");
+        int matchCount = 0;
+        boolean isMatched = false;
 
         for (Profile profile: allAttendees) {
-            // check for name match
-            if (profile.firstName.toLowerCase().contains(query) || profile.lastName.toLowerCase().contains(query)) {
-                // name match
-                matchedProfileSet.add(profile);
-                Log.d(TAG, "Matched NAME adding " + profile);
-            } else if (profile.headline.toLowerCase().contains(query)) {
-                matchedProfileSet.add(profile);
-            } else {
-                // check for education / school
-                if (profile.educationList != null) {
-                    for (Profile.Education education : profile.educationList) {
-                        if (education.schoolName.toLowerCase().contains(query)) {
-                            matchedProfileSet.add(profile);
-                            Log.d(TAG, "Matched Education SchoolName adding " + profile);
-                            break;
+            for (String query : queries) {
+                isMatched = false;
+                // check for name match
+                if (profile.firstName.toLowerCase().contains(query) || profile.lastName.toLowerCase().contains(query)) {
+                    // name match
+                        matchCount++;
+                        isMatched = true;
+                    Log.d(TAG, "Matched NAME adding " + profile);
+                } else if (profile.headline.toLowerCase().contains(query)) {
+                    matchCount++;
+                } else {
+                    // check for education / school
+                    if (profile.educationList != null) {
+                        for (Profile.Education education : profile.educationList) {
+                            if (education.schoolName.toLowerCase().contains(query)) {
+                                matchCount++;
+                                isMatched = true;
+                                Log.d(TAG, "Matched Education SchoolName adding " + profile);
+                                break;
+                            }
                         }
                     }
-                }
+                    if (isMatched) {
+                        break;
+                    }
 
-                // check for company name / title
-                if (profile.positionList != null) {
-                    for (Profile.Position position : profile.positionList) {
-                        if (position.companyName.toLowerCase().contains(query) || position.title.toLowerCase().contains(query)) {
-                            matchedProfileSet.add(profile);
-                            Log.d(TAG, "Matched Position adding " + profile);
-                            break;
+                    // check for company name / title
+                    if (profile.positionList != null) {
+                        for (Profile.Position position : profile.positionList) {
+                            if (position.companyName.toLowerCase().contains(query) || position.title.toLowerCase().contains(query)) {
+                                matchCount++;
+                                isMatched = true;
+                                Log.d(TAG, "Matched Position adding " + profile);
+                                break;
+                            }
                         }
                     }
                 }
             }
+            if (matchCount >= queries.length) {
+                matchedProfileSet.add(profile);
+            }
+            matchCount = 0;
         }
         matchedProfiles.addAll(matchedProfileSet);
         updateProfileList(matchedProfiles);
