@@ -1,9 +1,13 @@
 package com.icebreakers.nexxus.helpers;
 
+import android.content.Context;
 import com.icebreakers.nexxus.models.Message;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.models.messaging.UIMessage;
 import com.icebreakers.nexxus.models.messaging.User;
+
+import java.util.Calendar;
+import java.util.UUID;
 
 /**
  * Created by amodi on 4/13/17.
@@ -45,4 +49,18 @@ public class MessagesHelper {
         message.timestamp = uiMessage.getCreatedAt().getTime();
         return message;
     }
+
+    public static void sendMessage(Context context, String senderProfileId, String receiverProfileId, String messageBody) {
+        Message message = new Message();
+        message.timestamp = Calendar.getInstance().getTimeInMillis();
+        message.text = messageBody;
+        message.id = UUID.randomUUID().toString();
+        message.senderId = senderProfileId;
+        message.receiverId = receiverProfileId;
+
+        ProfileHolder profileHolder = ProfileHolder.getInstance(context);
+        profileHolder.saveMessage(getMessageRowId(senderProfileId, receiverProfileId), message);
+
+    }
+
 }

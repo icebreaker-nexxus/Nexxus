@@ -41,6 +41,8 @@
     <string name="have_checked_in">%d people have checked in</string>
     <string name="why_so_serious">%s, why so serious?</string>
     <string name="send_a_message">Send a message :)</string>
+    <string name="reply">Reply</string>
+    <string name="notif_content_sent">Message sent!</string>
 
     <!-- onboarding strings -->
     <string name="onboarding_find_attenedees">Know the attendees</string>

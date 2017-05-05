@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,14 +30,7 @@ import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
-
 import org.parceler.Parcels;
-
-import java.util.Calendar;
-import java.util.UUID;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by amodi on 4/12/17.
@@ -106,15 +100,16 @@ public class MessagingFragment extends Fragment {
         messageInput.setInputListener(new MessageInput.InputListener() {
             @Override
             public boolean onSubmit(CharSequence charSequence) {
-                Message message = new Message();
-                message.timestamp = Calendar.getInstance().getTimeInMillis();
-                message.text = charSequence.toString();
-                message.id = UUID.randomUUID().toString();
-                message.senderId = loggedInProfile.id;
-                message.receiverId = messageToProfile.id;
-
-                // save message and messageRef to profile
-                profileHolder.saveMessage(messagesRowId, message);
+//                Message message = new Message();
+//                message.timestamp = Calendar.getInstance().getTimeInMillis();
+//                message.text = charSequence.toString();
+//                message.id = UUID.randomUUID().toString();
+//                message.senderId = loggedInProfile.id;
+//                message.receiverId = messageToProfile.id;
+//
+//                // save message and messageRef to profile
+//                profileHolder.saveMessage(messagesRowId, message);
+                MessagesHelper.sendMessage(getContext(), loggedInProfile.id, messageToProfile.id, charSequence.toString());
 
                 if (isEmptyStateVisible) {
                     emptyStateRelativeLayout.setVisibility(View.GONE);
@@ -122,7 +117,7 @@ public class MessagingFragment extends Fragment {
                 }
                 emptyStateRelativeLayout.setVisibility(View.GONE);
 
-                // send push notification
+//                // send push notification
                 GoogleCloudFunctionClient.sendPushNotification(loggedInProfile.firstName, messageToProfile.id, loggedInProfile.id);
 
                 return true;

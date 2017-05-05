@@ -7,7 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +25,10 @@ import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.models.MeetupEvent;
 import com.icebreakers.nexxus.models.Profile;
 import com.icebreakers.nexxus.persistence.Database;
+import com.icebreakers.nexxus.receivers.NotificationBroadcastReceiver;
 import org.parceler.Parcels;
+
+import java.util.Random;
 
 import static com.icebreakers.nexxus.activities.EventDetailsActivity.EVENT_EXTRA;
 import static com.icebreakers.nexxus.activities.ProfileActivity.PROFILE_EXTRA;
@@ -38,8 +44,13 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
     private static final String MESSAGE_TYPE = "message";
     private static final String CHECKIN_TYPE = "checkin";
 
+    public static final String KEY_REPLY = "reply";
+    public static String REPLY_ACTION = "com.icebreakers.nexxus.services.REPLY_ACTION";
+
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        int notificationId = new Random().nextInt();
         Log.e(TAG, "Received message " + remoteMessage);
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
@@ -84,7 +95,8 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
                         Log.d(TAG, "Got the profile for push notification...");
                         sendMessageNotification(remoteMessage.getNotification().getBody(),
                                                 remoteMessage.getNotification().getTitle(),
-                                                profileToMessage);
+                                                profileToMessage,
+                                                notificationId);
                     }
 
                     @Override
@@ -100,7 +112,8 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
                 // hard coding to get
                 sendEventNotification(remoteMessage.getNotification().getBody(),
                                       remoteMessage.getNotification().getTitle(),
-                                      MeetupEvent.getCodePathEvent());
+                                      MeetupEvent.getCodePathEvent(),
+                                      notificationId);
 
 //                Database.instance().databaseReference.child(MEETUP_EVENT_TABLE).child(eventId)
 //                     .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -123,19 +136,53 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void sendMessageNotification(String messageBody, String title, Profile profile) {
+    private void sendMessageNotification(String messageBody, String title, Profile profile, int notificationId) {
+        String replyLabel = getString(R.string.reply);
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_REPLY)
+            .setLabel(replyLabel)
+            .build();
+        NotificationCompat.Action replyAction = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+             replyAction = new NotificationCompat.Action.Builder(
+                R.drawable.ic_send, replyLabel,
+                getReplyPendingIntent(ProfileHolder.getInstance(getApplicationContext()).getProfile().id, profile.id, notificationId))
+                .addRemoteInput(remoteInput)
+                .setAllowGeneratedReplies(true)
+                .build();
+
+        }
+
         Intent intent = new Intent(NexxusFirebaseMessagingService.this, MessagingActivity.class);
         intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
-        sendNotification(intent, title, messageBody);
+        sendNotification(intent, title, messageBody, replyAction, notificationId);
     }
 
-    private void sendEventNotification(String messageBody, String title, MeetupEvent meetupEvent) {
+    public static CharSequence getReplyMessage(Intent intent) {
+        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+        if (remoteInput != null) {
+            return remoteInput.getCharSequence(KEY_REPLY);
+        }
+        return null;
+    }
+
+    private PendingIntent getReplyPendingIntent(String senderProfileId, String receiverProfileId, int notificationId) {
+        Intent intent;
+        intent = NotificationBroadcastReceiver.getReplyMessageIntent(this, receiverProfileId, senderProfileId, notificationId);
+        return PendingIntent.getBroadcast(getApplicationContext(), 100, intent,
+                                          PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void sendEventNotification(String messageBody, String title, MeetupEvent meetupEvent, int notificationId) {
         Intent intent = new Intent(NexxusFirebaseMessagingService.this, EventDetailsActivity.class);
         intent.putExtra(EVENT_EXTRA, Parcels.wrap(meetupEvent));
-        sendNotification(intent, title, messageBody);
+        sendNotification(intent, title, messageBody, null, notificationId);
     }
 
-    private void sendNotification(Intent intent, String title, String messageBody) {
+    private void sendNotification(Intent intent,
+                                  String title,
+                                  String messageBody,
+                                  NotificationCompat.Action action,
+                                  int notificationId) {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
 
@@ -150,13 +197,17 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
             .setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary))
             .setContentText(messageBody)
             .setAutoCancel(true)
+            .setShowWhen(true)
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
             .setPriority(Notification.PRIORITY_HIGH);
+        if (action != null) {
+            notificationBuilder.addAction(action);
+        }
 
         NotificationManager notificationManager =
             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(notificationId /* ID of notification */, notificationBuilder.build());
 
     }
 }
