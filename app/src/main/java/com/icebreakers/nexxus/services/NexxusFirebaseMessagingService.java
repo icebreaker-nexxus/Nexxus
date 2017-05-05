@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +38,7 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = NexxusFirebaseMessagingService.class.getSimpleName();
     private static final String MESSAGE_TYPE = "message";
     private static final String CHECKIN_TYPE = "checkin";
+    private static final String KEY_REPLY = "reply";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -124,6 +126,10 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendMessageNotification(String messageBody, String title, Profile profile) {
+        String replyLabel = getString(R.string.reply);
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_REPLY)
+            .setLabel(replyLabel)
+            .build();
         Intent intent = new Intent(NexxusFirebaseMessagingService.this, MessagingActivity.class);
         intent.putExtra(PROFILE_EXTRA, Parcels.wrap(profile));
         sendNotification(intent, title, messageBody);
