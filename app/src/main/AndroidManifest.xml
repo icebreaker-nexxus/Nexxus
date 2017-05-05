@@ -64,6 +64,7 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
 
+        <receiver android:name=".receivers.NotificationBroadcastReceiver"/>
     </application>
 
 </manifest>
