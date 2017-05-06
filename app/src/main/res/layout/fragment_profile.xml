@@ -25,12 +25,26 @@
                 app:layout_collapseMode="parallax"
                 android:layout_height="280dp">
 
-                <View
+                <FrameLayout
                     android:id="@+id/toolbar_background"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
-                    android:background="@color/colorPrimary" />
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/backgroundImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        />
+
+                    <View
+                        android:id="@+id/backgroundTint"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/primary_color_gradient" />
+
+                </FrameLayout>
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivProfileImage"

@@ -2,6 +2,9 @@ package com.icebreakers.nexxus.fragments;
 
 import android.animation.Animator;
 import android.annotation.TargetApi;
+import android.content.res.ColorStateList;
+import android.gesture.GestureLibraries;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,6 +37,7 @@ import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.icebreakers.nexxus.NexxusApplication;
 import com.icebreakers.nexxus.R;
+import com.icebreakers.nexxus.helpers.MemberToImage;
 import com.icebreakers.nexxus.helpers.NestedScrollViewBehavior;
 import com.icebreakers.nexxus.helpers.ProfileHolder;
 import com.icebreakers.nexxus.helpers.SimilaritiesFinder;
@@ -67,6 +71,8 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.app_bar_layout) AppBarLayout appBarLayout;
     @BindView(R.id.toolbar_background) View toolbarBackground;
+    @BindView(R.id.backgroundTint) View backgroundTint;
+    @BindView(R.id.backgroundImage) ImageView backgroundImage;
 
     private Profile profile;
     private Similarities similaritiesWithLoggedInMember;
@@ -111,11 +117,13 @@ public class ProfileFragment extends Fragment {
         tvProfileName.setText(String.format(getString(R.string.full_name, profile.firstName, profile.lastName)));
         tvHeadline.setText(profile.headline);
         Glide.with(getActivity()).load(profile.pictureUrl).into(ivProfileImage);
+        Glide.with(getActivity()).load(MemberToImage.getImageUrl(profile.id)).into(backgroundImage);
         insertCommonSection();
         insertExperienceSection();
         insertEducationSection();
         if (profile.profileColor != 0 && profile.profileColor != -1) {
-            toolbarBackground.setBackgroundColor(profile.profileColor);
+            backgroundTint.setBackgroundColor(adjustAlpha(profile.profileColor, 0.7f));
+            //toolbarBackground.setColorFilter(adjustAlpha(profile.profileColor, 0.5f));
             appBarLayout.setBackgroundColor(profile.profileColor);
             collapsingToolbarLayout.setContentScrimColor(profile.profileColor);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -295,6 +303,21 @@ public class ProfileFragment extends Fragment {
             }
             linearLayoutExperienceSection.addView(v);
         }
+    }
+
+    public int adjustAlpha(int color, float factor) {
+        int alpha = Math.round(Color.alpha(color) * factor);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        int[][] states = new int[][] {
+            new int[] { android.R.attr.color}, // enabled
+        };
+
+        int[] colors = new int[] {
+            Color.argb(alpha, red, green, blue)
+        };
+        return Color.argb(alpha, red, green, blue);
     }
 
     private void insertEducationSection() {
