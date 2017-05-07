@@ -18,8 +18,8 @@ public class GoogleCloudFunctionClient {
     private static final String TAG = GoogleCloudFunctionClient.class.getSimpleName();
 
     // fix this to be less hacky if time permits
-    public static void sendPushNotification(String fromName, String toid, String fromId) {
-        sendPush(String.format("https://us-central1-nexxus-42eaf.cloudfunctions.net/sendPushNotificationForMessage?fromName=%s&toId=%s&fromId=%s", fromName, toid, fromId));
+    public static void sendPushNotification(String fromName, String toid, String fromId, String body) {
+        sendPush(String.format("https://us-central1-nexxus-42eaf.cloudfunctions.net/sendPushNotificationForMessageWithBody?fromName=%s&toId=%s&fromId=%s&body=%s", fromName, toid, fromId, body));
     }
 
     public static void sendEventCheckInNotification(String fromName, String fromId, String eventId) {

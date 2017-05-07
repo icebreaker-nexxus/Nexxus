@@ -93,6 +93,7 @@ public class NexxusFirebaseMessagingService extends FirebaseMessagingService {
                             return;
                         }
                         Log.d(TAG, "Got the profile for push notification...");
+                        String body = remoteMessage.getData().get("body");
                         sendMessageNotification(remoteMessage.getNotification().getBody(),
                                                 remoteMessage.getNotification().getTitle(),
                                                 profileToMessage,
