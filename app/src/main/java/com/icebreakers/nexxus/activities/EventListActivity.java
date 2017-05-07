@@ -354,7 +354,7 @@ public class EventListActivity extends BaseActivity
 
     private void setupDrawerContent(NavigationView navigationView) {
 
-        refreshDirectMessagesView(navigationView);
+        //refreshDirectMessagesView(navigationView);
 
         navigationView.setNavigationItemSelectedListener(
             new NavigationView.OnNavigationItemSelectedListener() {
@@ -444,14 +444,5 @@ public class EventListActivity extends BaseActivity
         Log.d(TAG, "Incoming Message received from: " + sender.firstName);
         binding.badger.setVisibility(View.VISIBLE);
         EventBus.getDefault().removeStickyEvent(id);
-    }
-
-    // profile update - direct messages and event check-ins
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(Profile profile) {
-        Log.d(TAG, "Updated Profile  received " + profile.firstName);
-        this.profile = profile;
-        refreshDirectMessagesView(binding.navigationView);
-        EventBus.getDefault().removeStickyEvent(profile);
     }
 }
