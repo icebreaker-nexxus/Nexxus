@@ -75,7 +75,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_marginRight="@dimen/item_spacing_2"
-                        android:src="@drawable/ic_education"/>
+                        tools:src="@drawable/ic_education"/>
 
                     <TextView
                         android:id="@+id/profile_similarity_text"
@@ -86,7 +86,7 @@
                         android:maxLines="2"
                         android:textAlignment="viewStart"
                         android:textAppearance="@style/TextAppearance.ArtDeco.Subhead"
-                        android:text="University of California, Los Angeles"/>
+                        tools:text="University of California, Los Angeles"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
