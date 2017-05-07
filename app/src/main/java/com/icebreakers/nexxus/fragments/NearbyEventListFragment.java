@@ -37,6 +37,8 @@ public class NearbyEventListFragment extends BaseEventListFragment {
         if (events.isEmpty()) {
             MeetupEvent codePathEvent = MeetupEvent.getCodePathEvent();
             events.add(0, codePathEvent);
+            MeetupEvent entrepreneurEvent = MeetupEvent.getEntrepreneurEvent();
+            events.add(1, entrepreneurEvent);
             Database.instance().saveMeetupEvent(codePathEvent);
         }
 

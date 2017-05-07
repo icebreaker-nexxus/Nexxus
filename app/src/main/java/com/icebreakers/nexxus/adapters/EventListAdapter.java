@@ -75,7 +75,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
         String imageURL = null;
 
-        if (event.fakeEvent && event.getId().equals(MeetupEvent.EVENT_ID_CODEPATH)) {
+        if (event.fakeEvent) {
             imageURL = event.imageUrl;
         } else {
             if (event.getGroup().getKeyPhoto() != null) {

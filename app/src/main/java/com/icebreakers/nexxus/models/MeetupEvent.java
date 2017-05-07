@@ -4,7 +4,6 @@ package com.icebreakers.nexxus.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.icebreakers.nexxus.models.internal.MeetupEventRef;
-
 import org.parceler.Parcel;
 
 import java.util.Date;
@@ -13,6 +12,7 @@ import java.util.Date;
 public class MeetupEvent {
 
     public static final String EVENT_ID_CODEPATH = "codepath-event";
+    public static final String ENTREPRENEUR_EVENT_ID = "ent-event";
 
     @SerializedName("created")
     @Expose
@@ -219,5 +219,32 @@ public class MeetupEvent {
                 //"http://cdn.bgr.com/2016/02/netflix-sign-2.jpg?quality=98&strip=all"; //"https://i.imgur.com/XgxWfyF.png";
 
         return codePathEvent;
+    }
+
+    public static MeetupEvent getEntrepreneurEvent() {
+        MeetupEvent entrepreneurEvent = new MeetupEvent();
+        entrepreneurEvent.fakeEvent = true;
+        entrepreneurEvent.id = ENTREPRENEUR_EVENT_ID;
+        entrepreneurEvent.name = "Entrepreneur Social Event";
+        entrepreneurEvent.time = 1494295200000L;
+
+        entrepreneurEvent.venue = new Venue();
+        entrepreneurEvent.venue.setName("Pivotal Labs");
+        entrepreneurEvent.venue.setAddress1("14109 S Winchester Blvd");
+        entrepreneurEvent.venue.setCity("Los Gatos");
+        entrepreneurEvent.venue.setLat(37.257103);
+        entrepreneurEvent.venue.setLon(-121.964178);
+
+        entrepreneurEvent.description = "Over the past couple months, CodePath and Netflix have partnered  to provide an intense Android bootcamp for practicing software engineers to develop knowlege and skill in industry standard Android development.\n" +
+            "\n" +
+            "Less than 3% of applicants were accepted into the bootcamp and the course required participants to spend 20+ hours a week on top of their full time jobs for 8 weeks. Netflix supported the course by providing design and engineering mentorship as well as hosting the class at their headquarters in Los Gatos. In the later half of the course, students formed teams and worked together to build polished Android applications.\n" +
+            "\n" +
+            "On May 8th, 2017 participants will showcase their final projects in front of an all engineering audience of CodePath alumni, Netflix engineers, and influential technology leaders judging the winning apps.\n" +
+            "\n" +
+            "Complimentary food and alcohol will be served. Netflix will be providing swag and prizes to attendees and demo day winners.  ";
+
+        entrepreneurEvent.imageUrl = "http://imgur.com/download/lweBHuj";
+
+        return entrepreneurEvent;
     }
 }
