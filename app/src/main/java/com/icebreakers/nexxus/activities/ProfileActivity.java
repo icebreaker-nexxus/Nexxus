@@ -28,7 +28,7 @@ public class ProfileActivity extends BaseActivity implements MessageClickEvent {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_container);
 
         Intent intent = getIntent();
         Profile profile = Parcels.unwrap(intent.getParcelableExtra(PROFILE_EXTRA));

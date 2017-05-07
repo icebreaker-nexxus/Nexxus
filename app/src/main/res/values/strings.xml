@@ -43,6 +43,7 @@
     <string name="send_a_message">Send a message :)</string>
     <string name="reply">Reply</string>
     <string name="notif_content_sent">Message sent!</string>
+    <string name="messages">Messages</string>
 
     <!-- onboarding strings -->
     <string name="onboarding_find_attenedees">Know the attendees</string>

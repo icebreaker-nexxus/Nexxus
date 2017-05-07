@@ -400,6 +400,9 @@ public class EventListActivity extends BaseActivity
             case R.id.logout_nav:
                 LogoutUtils.logout(this);
                 break;
+            case R.id.messages_nav:
+                startActivity(new Intent(this, MessagesActivity.class));
+                break;
             case R.id.nearby_nav:
                 startActivity(new Intent(this, NearbyActivity.class));
                 break;
